@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "478140576202",
+    "project_id": "licenta-manolache-maria",
+    "storage_bucket": "licenta-manolache-maria.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:478140576202:android:cf96f56824a7a32a7d5f33",
+        "android_client_info": {
+          "package_name": "eu.ase.ro.grupa1086.licentamanolachemariacatalina"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "478140576202-pjcp5hapis1saadn21n4thg03ter61j0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "eu.ase.ro.grupa1086.licentamanolachemariacatalina",
+            "certificate_hash": "86aece9e78be062e0a5c53b91f5ad5d2f2b7a42f"
+          }
+        },
+        {
+          "client_id": "478140576202-rhbkqt0h5fafenn441gvkhfr7isgquc2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCysjrCb9e2N5sNip39CegvBxQTgUCmphU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "478140576202-rhbkqt0h5fafenn441gvkhfr7isgquc2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

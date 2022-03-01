@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/mintgreenbackground"
+    tools:context=".account.SignUp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alatsi"
+            android:gravity="center"
+            android:text="Creare cont"
+            android:textAlignment="center"
+            android:textColor="@color/purple_200"
+            android:textSize="50dp"></TextView>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="20dp"
+            android:outlineAmbientShadowColor="@android:color/darker_gray"
+            android:background="@drawable/border"
+            tools:targetApi="p">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etName"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/alata"
+                android:hint="Nume"
+                android:inputType="text"
+                android:textColorHint="@color/design_default_color_primary_dark"
+                android:textSize="25dp"
+                android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+        </FrameLayout>
+
+<!--    <EditText-->
+<!--        android:id="@+id/etName"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="50dp"-->
+<!--        android:textSize="25dp"-->
+<!--        android:hint="Nume"></EditText>-->
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="20dp"
+            android:outlineAmbientShadowColor="@android:color/darker_gray"
+            android:background="@drawable/border"
+            tools:targetApi="p">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etEmail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/alata"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:textColorHint="@color/design_default_color_primary_dark"
+                android:textSize="25dp"
+                android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+        </FrameLayout>
+
+<!--    <EditText-->
+<!--        android:id="@+id/etEmail"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="25dp"-->
+<!--        android:textSize="25dp"-->
+<!--        android:inputType="textEmailAddress"-->
+<!--        android:maxLength="30"-->
+<!--        android:hint="Email"></EditText>-->
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="20dp"
+            android:outlineAmbientShadowColor="@android:color/darker_gray"
+            android:background="@drawable/border"
+            tools:targetApi="p">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPassword"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/alata"
+                android:hint="Parola"
+                android:inputType="textPassword"
+                android:textColorHint="@color/design_default_color_primary_dark"
+                android:textSize="25dp"
+                android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+        </FrameLayout>
+
+<!--    <EditText-->
+<!--        android:id="@+id/etPassword"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="25dp"-->
+<!--        android:textSize="25dp"-->
+<!--        android:inputType="textPassword"-->
+<!--        android:hint="Parola"></EditText>-->
+
+        <TextView
+            android:id="@+id/tvSignIn"
+            android:layout_marginTop="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="Ai deja cont? Conecteaza-te aici!"
+            android:textAlignment="center"/>
+
+        <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="25dp"
+        android:text="Inregsitreaza-te"></Button>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:visibility="invisible"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</RelativeLayout>
