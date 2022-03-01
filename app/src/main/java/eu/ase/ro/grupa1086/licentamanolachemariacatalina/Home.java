@@ -92,7 +92,7 @@ public class Home extends AppCompatActivity {
 
         recyclerMenu = (RecyclerView) findViewById(R.id.recyclerMenu);
         recyclerMenu.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerMenu.setLayoutManager(layoutManager);
 
         loadMenu();
