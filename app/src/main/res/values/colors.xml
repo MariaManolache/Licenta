@@ -7,6 +7,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="violet">#305187</color>
     <color name="overlayBackground">#7F0B3865</color>
     <color name="overlayActionBar">#0e0d0e</color>
 </resources>

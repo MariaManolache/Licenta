@@ -1,5 +1,6 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Category;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.databinding.ActivityHomeBinding;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.MenuViewHolder;
 
 public class Home extends AppCompatActivity {
 
@@ -51,6 +53,7 @@ public class Home extends AppCompatActivity {
     RecyclerView recyclerMenu;
     RecyclerView.LayoutManager layoutManager;
     FirebaseRecyclerAdapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,7 +145,11 @@ public class Home extends AppCompatActivity {
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
-                        Toast.makeText(Home.this, ""+clickItem.getName(), Toast.LENGTH_SHORT).show();
+                        //categoryId
+
+                        Intent restaurantsList = new Intent(Home.this, RestaurantsList.class);
+                        restaurantsList.putExtra("categoryId", adapter.getRef(position).getKey());
+                        startActivity(restaurantsList);
                     }
                 });
             }

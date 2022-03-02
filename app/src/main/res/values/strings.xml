@@ -27,4 +27,9 @@
     <string name="meniu">Meniu</string>
     <string name="comenzi">Comenzi</string>
     <string name="cont">Cont</string>
+    <string name="numele_restaurantului">Numele restaurantului</string>
+    <string name="foodName">Denumirea felului de mancare</string>
+    <string name="price">1,000</string>
+    <string name="restaurant_name">Numele restaurantului</string>
+    <string name="category_name">Numele categoriei</string>
 </resources>

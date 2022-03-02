@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.Home;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.firebase.FirebaseService;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.MainMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
@@ -132,7 +133,7 @@ public class SignUp extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()) {
                                         Toast.makeText(SignUp.this, "Cont creat", Toast.LENGTH_LONG).show();
-                                        startActivity(new Intent(getApplicationContext(), MainMenu.class));
+                                        startActivity(new Intent(getApplicationContext(), Home.class));
                                         finish();
                                     } else {
                                         Toast.makeText(SignUp.this, "Eroare la crearea contului" + task.getException().getMessage(), Toast.LENGTH_LONG).show();

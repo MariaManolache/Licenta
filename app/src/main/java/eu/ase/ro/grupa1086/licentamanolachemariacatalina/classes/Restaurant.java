@@ -9,9 +9,17 @@ public class Restaurant implements Serializable {
 
     private String id;
     private String name;
-    private ArrayList<Food> menu;
+    private String image;
+    private String categoryId;
 
     public Restaurant() {
+    }
+
+    public Restaurant(String id, String name, String image, String categoryId) {
+        this.id = id;
+        this.name = name;
+        this.image = image;
+        this.categoryId = categoryId;
     }
 
     public String getId() {
@@ -30,20 +38,29 @@ public class Restaurant implements Serializable {
         this.name = name;
     }
 
-    public ArrayList<Food> getMenu() {
-        return menu;
+    public String getImage() {
+        return image;
     }
 
-    public void setMenu(ArrayList<Food> menu) {
-        this.menu = menu;
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    @NonNull
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
+
     @Override
     public String toString() {
         return "Restaurant{" +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", menu=" + menu +
+                ", image='" + image + '\'' +
+                ", categoryId='" + categoryId + '\'' +
                 '}';
     }
 }
