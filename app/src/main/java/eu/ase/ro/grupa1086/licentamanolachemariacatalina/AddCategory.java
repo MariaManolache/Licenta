@@ -2,7 +2,6 @@ package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,8 +15,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.adapters.CategoryAdapter;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Category;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.firebase.Callback;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.firebase.FirebaseService;
 

@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -54,6 +55,8 @@ public class Home extends AppCompatActivity {
     RecyclerView.LayoutManager layoutManager;
     FirebaseRecyclerAdapter adapter;
 
+    FloatingActionButton cart;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +75,10 @@ public class Home extends AppCompatActivity {
         binding.appBarHome.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                Intent shoppingCart = new Intent(Home.this, ShoppingCart.class);
+                startActivity(shoppingCart);
             }
         });
         DrawerLayout drawer = binding.drawerLayout;
@@ -118,6 +123,16 @@ public class Home extends AppCompatActivity {
                 Toast.makeText(Home.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+
+//        cart = findViewById(R.id.btnShoppingCart);
+//
+//        cart.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent shoppingCart = new Intent(Home.this, ShoppingCart.class);
+//                startActivity(shoppingCart);
+//            }
+//        });
 
 
     }

@@ -38,6 +38,7 @@ public class MainMenu extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private DatabaseReference databaseReference;
+    private DatabaseReference databaseReferenceCart;
 
     private TextView name;
     AlertDialog.Builder resetAlert;
@@ -140,6 +141,8 @@ public class MainMenu extends AppCompatActivity {
                             String email = user.getEmail();
                             databaseReference = FirebaseDatabase.getInstance().getReference("users").child(id);
 
+                            databaseReferenceCart = FirebaseDatabase.getInstance().getReference("carts").child(id);
+
 //                            databaseReference.addValueEventListener(new ValueEventListener() {
 //                                @Override
 //                                public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -171,6 +174,7 @@ public class MainMenu extends AppCompatActivity {
                                 public void onSuccess(Void unused) {
                                     Toast.makeText(MainMenu.this, "Cont sters", Toast.LENGTH_LONG).show();
                                     databaseReference.removeValue();
+                                    databaseReferenceCart.removeValue();
                                     FirebaseAuth.getInstance().signOut();
                                     startActivity(new Intent(getApplicationContext(), SignIn.class));
                                     finish();

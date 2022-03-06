@@ -35,4 +35,6 @@
     <string name="food_name">Numele felului de mancare</string>
     <string name="food_description">Descrierea felului de mancare</string>
     <string name="restaurants_list_title">Lista restaurantelor</string>
+    <string name="total">Total:</string>
+    <string name="place_order">Plaseaza comanda</string>
 </resources>

@@ -10,15 +10,17 @@ public class User implements Serializable {
     private String email;
     private String name;
     private String password;
+    private String phoneNumber;
 
     public User() {
     }
 
-    public User(String id, String email, String name, String password) {
+    public User(String id, String email, String name, String password, String phoneNumber) {
         this.id = id;
         this.email = email;
         this.name = name;
         this.password = password;
+        this.phoneNumber = phoneNumber;
     }
 
     public String getId() {
@@ -53,13 +55,22 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    @NonNull
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-                "email='" + email + '\'' +
+                "id='" + id + '\'' +
+                ", email='" + email + '\'' +
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
                 '}';
     }
 }

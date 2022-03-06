@@ -20,7 +20,7 @@
             android:iconTint="@color/white"
             android:title="@string/comenzi" />
         <item
-            android:id="@+id/nav_sign_out"
+            android:id="@+id/nav_account"
             android:icon="@drawable/ic_baseline_account_circle_24"
             android:iconTint="@color/white"
             android:title="@string/cont" />

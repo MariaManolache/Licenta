@@ -27,6 +27,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.Home;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.ShoppingCart;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Cart;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Order;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.firebase.FirebaseService;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.MainMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
@@ -36,14 +40,17 @@ public class SignUp extends AppCompatActivity {
 
     private EditText etName;
     private EditText etEmail;
+    private EditText etPhoneNumber;
     private EditText etPassword;
     private Button btnRegister;
     private FirebaseService firebaseService;
+    private List<Food> foodList;
 
     private FirebaseAuth firebaseAuth;
     private ProgressBar progressBar;
 
     private DatabaseReference databaseReference;
+    private DatabaseReference databaseReferenceShoppingCart;
 
     private TextView signIn;
 
@@ -67,7 +74,8 @@ public class SignUp extends AppCompatActivity {
     private void initializareComponente() {
         etName = findViewById(R.id.etName);
         etEmail = findViewById(R.id.etEmail);
-        etPassword= findViewById(R.id.etPassword);
+        etPassword = findViewById(R.id.etPassword);
+        etPhoneNumber = findViewById(R.id.etPhoneNumber);
 
         btnRegister = findViewById(R.id.btnRegister);
 
@@ -77,6 +85,10 @@ public class SignUp extends AppCompatActivity {
         signIn = findViewById(R.id.tvSignIn);
 
         user_list = new ArrayList<>();
+        foodList = new ArrayList<>();
+
+        Food food = new Food("01", "01");
+        foodList.add(food);
 
         if(firebaseAuth.getCurrentUser() != null) {
             startActivity(new Intent(getApplicationContext(), MainMenu.class));
@@ -89,6 +101,7 @@ public class SignUp extends AppCompatActivity {
             public void onClick(View v) {
                 final String name = etName.getText().toString().trim();
                 final String email = etEmail.getText().toString().trim();
+                final String phoneNumber = etPhoneNumber.getText().toString().trim();
                 final String password = etPassword.getText().toString().trim();
 
                 if(TextUtils.isEmpty(name)) {
@@ -111,6 +124,11 @@ public class SignUp extends AppCompatActivity {
                     return;
                 }
 
+                if(TextUtils.isEmpty(name)) {
+                    etPhoneNumber.setError("Numarul de telefon al utilizatorului este necesar pentru crearea contului");
+                    return;
+                }
+
                 progressBar.setVisibility(View.VISIBLE);
 
                 // inregistrarea user-ului in firebase
@@ -127,17 +145,34 @@ public class SignUp extends AppCompatActivity {
                             hashMap.put("id", id);
                             hashMap.put("name", name);
                             hashMap.put("email", email);
+                            hashMap.put("phoneNumber", phoneNumber);
                             hashMap.put("password", password);
                             databaseReference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()) {
-                                        Toast.makeText(SignUp.this, "Cont creat", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(SignUp.this, "Cont creat", Toast.LENGTH_SHORT).show();
                                         startActivity(new Intent(getApplicationContext(), Home.class));
                                         finish();
                                     } else {
                                         Toast.makeText(SignUp.this, "Eroare la crearea contului" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                         progressBar.setVisibility(View.GONE);
+                                    }
+                                }
+                            });
+
+                            databaseReferenceShoppingCart = FirebaseDatabase.getInstance().getReference("carts").child(id);
+                            Cart cart = new Cart(id, foodList);
+                            HashMap<String, String> hashMapCarts = new HashMap<>();
+                            hashMapCarts.put("id", id);
+                            hashMapCarts.put("food", foodList.toString());
+                            databaseReferenceShoppingCart.setValue(cart).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()) {
+                                        Toast.makeText(SignUp.this, "Cos de cumparaturi creat", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        Toast.makeText(SignUp.this, "Eroare la crearea contului" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });

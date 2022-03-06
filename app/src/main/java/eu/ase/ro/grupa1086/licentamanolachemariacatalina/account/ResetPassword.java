@@ -101,6 +101,7 @@ public class ResetPassword extends AppCompatActivity {
                                                 hashMap.put("id", user2.getId());
                                                 hashMap.put("name", user2.getName());
                                                 hashMap.put("email", user2.getEmail());
+                                                hashMap.put("phoneNumber", user2.getPhoneNumber());
                                                 hashMap.put("password", newPassword.getText().toString());
 
                                                 databaseReference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {

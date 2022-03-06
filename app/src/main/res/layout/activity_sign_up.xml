@@ -78,6 +78,28 @@
                 android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
         </FrameLayout>
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="20dp"
+            android:outlineAmbientShadowColor="@android:color/darker_gray"
+            android:background="@drawable/border"
+            tools:targetApi="p">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPhoneNumber"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/alata"
+                android:hint="Telefon"
+                android:inputType="phone"
+                android:textColorHint="@color/design_default_color_primary_dark"
+                android:textSize="25dp"
+                android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+        </FrameLayout>
+
 <!--    <EditText-->
 <!--        android:id="@+id/etEmail"-->
 <!--        android:layout_width="match_parent"-->
