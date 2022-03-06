@@ -2,117 +2,107 @@ package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
 
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Category;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.databinding.ActivityHomeBinding;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.MenuViewHolder;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.FoodViewHolder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.RestaurantViewHolder;
 
-public class RestaurantsList extends AppCompatActivity {
+public class FoodList extends AppCompatActivity {
 
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
 
-
     FirebaseDatabase database;
-    DatabaseReference restaurantsList;
+    DatabaseReference foodList;
 
-    String categoryId = "";
+    String restaurantId = "";
 
-    FirebaseRecyclerAdapter<Restaurant, RestaurantViewHolder> adapter;
+    FirebaseRecyclerAdapter<Food, FoodViewHolder> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_restaurants_list);
-
+        setContentView(R.layout.activity_food_list);
 
         //Firebase
         database = FirebaseDatabase.getInstance();
-        restaurantsList = database.getReference("restaurants");
+        foodList = database.getReference("food");
 
-        recyclerView = (RecyclerView)findViewById(R.id.recyclerRestaurants);
+        recyclerView = (RecyclerView)findViewById(R.id.recyclerFood);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
         //Intent
         if(getIntent() != null) {
-            categoryId = getIntent().getStringExtra("categoryId");
+            restaurantId = getIntent().getStringExtra("restaurantId");
         }
-        if(!categoryId.isEmpty() && categoryId != null) {
-            loadRestaurantsList(categoryId);
+        if(!restaurantId.isEmpty() && restaurantId != null) {
+            loadFoodList(restaurantId);
         }
 
     }
 
-    private void loadRestaurantsList(String categoryId) {
+    private void loadFoodList(String restaurantId) {
 
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
-                .child("restaurants")
-                .orderByChild("categoryId").equalTo(categoryId)
+                .child("food")
+                .orderByChild("restaurantId").equalTo(restaurantId)
                 .limitToLast(50);
 
-        FirebaseRecyclerOptions<Restaurant> options =
-                new FirebaseRecyclerOptions.Builder<Restaurant>()
-                        .setQuery(query, Restaurant.class)
+        FirebaseRecyclerOptions<Food> options =
+                new FirebaseRecyclerOptions.Builder<Food>()
+                        .setQuery(query, Food.class)
                         .build();
 
-        adapter = new FirebaseRecyclerAdapter<Restaurant, RestaurantViewHolder>(options) {
+        adapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull RestaurantViewHolder holder, int position, @NonNull Restaurant model) {
-                holder.restaurantName.setText(model.getName());
+            protected void onBindViewHolder(@NonNull FoodViewHolder holder, int position, @NonNull Food model) {
+                holder.foodName.setText(model.getName());
                 Picasso.with(getBaseContext()).load(model.getImage())
                         .into(holder.imageView);
 
-                final Restaurant local = model;
+                final Food local = model;
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
 
-                        //restaurantId
-                        Intent foodList = new Intent(RestaurantsList.this, FoodList.class);
-                        foodList.putExtra("restaurantId", adapter.getRef(position).getKey());
-                        startActivity(foodList);
-
+                       //newActivity
+                        Intent foodInfo= new Intent(FoodList.this, FoodInfo.class);
+                        foodInfo.putExtra("id", adapter.getRef(position).getKey());
+                        //Log.i("foodid", adapter.getRef(position).getKey());
+                        startActivity(foodInfo);
                     }
                 });
             }
 
             @NonNull
             @Override
-            public RestaurantViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public FoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.restaurant_item, parent, false);
+                        .inflate(R.layout.food_item, parent, false);
                 view.setMinimumWidth(parent.getMeasuredWidth());
 
-                return new RestaurantViewHolder(view);
+                return new FoodViewHolder(view);
             }
         };
 
@@ -124,5 +114,4 @@ public class RestaurantsList extends AppCompatActivity {
         super.onStart();
         adapter.startListening();
     }
-
 }

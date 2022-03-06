@@ -14,8 +14,12 @@
         android:theme="@style/Theme.LicentaManolacheMariaCatalina"
         tools:replace="android:theme">
         <activity
-            android:name=".RestaurantsList"
+            android:name=".FoodList"
             android:exported="false" />
+        <activity
+            android:name=".RestaurantsList"
+            android:exported="false"
+            android:label="@string/restaurants_list_title" />
         <activity
             android:name=".FoodInfo"
             android:exported="false" />

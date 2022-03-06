@@ -32,4 +32,7 @@
     <string name="price">1,000</string>
     <string name="restaurant_name">Numele restaurantului</string>
     <string name="category_name">Numele categoriei</string>
+    <string name="food_name">Numele felului de mancare</string>
+    <string name="food_description">Descrierea felului de mancare</string>
+    <string name="restaurants_list_title">Lista restaurantelor</string>
 </resources>

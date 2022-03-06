@@ -9,9 +9,22 @@ public class Food implements Serializable {
     private String id;
     private String name;
     private float price;
+    private String description;
     private int quantity;
+    private String image;
+    private String restaurantId;
 
     public Food() {
+    }
+
+    public Food(String id, String name, float price, String description, int quantity, String image, String restaurantId) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.quantity = quantity;
+        this.image = image;
+        this.restaurantId = restaurantId;
     }
 
     public String getId() {
@@ -46,13 +59,40 @@ public class Food implements Serializable {
         this.quantity = quantity;
     }
 
-    @NonNull
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(String restaurantId) {
+        this.restaurantId = restaurantId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         return "Food{" +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", price=" + price +
+                ", description='" + description + '\'' +
                 ", quantity=" + quantity +
+                ", image='" + image + '\'' +
+                ", restaurantId='" + restaurantId + '\'' +
                 '}';
     }
 }
