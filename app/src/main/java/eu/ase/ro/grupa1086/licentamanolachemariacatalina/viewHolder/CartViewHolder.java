@@ -13,10 +13,17 @@ import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 
 public class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public TextView tvCartName, tvCartPrice;
+    public TextView tvCartName;
+    public TextView tvCartPrice;
+    public TextView tvCartQuantity;
+    public TextView tvCartValue;
     public ImageView imgCartCount;
 
     private ItemClickListener itemClickListener;
+
+    public void setItemClickListener(ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
 
     public void setTvCartName(TextView tvCartName) {
         this.tvCartName = tvCartName;
@@ -26,6 +33,8 @@ public class CartViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         super(itemView);
         tvCartName = (TextView) itemView.findViewById(R.id.cartItemName);
         tvCartPrice = (TextView) itemView.findViewById(R.id.cartItemPrice);
+        tvCartQuantity = (TextView) itemView.findViewById(R.id.cartItemQuantity);
+        tvCartValue = (TextView) itemView.findViewById(R.id.cartItemValue);
         imgCartCount = (ImageView) itemView.findViewById(R.id.cartItemCount);
 
         itemView.setOnClickListener(this);

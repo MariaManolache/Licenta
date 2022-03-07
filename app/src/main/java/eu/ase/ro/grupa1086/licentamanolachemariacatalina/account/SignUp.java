@@ -87,8 +87,6 @@ public class SignUp extends AppCompatActivity {
         user_list = new ArrayList<>();
         foodList = new ArrayList<>();
 
-        Food food = new Food("01", "01");
-        foodList.add(food);
 
         if(firebaseAuth.getCurrentUser() != null) {
             startActivity(new Intent(getApplicationContext(), MainMenu.class));

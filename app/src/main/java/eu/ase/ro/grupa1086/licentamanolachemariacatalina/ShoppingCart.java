@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -44,8 +45,9 @@ public class ShoppingCart extends AppCompatActivity {
     TextView tvTotalPrice;
     Button btnPlaceOrder;
     String id;
+    Float total = 0.0f;
 
-    FirebaseRecyclerAdapter<Cart, CartViewHolder> adapter;
+    FirebaseRecyclerAdapter<Food, CartViewHolder> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +56,6 @@ public class ShoppingCart extends AppCompatActivity {
 
         //Firebase
         database = FirebaseDatabase.getInstance();
-        cart = database.getReference("carts");
 
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
@@ -69,7 +70,7 @@ public class ShoppingCart extends AppCompatActivity {
 
         tvTotalPrice = findViewById(R.id.total);
         btnPlaceOrder = findViewById(R.id.btnPlaceOrder);
-        
+
         loadListFood();
 
     }
@@ -79,26 +80,48 @@ public class ShoppingCart extends AppCompatActivity {
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
                 .child("carts")
-                .orderByChild("id").equalTo(id)
+                .child(id)
+                .child("foodList")
+                .orderByChild("id")
                 .limitToLast(50);
 
-        FirebaseRecyclerOptions<Cart> options =
-                new FirebaseRecyclerOptions.Builder<Cart>()
-                        .setQuery(query, Cart.class)
+
+        FirebaseRecyclerOptions<Food> options =
+                new FirebaseRecyclerOptions.Builder<Food>()
+                        .setQuery(query, Food.class)
                         .build();
 
 
-        adapter = new FirebaseRecyclerAdapter<Cart, CartViewHolder>(options) {
+        adapter = new FirebaseRecyclerAdapter<Food, CartViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull CartViewHolder holder, int position, @NonNull Cart model) {
-                List<Food> list = model.getFoodList();
-                holder.tvCartName.setText(list.get(0).getName());
-                Picasso.with(getBaseContext()).load(list.get(0).getImage())
+            protected void onBindViewHolder(@NonNull CartViewHolder holder, int position, @NonNull Food model) {
+
+                holder.tvCartName.setText(model.getName());
+                Picasso.with(getBaseContext()).load(model.getImage())
                         .into(holder.imgCartCount);
 
-                holder.tvCartPrice.setText(String.valueOf(list.get(0).getPrice()));
+                holder.tvCartPrice.setText(String.valueOf(model.getPrice()));
+                holder.tvCartQuantity.setText(String.valueOf(model.getQuantity()));
+                holder.tvCartValue.setText(String.valueOf(model.getPrice() * model.getQuantity()));
 
-                final Cart local = model;
+                total += model.getPrice() * model.getQuantity();
+
+                if(total > 0) {
+                    tvTotalPrice.setText(total + " LEI");
+                } else
+                {
+                    tvTotalPrice.setText("0 LEI");
+                }
+
+                final Food local = model;
+                holder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+
+                        Toast.makeText(getApplicationContext(), local.getName(), Toast.LENGTH_LONG).show();
+
+                    }
+                });
 
             }
 
@@ -114,6 +137,7 @@ public class ShoppingCart extends AppCompatActivity {
         };
 
         recyclerView.setAdapter(adapter);
+
     }
 
     @Override

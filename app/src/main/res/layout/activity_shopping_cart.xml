@@ -10,13 +10,15 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cartList"
-        android:background="@android:color/transparent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+        android:layout_height="450dp"
+        android:scrollbars="vertical"
+        android:background="@android:color/transparent"></androidx.recyclerview.widget.RecyclerView>
 
     <androidx.cardview.widget.CardView
         android:layout_alignParentBottom="true"
         app:cardBackgroundColor="@color/teal_700"
+        android:layout_alignParentEnd="true"
         android:layout_width="match_parent"
         android:layout_height="100dp">
 

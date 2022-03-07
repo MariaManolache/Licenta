@@ -37,4 +37,5 @@
     <string name="restaurants_list_title">Lista restaurantelor</string>
     <string name="total">Total:</string>
     <string name="place_order">Plaseaza comanda</string>
+    <string name="title_activity_account">Account</string>
 </resources>

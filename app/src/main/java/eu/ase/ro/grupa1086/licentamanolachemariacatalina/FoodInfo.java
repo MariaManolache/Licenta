@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -24,9 +25,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
 import java.util.List;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
 
 public class FoodInfo extends AppCompatActivity {
 
@@ -47,6 +50,7 @@ public class FoodInfo extends AppCompatActivity {
     List<Food> cartFood;
 
     DatabaseReference cart;
+    DatabaseReference cartItem;
 
     Food food;
 
@@ -63,7 +67,7 @@ public class FoodInfo extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
         String id = user.getUid();
-        cart = database.getInstance().getReference("carts").child(id).child("foodList");
+        cart = database.getReference("carts").child(id).child("foodList");
 
         //View
         btnAdd = findViewById(R.id.btnPlus);
@@ -82,10 +86,10 @@ public class FoodInfo extends AppCompatActivity {
         collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppbar);
 
         //foodId from Intent
-        if(getIntent() != null) {
+        if (getIntent() != null) {
             foodId = getIntent().getStringExtra("id");
         }
-        if(!foodId.isEmpty()) {
+        if (!foodId.isEmpty()) {
             getFoodInfo(foodId);
         }
 
@@ -102,25 +106,87 @@ public class FoodInfo extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 int newQuantity = food.getQuantity() - 1;
-                if(newQuantity >= 1)
-                { food.setQuantity(newQuantity);
-                quantity.setText(String.valueOf(food.getQuantity()));}
+                if (newQuantity >= 1) {
+                    food.setQuantity(newQuantity);
+                    quantity.setText(String.valueOf(food.getQuantity()));
+                }
             }
         });
 
         btnShoppingCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cart.setValue(food).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                String id = user.getUid();
+                cartItem = cart.child(food.getId());
+                Log.i("cartItem", cartItem.toString());
+                HashMap<String, String> hashMap = new HashMap<>();
+                hashMap.put("id", food.getId());
+                hashMap.put("name", food.getName());
+                hashMap.put("description", food.getDescription());
+                hashMap.put("image", food.getImage());
+                hashMap.put("price", String.valueOf(food.getPrice()));
+                hashMap.put("quantity", String.valueOf(food.getQuantity()));
+                hashMap.put("restaurantId", food.getRestaurantId());
+
+
+                cartItem.addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(), "Produsul a fost adaugat in cos", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Eroare la adaugarea produsului in cos", Toast.LENGTH_SHORT).show();
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Food oldItem = snapshot.getValue(Food.class);
+                        Log.i("oldItem", oldItem.toString());
+
+//                        if (oldItem != null) {
+////                            String oldQuantity = cartItem.child("quantity").toString();
+////                            Log.i("cantitate", String.valueOf(oldQuantity));
+//                            cartItem.child("quantity").setValue(oldItem.getQuantity() + food.getQuantity()).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<Void> task) {
+//                                    if (task.isSuccessful()) {
+//                                        Toast.makeText(getApplicationContext(), "Cantitatea de " + food.getName() + " a fost actualizata", Toast.LENGTH_SHORT).show();
+//                                    } else {
+//                                        Toast.makeText(getApplicationContext(), "Eroare la actualizarea cantitatii", Toast.LENGTH_SHORT).show();
+//                                    }
+//                                }
+//                            });
+//                        }
+//                        else {
+//                        if (oldItem.getQuantity() > 0) {
+//                            int oldQuantity = Integer.parseInt(String.valueOf(cartItem.child("quantity")));
+//                            cartItem.child("quantity").setValue(oldQuantity + food.getQuantity()).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<Void> task) {
+//                                    if (task.isSuccessful()) {
+//                                        Toast.makeText(getApplicationContext(), "Cantitatea de " + food.getName() + " a fost actualizata", Toast.LENGTH_SHORT).show();
+//                                    } else {
+//                                        Toast.makeText(getApplicationContext(), "Eroare la actualizarea cantitatii", Toast.LENGTH_SHORT).show();
+//                                    }
+//                                }
+//                            });
+//
+//                        } else {
+
+                            cartItem.setValue(food).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(getApplicationContext(), "Produsul a fost adaugat in cos", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "Eroare la adaugarea produsului in cos", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                         }
+
+//                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(FoodInfo.this, error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+
+
             }
         });
 

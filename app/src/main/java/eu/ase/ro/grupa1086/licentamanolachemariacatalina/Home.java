@@ -3,6 +3,7 @@ package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.view.ViewGroup;
@@ -55,7 +56,6 @@ public class Home extends AppCompatActivity {
     RecyclerView.LayoutManager layoutManager;
     FirebaseRecyclerAdapter adapter;
 
-    FloatingActionButton cart;
 
 
     @Override
@@ -124,13 +124,19 @@ public class Home extends AppCompatActivity {
             }
         });
 
-//        cart = findViewById(R.id.btnShoppingCart);
-//
-//        cart.setOnClickListener(new View.OnClickListener() {
+//        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 //            @Override
-//            public void onClick(View v) {
-//                Intent shoppingCart = new Intent(Home.this, ShoppingCart.class);
-//                startActivity(shoppingCart);
+//            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+//                int id=menuItem.getItemId();
+//                if(id == R.id.nav_home) {
+//                    Intent homeIntent = new Intent(Home.this, Home.class);
+//                    startActivity(homeIntent);
+//                }
+//                if (id == R.id.nav_account){
+//                    Intent accountIntent = new Intent(Home.this, Account.class);
+//                    startActivity(accountIntent);
+//                }
+//                return true;
 //            }
 //        });
 
@@ -181,6 +187,7 @@ public class Home extends AppCompatActivity {
         };
 
         recyclerMenu.setAdapter(adapter);
+
     }
 
     @Override
