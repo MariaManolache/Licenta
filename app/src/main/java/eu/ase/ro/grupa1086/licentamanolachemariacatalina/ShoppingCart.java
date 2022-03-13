@@ -119,6 +119,11 @@ public class ShoppingCart extends AppCompatActivity {
                     public void onClick(View view, int position, boolean isLongClick) {
 
                         Toast.makeText(getApplicationContext(), local.getName(), Toast.LENGTH_LONG).show();
+                        Intent foodInfo = new Intent(ShoppingCart.this, FoodInfo.class);
+                        foodInfo.putExtra("idCartItem", adapter.getRef(position).getKey());
+                        foodInfo.putExtra("quantity", String.valueOf(local.getQuantity()));
+                        foodInfo.putExtra("origin", "activityShoppingCart");
+                        startActivity(foodInfo);
 
                     }
                 });

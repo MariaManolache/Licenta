@@ -89,6 +89,7 @@ public class FoodList extends AppCompatActivity {
                        //newActivity
                         Intent foodInfo= new Intent(FoodList.this, FoodInfo.class);
                         foodInfo.putExtra("id", adapter.getRef(position).getKey());
+                        foodInfo.putExtra("origin", "activityFoodList");
                         //Log.i("foodid", adapter.getRef(position).getKey());
                         startActivity(foodInfo);
                     }

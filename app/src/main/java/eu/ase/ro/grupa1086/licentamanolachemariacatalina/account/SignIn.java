@@ -29,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.Account;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.Home;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.Menu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.firebase.FirebaseService;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.MainMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
@@ -39,7 +40,6 @@ public class SignIn extends AppCompatActivity {
     private EditText etPassword;
     private Button btnConnect;
 
-    private FirebaseService firebaseService;
 
     private ProgressBar progressBar;
     private FirebaseAuth firebaseAuth;
@@ -193,7 +193,6 @@ public class SignIn extends AppCompatActivity {
 
                 progressBar.setVisibility(View.VISIBLE);
 
-                //autentificare utilizatorului
 
                 firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -201,7 +200,7 @@ public class SignIn extends AppCompatActivity {
                         if(task.isSuccessful()) {
                             Toast.makeText(SignIn.this, "Autentificare realizata cu succes", Toast.LENGTH_LONG).show();
 //                            startActivity(new Intent(getApplicationContext(), MainMenu.class));
-                            startActivity(new Intent(getApplicationContext(),Home.class));
+                            startActivity(new Intent(getApplicationContext(), Home.class));
                             finish();
                         } else {
                             Toast.makeText(SignIn.this, "Eroare la autentificare" + task.getException().getMessage(), Toast.LENGTH_LONG).show();

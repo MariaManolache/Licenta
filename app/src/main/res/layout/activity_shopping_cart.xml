@@ -52,7 +52,7 @@
 
             <Button
                 android:id="@+id/btnPlaceOrder"
-                android:text="@string/place_order"
+                android:text="@string/next_step"
                 android:layout_marginRight="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_alignParentBottom="true"

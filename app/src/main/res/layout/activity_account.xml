@@ -26,6 +26,6 @@
         app:itemTextColor="@color/white"
         app:itemIconTint="@color/white"
         app:itemIconSize="40dp"
-        app:headerLayout="@layout/nav_header_account"
+        app:headerLayout="@layout/nav_header_home"
         app:menu="@menu/activity_main_drawer" />
 </androidx.drawerlayout.widget.DrawerLayout>

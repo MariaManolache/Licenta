@@ -86,7 +86,7 @@ public class Home extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
+                R.id.nav_home, R.id.nav_cart, R.id.nav_orders, R.id.nav_account)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home);
@@ -124,21 +124,21 @@ public class Home extends AppCompatActivity {
             }
         });
 
-//        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-//                int id=menuItem.getItemId();
-//                if(id == R.id.nav_home) {
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                int id = menuItem.getItemId();
+                if(id == R.id.nav_home) {
 //                    Intent homeIntent = new Intent(Home.this, Home.class);
 //                    startActivity(homeIntent);
-//                }
-//                if (id == R.id.nav_account){
-//                    Intent accountIntent = new Intent(Home.this, Account.class);
-//                    startActivity(accountIntent);
-//                }
-//                return true;
-//            }
-//        });
+                }
+                if (id == R.id.nav_account){
+                    Intent accountIntent = new Intent(Home.this, Account.class);
+                    startActivity(accountIntent);
+                }
+                return true;
+            }
+        });
 
 
     }

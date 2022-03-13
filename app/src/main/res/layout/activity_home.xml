@@ -27,4 +27,5 @@
         app:itemIconTint="@color/white"
         app:itemIconSize="40dp"
         app:menu="@menu/activity_main_drawer" />
+
 </androidx.drawerlayout.widget.DrawerLayout>

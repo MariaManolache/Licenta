@@ -37,8 +37,8 @@ public class MainActivity extends AppCompatActivity {
         btnSignUp = findViewById(R.id.btnSignUp);
 
         slogan = findViewById(R.id.tvSlogan);
-        Typeface face = Typeface.createFromAsset(getAssets(), "fonts/RobotoSerif-Black.ttf");
-        slogan.setTypeface(face);
+//        Typeface face = Typeface.createFromAsset(getAssets(), "fonts/RobotoSerif-Black.ttf");
+//        slogan.setTypeface(face);
 
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if(FirebaseAuth.getInstance().getCurrentUser() != null) {
-            startActivity(new Intent(getApplicationContext(), MainMenu.class));
+            startActivity(new Intent(getApplicationContext(), Home.class));
             finish();
         }
     }

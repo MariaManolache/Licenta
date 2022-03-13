@@ -38,4 +38,8 @@
     <string name="total">Total:</string>
     <string name="place_order">Plaseaza comanda</string>
     <string name="title_activity_account">Account</string>
+    <string name="menu_title">Meniu</string>
+    <string name="orders">Comenzi</string>
+    <string name="account">Cont</string>
+    <string name="next_step">Mergi la pasul urmator</string>
 </resources>

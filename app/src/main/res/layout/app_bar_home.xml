@@ -35,6 +35,7 @@
         android:outlineAmbientShadowColor="@color/violet"
         android:background="@drawable/categories"
         tools:targetApi="p">
+
     <TextView
         android:id="@+id/tvCategories"
         android:layout_width="match_parent"

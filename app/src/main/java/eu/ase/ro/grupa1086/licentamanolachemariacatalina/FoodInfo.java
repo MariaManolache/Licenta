@@ -28,6 +28,7 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 import java.util.List;
 
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Cart;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
 
@@ -51,6 +52,8 @@ public class FoodInfo extends AppCompatActivity {
 
     DatabaseReference cart;
     DatabaseReference cartItem;
+
+    String quantityFromCart;
 
     Food food;
 
@@ -86,12 +89,23 @@ public class FoodInfo extends AppCompatActivity {
         collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppbar);
 
         //foodId from Intent
-        if (getIntent() != null) {
-            foodId = getIntent().getStringExtra("id");
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            String origin = getIntent().getExtras().getString("origin");
+            if(origin != null && origin.equals("activityFoodList")){
+                foodId = getIntent().getStringExtra("id");
+                if (!foodId.isEmpty()) {
+                    getFoodInfo(foodId);
+                }
+            }
+            if(origin != null && origin.equals("activityShoppingCart")) {
+                foodId = getIntent().getStringExtra("idCartItem");
+                if (!foodId.isEmpty()) {
+                    quantityFromCart = getIntent().getStringExtra("quantity");
+                    getFoodInfoFromCart(foodId);
+                }
+            }
         }
-        if (!foodId.isEmpty()) {
-            getFoodInfo(foodId);
-        }
+
 
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +113,7 @@ public class FoodInfo extends AppCompatActivity {
                 int newQuantity = food.getQuantity() + 1;
                 food.setQuantity(newQuantity);
                 quantity.setText(String.valueOf(food.getQuantity()));
+                quantityFromCart = String.valueOf(newQuantity);
             }
         });
 
@@ -109,6 +124,7 @@ public class FoodInfo extends AppCompatActivity {
                 if (newQuantity >= 1) {
                     food.setQuantity(newQuantity);
                     quantity.setText(String.valueOf(food.getQuantity()));
+                    quantityFromCart = String.valueOf(newQuantity);
                 }
             }
         });
@@ -119,22 +135,22 @@ public class FoodInfo extends AppCompatActivity {
 
                 String id = user.getUid();
                 cartItem = cart.child(food.getId());
-                Log.i("cartItem", cartItem.toString());
+//                Log.i("cartItem", String.valueOf(cart.child("quantity")));
                 HashMap<String, String> hashMap = new HashMap<>();
                 hashMap.put("id", food.getId());
                 hashMap.put("name", food.getName());
                 hashMap.put("description", food.getDescription());
                 hashMap.put("image", food.getImage());
                 hashMap.put("price", String.valueOf(food.getPrice()));
-                hashMap.put("quantity", String.valueOf(food.getQuantity()));
+                hashMap.put("quantity", quantity.getText().toString());
                 hashMap.put("restaurantId", food.getRestaurantId());
 
 
-                cartItem.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Food oldItem = snapshot.getValue(Food.class);
-                        Log.i("oldItem", oldItem.toString());
+//                cartItem.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        Food oldItem = snapshot.getValue(Food.class);
+//                        Log.i("oldItem", oldItem.toString());
 
 //                        if (oldItem != null) {
 ////                            String oldQuantity = cartItem.child("quantity").toString();
@@ -171,25 +187,59 @@ public class FoodInfo extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
                                         Toast.makeText(getApplicationContext(), "Produsul a fost adaugat in cos", Toast.LENGTH_SHORT).show();
+                                        quantity.setText(String.valueOf(food.getQuantity()));
                                     } else {
                                         Toast.makeText(getApplicationContext(), "Eroare la adaugarea produsului in cos", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
-                        }
+                       // }
 
 //                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(FoodInfo.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//                        Toast.makeText(FoodInfo.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+//                    }
+//                });
 
 
             }
         });
 
+    }
+
+    private void getFoodInfoFromCart(String foodId) {
+        cart.child(foodId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                food = snapshot.getValue(Food.class);
+//
+//                for(Food cartItem : cartFood) {
+//                    if(cartItem.getId().equals(foodId)) {
+//                        food = cartItem;
+//                    }
+//                }
+
+                //image
+                Picasso.with(getBaseContext()).load(food.getImage())
+                        .into(image);
+
+                collapsingToolbarLayout.setTitle(food.getName());
+
+                price.setText(String.valueOf(food.getPrice()));
+                name.setText(food.getName());
+                description.setText(food.getDescription());
+                quantity.setText(quantityFromCart);
+                food.setQuantity(Integer.parseInt(String.valueOf(quantity.getText())));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                food.setQuantity(1);
+               // quantity.setText(food.getQuantity());
+            }
+        });
     }
 
     private void getFoodInfo(String foodId) {
@@ -213,7 +263,7 @@ public class FoodInfo extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                food.setQuantity(0);
+                food.setQuantity(1);
                 quantity.setText(food.getQuantity());
             }
         });
