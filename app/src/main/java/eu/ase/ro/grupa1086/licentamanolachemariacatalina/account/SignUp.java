@@ -16,17 +16,23 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthOptions;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.Home;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.PhoneNumberValidation;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.ShoppingCart;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Cart;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
@@ -53,6 +59,8 @@ public class SignUp extends AppCompatActivity {
     private DatabaseReference databaseReferenceShoppingCart;
 
     private TextView signIn;
+
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks;
 
     private List<User> usersList;
     private List<String> user_list;
@@ -89,7 +97,7 @@ public class SignUp extends AppCompatActivity {
 
 
         if(firebaseAuth.getCurrentUser() != null) {
-            startActivity(new Intent(getApplicationContext(), MainMenu.class));
+            startActivity(new Intent(getApplicationContext(), Home.class));
             finish();
         }
 
@@ -129,60 +137,98 @@ public class SignUp extends AppCompatActivity {
 
                 progressBar.setVisibility(View.VISIBLE);
 
-                // inregistrarea user-ului in firebase
 
-                firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()) {
+//                firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if(task.isSuccessful()) {
+//
+//                            FirebaseUser user = firebaseAuth.getCurrentUser();
+//                            String id = user.getUid();
+//                            databaseReference = FirebaseDatabase.getInstance().getReference("users").child(id);
+//                            HashMap<String, String> hashMap = new HashMap<>();
+//                            hashMap.put("id", id);
+//                            hashMap.put("name", name);
+//                            hashMap.put("email", email);
+//                            hashMap.put("phoneNumber", phoneNumber);
+//                            hashMap.put("password", password);
 
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
-                            String id = user.getUid();
-                            databaseReference = FirebaseDatabase.getInstance().getReference("users").child(id);
-                            HashMap<String, String> hashMap = new HashMap<>();
-                            hashMap.put("id", id);
-                            hashMap.put("name", name);
-                            hashMap.put("email", email);
-                            hashMap.put("phoneNumber", phoneNumber);
-                            hashMap.put("password", password);
-                            databaseReference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            callbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                                 @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()) {
-                                        Toast.makeText(SignUp.this, "Cont creat", Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(getApplicationContext(), Home.class));
-                                        finish();
-                                    } else {
-                                        Toast.makeText(SignUp.this, "Eroare la crearea contului" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                                        progressBar.setVisibility(View.GONE);
-                                    }
-                                }
-                            });
+                                public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
 
-                            databaseReferenceShoppingCart = FirebaseDatabase.getInstance().getReference("carts").child(id);
-                            Cart cart = new Cart(id, foodList);
-                            HashMap<String, String> hashMapCarts = new HashMap<>();
-                            hashMapCarts.put("id", id);
-                            hashMapCarts.put("food", foodList.toString());
-                            databaseReferenceShoppingCart.setValue(cart).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                }
+
                                 @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()) {
-                                        Toast.makeText(SignUp.this, "Cos de cumparaturi creat", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(SignUp.this, "Eroare la crearea contului" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                                    }
+                                public void onVerificationFailed(@NonNull FirebaseException e) {
+                                    Toast.makeText(SignUp.this, "Eroare la validarea numarului de telefon", Toast.LENGTH_LONG).show();
                                 }
-                            });
 
-                        } else {
-                            progressBar.setVisibility(View.GONE);
-                            Toast.makeText(SignUp.this, "Eroare la crearea contului" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
+                                @Override
+                                public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                                    super.onCodeSent(s, forceResendingToken);
+                                    Intent phoneValidationIntent = new Intent(SignUp.this, PhoneNumberValidation.class);
+//                                    phoneValidationIntent.putExtra("id", id);
+                                    phoneValidationIntent.putExtra("name", name);
+                                    phoneValidationIntent.putExtra("email", email);
+                                    phoneValidationIntent.putExtra("phoneNumber", phoneNumber);
+                                    phoneValidationIntent.putExtra("password", password);
+                                    phoneValidationIntent.putExtra("authCredential", s);
+                                    startActivity(phoneValidationIntent);
+                                }
+                            };
+
+
+//                            databaseReference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<Void> task) {
+//                                    if(task.isSuccessful()) {
+//                                        Toast.makeText(SignUp.this, "Cont creat", Toast.LENGTH_SHORT).show();
+
+                                        PhoneAuthOptions options =
+                                                PhoneAuthOptions.newBuilder(firebaseAuth)
+                                                        .setPhoneNumber(phoneNumber)       // Phone number to verify
+                                                        .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+                                                        .setActivity(SignUp.this)                 // Activity (for callback binding)
+                                                        .setCallbacks(callbacks)          // OnVerificationStateChangedCallbacks
+                                                        .build();
+                                        PhoneAuthProvider.verifyPhoneNumber(options);
+
+//
+//                                    } else {
+//                                        Toast.makeText(SignUp.this, "Eroare la crearea contului" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+//                                        progressBar.setVisibility(View.GONE);
+//                                    }
+//                                }
+//                            });
+//
+//                            databaseReferenceShoppingCart = FirebaseDatabase.getInstance().getReference("carts").child(id);
+//                            Cart cart = new Cart(id, foodList);
+//                            HashMap<String, String> hashMapCarts = new HashMap<>();
+//                            hashMapCarts.put("id", id);
+//                            hashMapCarts.put("food", foodList.toString());
+//                            databaseReferenceShoppingCart.setValue(cart).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<Void> task) {
+//                                    if(task.isSuccessful()) {
+//                                        Toast.makeText(SignUp.this, "Cos de cumparaturi creat", Toast.LENGTH_LONG).show();
+//                                    } else {
+//                                        Toast.makeText(SignUp.this, "Eroare la crearea cosului de cumparaturi" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+//                                        progressBar.setVisibility(View.VISIBLE);
+//                                    }
+//                                }
+//                            });
+//
+//                        } else {
+//                            progressBar.setVisibility(View.GONE);
+//                            Toast.makeText(SignUp.this, "Eroare la crearea contului" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+//                        }
+//
+//                    }
+//                });
             }
         }));
+
 
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,38 +238,5 @@ public class SignUp extends AppCompatActivity {
         });
     }
 
-    private View.OnClickListener addUser() {
-        return new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                if(isValid()) {
-                    User user = updateUserFromView(null);
-                    firebaseService.insertUser(user);
-                }
-            }
-        };
-    }
-
-    private User updateUserFromView(String id) {
-        User user  = new User();
-        user.setId(id);
-        user.setName(etName.getText().toString());
-        user.setEmail(etEmail.getText().toString());
-        user.setPassword(etPassword.getText().toString());
-        return user;
-    }
-
-    private boolean isValid() {
-        if(etName.getText() == null || etName.getText().toString().trim().isEmpty() ||
-                etEmail.getText() == null || etEmail.getText().toString().trim().isEmpty() || etEmail.getText().length() < 3 ||
-                etPassword.getText() == null || etPassword.getText().toString().trim().isEmpty() || etPassword.getText().length() < 3) {
-
-
-            Toast.makeText(getApplicationContext(),"Validarea nu a trecut",
-                    Toast.LENGTH_LONG).show();
-            return false;
-        }
-        return true;
-    }
 
 }

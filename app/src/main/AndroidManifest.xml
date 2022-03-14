@@ -14,6 +14,12 @@
         android:theme="@style/Theme.LicentaManolacheMariaCatalina"
         tools:replace="android:theme">
         <activity
+            android:name=".PhoneNumberValidation"
+            android:exported="false" />
+        <activity
+            android:name=".PlaceOrder"
+            android:exported="false" />
+        <activity
             android:name=".Menu"
             android:exported="false" />
         <activity

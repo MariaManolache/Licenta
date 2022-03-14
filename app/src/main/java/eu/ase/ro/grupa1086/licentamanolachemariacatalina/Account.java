@@ -215,6 +215,7 @@ public class Account extends AppCompatActivity {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     Toast.makeText(Account.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                                    finish();
                                 }
                             });
 

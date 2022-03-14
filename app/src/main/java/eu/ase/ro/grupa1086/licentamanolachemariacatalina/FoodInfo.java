@@ -264,7 +264,7 @@ public class FoodInfo extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 food.setQuantity(1);
-                quantity.setText(food.getQuantity());
+                quantity.setText(String.valueOf(food.getQuantity()));
             }
         });
     }

@@ -7,6 +7,9 @@ enum Status {plasata, confirmata, in_curs_de_livrare, finalizata}
 
 public class Order implements Serializable {
     private String id;
+    private String phone;
+    private String address;
+    private String total;
     private Cart cart;
     private Status status;
 

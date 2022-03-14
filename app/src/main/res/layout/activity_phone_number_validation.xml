@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/mintgreenbackground"
-    tools:context=".account.SignIn">
-
+    tools:context=".PhoneNumberValidation">
 
     <LinearLayout
         android:orientation="vertical"
@@ -23,52 +22,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/connect"
+            android:text="@string/validate_phone_number"
             android:textStyle="bold"
             android:textColor="@color/purple_200"
             android:textAlignment="center"
-            android:textSize="50dp"></TextView>
+            android:textSize="40dp"></TextView>
 
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_margin="20dp"
+            android:layout_margin="50dp"
             android:outlineAmbientShadowColor="@android:color/darker_gray"
             android:background="@drawable/border"
             tools:targetApi="p">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etEmail"
+                android:id="@+id/etValidationCode"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
                 android:backgroundTint="@color/white"
                 android:fontFamily="@font/alata"
-                android:hint="@string/email"
-                android:inputType="textEmailAddress"
-                android:textColorHint="@color/design_default_color_primary_dark"
-                android:textSize="25dp"
-                android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_margin="20dp"
-            android:outlineAmbientShadowColor="@android:color/darker_gray"
-            android:background="@drawable/border"
-            tools:targetApi="p">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etPassword"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:backgroundTint="@color/white"
-                android:fontFamily="@font/alata"
-                android:hint="@string/password"
-                android:inputType="textPassword"
+                android:hint="123456"
+                android:inputType="number"
                 android:textColorHint="@color/design_default_color_primary_dark"
                 android:textSize="25dp"
                 android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
@@ -78,40 +55,28 @@
             android:id="@+id/tvSignUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/register_here"
+            android:text="@string/receive_text_message_for_phone_validation"
             android:textAlignment="center"
             android:textSize="20dp"
             android:layout_marginTop="25dp"/>
 
         <Button
-            android:id="@+id/btnConnect"
+            android:id="@+id/btnValidate"
             android:layout_width="match_parent"
             android:gravity="center"
             android:textAlignment="center"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
-            android:layout_marginTop="25dp"
-            android:text="@string/connect_to_account"></Button>
+            android:layout_marginTop="100dp"
+            android:text="@string/validate"></Button>
 
         <ProgressBar
-            android:id="@+id/progressBarSignIn"
+            android:id="@+id/progressBarPhoneValidation"
             android:visibility="invisible"
             style="?android:attr/progressBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/tvResetPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="20dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="0dp"
-            android:text="@string/forgot_password" />
 
     </LinearLayout>
 

@@ -42,4 +42,16 @@
     <string name="orders">Comenzi</string>
     <string name="account">Cont</string>
     <string name="next_step">Mergi la pasul urmator</string>
+    <string name="create_account">Creare cont</string>
+    <string name="connect">Conectare</string>
+    <string name="validate_phone_number">Valideaza-ti numarul de telefon</string>
+    <string name="password">Parola</string>
+    <string name="register_here">Nu ai cont? Inregistreaza-te aici</string>
+    <string name="connect_to_account">Conecteaza-te</string>
+    <string name="forgot_password">Ai uitat parola? Click aici pentru resetare.</string>
+    <string name="email">Email</string>
+    <string name="validate">Valideaza</string>
+    <string name="receive_text_message_for_phone_validation">Ai primit un cod prin SMS. Introdu-l mai sus pentru a valida numarul de telefon.</string>
+    <string name="necesity_validation_code">Este necesar codul pentru validare</string>
+    <string name="initial_total">0 RON</string>
 </resources>
