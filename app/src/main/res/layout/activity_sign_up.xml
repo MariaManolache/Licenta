@@ -23,7 +23,7 @@
             android:gravity="center"
             android:text="@string/create_account"
             android:textAlignment="center"
-            android:textColor="@color/purple_200"
+            android:textColor="@color/violet"
             android:textSize="50dp"></TextView>
 
         <FrameLayout
@@ -41,20 +41,13 @@
                 android:layout_gravity="center_horizontal"
                 android:backgroundTint="@color/white"
                 android:fontFamily="@font/alata"
-                android:hint="Nume"
+                android:hint="@string/name"
                 android:inputType="text"
-                android:textColorHint="@color/design_default_color_primary_dark"
+                android:textColorHint="@color/violet"
                 android:textSize="25dp"
                 android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
         </FrameLayout>
 
-<!--    <EditText-->
-<!--        android:id="@+id/etName"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="50dp"-->
-<!--        android:textSize="25dp"-->
-<!--        android:hint="Nume"></EditText>-->
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -71,9 +64,9 @@
                 android:layout_gravity="center_horizontal"
                 android:backgroundTint="@color/white"
                 android:fontFamily="@font/alata"
-                android:hint="Email"
+                android:hint="@string/email"
                 android:inputType="textEmailAddress"
-                android:textColorHint="@color/design_default_color_primary_dark"
+                android:textColorHint="@color/violet"
                 android:textSize="25dp"
                 android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
         </FrameLayout>
@@ -93,9 +86,9 @@
                 android:layout_gravity="center_horizontal"
                 android:backgroundTint="@color/white"
                 android:fontFamily="@font/alata"
-                android:hint="Telefon"
+                android:hint="@string/phone"
                 android:inputType="phone"
-                android:textColorHint="@color/design_default_color_primary_dark"
+                android:textColorHint="@color/violet"
                 android:textSize="25dp"
                 android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
         </FrameLayout>
@@ -125,9 +118,9 @@
                 android:layout_gravity="center_horizontal"
                 android:backgroundTint="@color/white"
                 android:fontFamily="@font/alata"
-                android:hint="Parola"
+                android:hint="@string/password"
                 android:inputType="textPassword"
-                android:textColorHint="@color/design_default_color_primary_dark"
+                android:textColorHint="@color/violet"
                 android:textSize="25dp"
                 android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
         </FrameLayout>
@@ -138,7 +131,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20dp"
-            android:text="Ai deja cont? Conecteaza-te aici!"
+            android:textColor="@color/violet"
+            android:textStyle="italic"
+            android:text="@string/already_has_account"
             android:textAlignment="center"/>
 
         <Button

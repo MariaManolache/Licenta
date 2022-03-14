@@ -71,7 +71,6 @@ public class Home extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         category = database.getReference("categories");
         firebaseAuth = FirebaseAuth.getInstance();
-
         binding.appBarHome.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -1,17 +1,25 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes;
 
 import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
+@Entity(tableName = "users")
 public class User implements Serializable {
 
+    @NonNull
+    @PrimaryKey(autoGenerate = false)
     private String id;
+
     private String email;
     private String name;
     private String password;
     private String phoneNumber;
 
+    @Ignore
     public User() {
     }
 

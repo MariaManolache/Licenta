@@ -26,9 +26,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.SignUp;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Cart;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.UserDB;
 
 public class PhoneNumberValidation extends AppCompatActivity {
 
@@ -87,12 +88,17 @@ public class PhoneNumberValidation extends AppCompatActivity {
                                 hashMap.put("email", email);
                                 hashMap.put("phoneNumber", phoneNumber);
                                 hashMap.put("password", password);
+
+                                UserDB roomDatabase = UserDB.getInstance(getApplicationContext());
+                                User newUser = new User(id, name, email, phoneNumber, password);
+                                roomDatabase.getUserDao().insert(newUser);
+
                                 databaseReference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
                                             Toast.makeText(PhoneNumberValidation.this, "Cont creat", Toast.LENGTH_SHORT).show();
-                                            startActivity(new Intent(getApplicationContext(), Home.class));
+                                            startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
                                             finish();
                                         } else {
                                             Toast.makeText(PhoneNumberValidation.this, "Eroare la crearea contului" + task.getException().getMessage(), Toast.LENGTH_LONG).show();

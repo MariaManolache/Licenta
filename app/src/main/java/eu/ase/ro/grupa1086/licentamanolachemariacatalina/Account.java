@@ -14,6 +14,8 @@ import android.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -53,40 +55,17 @@ public class Account extends AppCompatActivity {
     AlertDialog.Builder resetAlert;
     private DatabaseReference databaseReferenceCart;
     LayoutInflater inflater;
+    BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_account);
 
-        binding = ActivityAccountBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        setSupportActionBar(binding.appBarAccount.toolbar);
 
         //Firebase
         firebaseAuth = FirebaseAuth.getInstance();
 
-        binding.appBarAccount.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        DrawerLayout drawer = binding.drawerLayoutAccount;
-        NavigationView navigationView = binding.navViewAccount;
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_account, R.id.nav_home, R.id.nav_cart, R.id.nav_orders)
-                .setOpenableLayout(drawer)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_account);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
-
-        View headerView = navigationView.getHeaderView(0);
-        name = (TextView)headerView.findViewById(R.id.tvNameAccount);
 
         firebaseUser = firebaseAuth.getCurrentUser();
         databaseReference = FirebaseDatabase.getInstance().getReference("users").child(firebaseUser.getUid());
@@ -142,6 +121,26 @@ public class Account extends AppCompatActivity {
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(getApplicationContext(), SignIn.class));
                 finish();
+            }
+        });
+
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.account);
+
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                switch (item.getItemId()) {
+                    case R.id.restaurantsMenu:
+                        startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
+                        //finish();
+                        overridePendingTransition(0, 0);
+                        return true;
+                    case R.id.account:
+                        return true;
+                }
+                return false;
             }
         });
 

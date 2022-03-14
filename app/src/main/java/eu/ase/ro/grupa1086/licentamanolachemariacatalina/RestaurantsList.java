@@ -38,7 +38,6 @@ public class RestaurantsList extends AppCompatActivity {
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
 
-
     FirebaseDatabase database;
     DatabaseReference restaurantsList;
 

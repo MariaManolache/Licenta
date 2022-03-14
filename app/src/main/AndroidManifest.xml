@@ -20,13 +20,9 @@
             android:name=".PlaceOrder"
             android:exported="false" />
         <activity
-            android:name=".Menu"
-            android:exported="false" />
-        <activity
             android:name=".Account"
             android:exported="false"
-            android:label="@string/title_activity_account"
-            android:theme="@style/Theme.LicentaManolacheMariaCatalina.NoActionBar" />
+            android:label="@string/account" />
         <activity
             android:name=".ShoppingCart"
             android:exported="false" />
@@ -51,6 +47,10 @@
         <activity
             android:name=".account.ResetPassword"
             android:exported="false" />
+        <activity
+            android:name=".PrincipalMenu"
+            android:exported="false"
+            android:label="@string/main_page" />
         <activity
             android:name=".MainMenu"
             android:exported="false" />
