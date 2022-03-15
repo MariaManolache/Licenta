@@ -8,12 +8,20 @@
     android:padding="16dp"
     tools:context=".ShoppingCart">
 
+    <TextView
+        android:id="@+id/restaurantName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="@string/restaurant_name"></TextView>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cartList"
         android:layout_width="match_parent"
-        android:layout_height="450dp"
-        android:scrollbars="vertical"
-        android:background="@android:color/transparent"></androidx.recyclerview.widget.RecyclerView>
+        android:layout_height="200dp"
+        android:layout_marginTop="40dp"
+        android:background="@android:color/transparent"
+        android:scrollbars="vertical"></androidx.recyclerview.widget.RecyclerView>
 
     <androidx.cardview.widget.CardView
         android:layout_alignParentBottom="true"

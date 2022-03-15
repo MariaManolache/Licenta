@@ -22,7 +22,7 @@
 
             <TextView
                 android:id="@+id/cartItemName"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="100dp"
                 android:gravity="center_vertical|start"
                 android:textAllCaps="true"
                 android:textStyle="bold"
@@ -37,7 +37,7 @@
 
                 <TextView
                     android:id="@+id/cartItemPrice"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="100dp"
                     android:gravity="center_vertical|start"
                     android:textAllCaps="true"
                     android:textStyle="italic"
@@ -88,13 +88,38 @@
 
         </LinearLayout>
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/cartItemCount"
-            android:layout_gravity="center_vertical|end"
-            android:layout_marginRight="16dp"
-            android:layout_width="40dp"
-            android:layout_height="40dp"></com.google.android.material.imageview.ShapeableImageView>
-
     </LinearLayout>
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/cartItemCount"
+        android:layout_gravity="center_vertical|end"
+        android:layout_marginRight="280dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"></com.google.android.material.imageview.ShapeableImageView>
+
+    <ImageButton
+        android:id="@+id/btnRemove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="275dp"
+        android:backgroundTint="@color/white"
+        android:outlineSpotShadowColor="@color/violet"
+        android:src="@drawable/ic_baseline_remove_circle_24"></ImageButton>
+
+    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+        android:id="@+id/tvQuantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="315dp"
+        android:text="1"></androidx.appcompat.widget.AppCompatAutoCompleteTextView>
+
+    <ImageButton
+        android:id="@+id/btnAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="330dp"
+        android:backgroundTint="@color/white"
+        android:outlineSpotShadowColor="@color/violet"
+        android:src="@drawable/ic_baseline_add_24"></ImageButton>
 
 </androidx.cardview.widget.CardView>

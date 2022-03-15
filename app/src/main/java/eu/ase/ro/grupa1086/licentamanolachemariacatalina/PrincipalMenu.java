@@ -26,12 +26,15 @@ import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Category;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.MenuViewHolder;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.RestaurantViewHolder;
 
 public class PrincipalMenu extends AppCompatActivity {
 
     FirebaseDatabase database;
     DatabaseReference category;
+    DatabaseReference restaurants;
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
     private DatabaseReference databaseReference;
@@ -40,6 +43,11 @@ public class PrincipalMenu extends AppCompatActivity {
     RecyclerView recyclerMenu;
     RecyclerView.LayoutManager layoutManager;
     FirebaseRecyclerAdapter adapter;
+
+    RecyclerView recyclerRestaurants;
+    RecyclerView.LayoutManager layoutManagerRestaurants;
+    FirebaseRecyclerAdapter adapterRestaurants;
+
     FloatingActionButton shoppingCart;
     BottomNavigationView bottomNavigationView;
 
@@ -50,6 +58,7 @@ public class PrincipalMenu extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         category = database.getReference("categories");
+        restaurants = database.getReference("restaurants");
         firebaseAuth = FirebaseAuth.getInstance();
         shoppingCart = findViewById(R.id.fab);
 
@@ -68,7 +77,13 @@ public class PrincipalMenu extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerMenu.setLayoutManager(layoutManager);
 
+        recyclerRestaurants = (RecyclerView) findViewById(R.id.recyclerRestaurants);
+        recyclerRestaurants.setHasFixedSize(true);
+        layoutManagerRestaurants = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerRestaurants.setLayoutManager(layoutManagerRestaurants);
+
         loadMenu();
+        loadRestaurants();
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.restaurantsMenu);
@@ -89,6 +104,53 @@ public class PrincipalMenu extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    private void loadRestaurants() {
+
+        Query query = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("restaurants")
+                .limitToLast(50);
+
+        FirebaseRecyclerOptions<Restaurant> optionsForRestaurants =
+                new FirebaseRecyclerOptions.Builder<Restaurant>()
+                        .setQuery(query, Restaurant.class)
+                        .build();
+
+        adapterRestaurants = new FirebaseRecyclerAdapter<Restaurant, RestaurantViewHolder>(optionsForRestaurants) {
+            @Override
+            protected void onBindViewHolder(@NonNull RestaurantViewHolder holder, int position, @NonNull Restaurant model) {
+                holder.restaurantName.setText(model.getName());
+                Picasso.with(getBaseContext()).load(model.getImage())
+                        .into(holder.imageView);
+
+                final Restaurant local = model;
+                holder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+
+                        //restaurantId
+                        Intent foodList = new Intent(PrincipalMenu.this, FoodList.class);
+                        foodList.putExtra("restaurantId", adapter.getRef(position).getKey());
+                        startActivity(foodList);
+
+                    }
+                });
+            }
+
+            @NonNull
+            @Override
+            public RestaurantViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.restaurant_item_principal_menu, parent, false);
+                view.setMinimumWidth(parent.getMeasuredWidth());
+
+                return new RestaurantViewHolder(view);
+            }
+        };
+
+        recyclerRestaurants.setAdapter(adapterRestaurants);
     }
 
     private void loadMenu() {
@@ -142,6 +204,7 @@ public class PrincipalMenu extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         adapter.startListening();
+        adapterRestaurants.startListening();
     }
 
 //    @Override

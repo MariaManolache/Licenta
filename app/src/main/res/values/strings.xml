@@ -59,4 +59,7 @@
     <string name="phone">Telefon</string>
     <string name="name">Nume</string>
     <string name="already_has_account">Ai deja cont? Conecteaza-te aici!</string>
+    <string name="restaurants">Restaurante</string>
+    <string name="search_restaurant">Cauta restaurantul dorit</string>
+    <string name="search_favourite_restaurant">Cauta-ti restaurantul preferat</string>
 </resources>

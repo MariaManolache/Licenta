@@ -2,6 +2,7 @@ package eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder;
 
 import android.media.Image;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,7 +18,10 @@ public class CartViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     public TextView tvCartPrice;
     public TextView tvCartQuantity;
     public TextView tvCartValue;
+    public TextView tvQuantityDisplay;
     public ImageView imgCartCount;
+    public ImageButton btnAdd;
+    public ImageButton btnRemove;
 
     private ItemClickListener itemClickListener;
 
@@ -35,7 +39,10 @@ public class CartViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         tvCartPrice = (TextView) itemView.findViewById(R.id.cartItemPrice);
         tvCartQuantity = (TextView) itemView.findViewById(R.id.cartItemQuantity);
         tvCartValue = (TextView) itemView.findViewById(R.id.cartItemValue);
+        tvQuantityDisplay = (TextView) itemView.findViewById(R.id.tvQuantity);
         imgCartCount = (ImageView) itemView.findViewById(R.id.cartItemCount);
+        btnAdd = (ImageButton) itemView.findViewById(R.id.btnAdd);
+        btnRemove = (ImageButton) itemView.findViewById(R.id.btnRemove);
 
         itemView.setOnClickListener(this);
     }
