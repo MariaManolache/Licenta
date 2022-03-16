@@ -62,4 +62,5 @@
     <string name="restaurants">Restaurante</string>
     <string name="search_restaurant">Cauta restaurantul dorit</string>
     <string name="search_favourite_restaurant">Cauta-ti restaurantul preferat</string>
+    <string name="cart">Cos</string>
 </resources>

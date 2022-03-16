@@ -13,6 +13,7 @@ public class Food implements Serializable {
     private int quantity;
     private String image;
     private String restaurantId;
+    private String restaurantIdName;
 
     public Food() {
     }
@@ -25,6 +26,7 @@ public class Food implements Serializable {
         this.quantity = quantity;
         this.image = image;
         this.restaurantId = restaurantId;
+        this.restaurantIdName = restaurantId + name;
     }
 
     public Food(String id, String restaurantId) {
@@ -86,6 +88,14 @@ public class Food implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getRestaurantIdName() {
+        return restaurantIdName;
+    }
+
+    public void setRestaurantIdName(String restaurantIdName) {
+        this.restaurantIdName = restaurantIdName;
     }
 
     @Override

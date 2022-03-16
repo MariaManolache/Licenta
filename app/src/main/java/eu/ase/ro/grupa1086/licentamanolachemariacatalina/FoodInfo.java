@@ -213,7 +213,8 @@ public class FoodInfo extends AppCompatActivity {
         cart.child(foodId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                food = snapshot.getValue(Food.class);
+                if(food != null) {
+                    food = snapshot.getValue(Food.class);
 //
 //                for(Food cartItem : cartFood) {
 //                    if(cartItem.getId().equals(foodId)) {
@@ -221,17 +222,18 @@ public class FoodInfo extends AppCompatActivity {
 //                    }
 //                }
 
-                //image
-                Picasso.with(getBaseContext()).load(food.getImage())
-                        .into(image);
+                    //image
+                    Picasso.with(getBaseContext()).load(food.getImage())
+                            .into(image);
 
-                collapsingToolbarLayout.setTitle(food.getName());
+                    collapsingToolbarLayout.setTitle(food.getName());
 
-                price.setText(String.valueOf(food.getPrice()));
-                name.setText(food.getName());
-                description.setText(food.getDescription());
-                quantity.setText(quantityFromCart);
-                food.setQuantity(Integer.parseInt(String.valueOf(quantity.getText())));
+                    price.setText(String.valueOf(food.getPrice()));
+                    name.setText(food.getName());
+                    description.setText(food.getDescription());
+                    quantity.setText(quantityFromCart);
+                    food.setQuantity(Integer.parseInt(String.valueOf(quantity.getText())));
+                }
             }
 
             @Override

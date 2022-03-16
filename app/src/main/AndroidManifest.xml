@@ -25,7 +25,8 @@
             android:label="@string/account" />
         <activity
             android:name=".ShoppingCart"
-            android:exported="false" />
+            android:exported="false"
+            android:label="@string/cart"/>
         <activity
             android:name=".FoodList"
             android:exported="false" />

@@ -10,17 +10,6 @@
         android:id="@+id/recyclerRestaurants"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="50dp"
         android:scrollbars="vertical"></androidx.recyclerview.widget.RecyclerView>
-
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchView"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:padding="10dp"
-        app:queryHint="@string/search_favourite_restaurant"
-        android:layout_margin="5dp">
-
-    </androidx.appcompat.widget.SearchView>
 
 </RelativeLayout>

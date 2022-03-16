@@ -22,6 +22,7 @@ public class CartViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     public ImageView imgCartCount;
     public ImageButton btnAdd;
     public ImageButton btnRemove;
+    public TextView restaurantName;
 
     private ItemClickListener itemClickListener;
 
@@ -43,6 +44,7 @@ public class CartViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         imgCartCount = (ImageView) itemView.findViewById(R.id.cartItemCount);
         btnAdd = (ImageButton) itemView.findViewById(R.id.btnAdd);
         btnRemove = (ImageButton) itemView.findViewById(R.id.btnRemove);
+        restaurantName = (TextView) itemView.findViewById(R.id.restaurantName);
 
         itemView.setOnClickListener(this);
     }

@@ -71,7 +71,7 @@ public class SignUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        initializareComponente();
+        initializeComponents();
 
 
         //firebaseService = FirebaseService.getInstance();
@@ -79,7 +79,7 @@ public class SignUp extends AppCompatActivity {
 
     }
 
-    private void initializareComponente() {
+    private void initializeComponents() {
         etName = findViewById(R.id.etName);
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);

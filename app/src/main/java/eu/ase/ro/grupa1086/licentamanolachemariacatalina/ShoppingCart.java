@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.ArraySet;
 import android.util.Log;
@@ -50,6 +51,7 @@ public class ShoppingCart extends AppCompatActivity {
 
     FirebaseDatabase database;
     DatabaseReference cart;
+    DatabaseReference restaurants;
 
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
@@ -83,6 +85,21 @@ public class ShoppingCart extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+        SwipeHelper swipeHelper = new SwipeHelper(getApplicationContext(), recyclerView, 200) {
+            @Override
+            public void instantiateMyButton(RecyclerView.ViewHolder viewHolder, List<MyButton> buffer) {
+                buffer.add(new MyButton(getApplicationContext(), "Stergere", 30, 0, Color.parseColor("#FF3C30"),
+                        position -> {
+                            Toast.makeText(getApplicationContext(), "Produsul a fost eliminat din cos", Toast.LENGTH_SHORT).show();
+                            Food deletedFood = adapter.getItem(position);
+                            total -= deletedFood.getPrice() * deletedFood.getQuantity();
+                            DatabaseReference cartItem = cart.child(deletedFood.getId());
+                            cartItem.removeValue();
+                            recyclerView.setAdapter(adapter);
+                }));
+            }
+        };
+
         tvTotalPrice = findViewById(R.id.total);
         btnPlaceOrder = findViewById(R.id.btnPlaceOrder);
 
@@ -94,17 +111,16 @@ public class ShoppingCart extends AppCompatActivity {
 //            Log.i("info2", f.toString());
 //        }
 
-        loadListFood();
+//       loadListFood();
 //
-//        for(int i = 0; i < cartList.size(); i++) {
-//            loadListFood(cartList.get(i).getRestaurantId());
-//        }
+        loadFood();
 
     }
 
+
     public List<Food> loadFood() {
 
-        cart.addListenerForSingleValueEvent(new ValueEventListener() {
+        cart.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
@@ -113,15 +129,25 @@ public class ShoppingCart extends AppCompatActivity {
                 //Log.d("hello", "Value is: " + value);
                 List<Food> foods = new ArrayList<>();
 
+                total = 0.0f;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Food food = snapshot.getValue(Food.class);
                     Log.i("hello", food.toString());
-                    foods.add(food);
-
+                    cartList.add(food);
+                    total += food.getPrice() * food.getQuantity();
                 }
 
-                cartList = foods;
-                cart.removeEventListener(this);
+//                for (Food f: foods) {
+//                    cartList.add(f);
+//                }
+//                cartList = foods;
+
+                for (int i = 0; i < cartList.size(); i++) {
+                    loadListFood(cartList.get(i).getRestaurantId());
+                    Log.i("hello", cartList.get(i).toString());
+                }
+
+                // cart.removeEventListener(this);
             }
 
             @Override
@@ -130,20 +156,20 @@ public class ShoppingCart extends AppCompatActivity {
                 Log.i("hello", "Failed to read value.", error.toException());
             }
         });
-
         return cartList;
     }
 
-        private void loadListFood() {
+    private void loadListFood(String restaurantId) {
 
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
                 .child("carts")
                 .child(id)
                 .child("foodList")
-                .orderByChild("id")
+                //.orderByChild("restaurantId").equalTo(restaurantId)
                 .limitToLast(50);
 
+        Log.i("hello", query.toString());
 
         FirebaseRecyclerOptions<Food> options =
                 new FirebaseRecyclerOptions.Builder<Food>()
@@ -155,6 +181,10 @@ public class ShoppingCart extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull CartViewHolder holder, int position, @NonNull Food model) {
 
+                int quantity = 0;
+                float price = 0.0f;
+
+                //holder.restaurantName.setText(model.getRestaurantId());
                 holder.tvCartName.setText(model.getName());
                 Picasso.with(getBaseContext()).load(model.getImage())
                         .into(holder.imgCartCount);
@@ -164,7 +194,24 @@ public class ShoppingCart extends AppCompatActivity {
                 holder.tvCartValue.setText(String.valueOf(model.getPrice() * model.getQuantity()));
                 holder.tvQuantityDisplay.setText(String.valueOf(model.getQuantity()));
 
-                total += model.getPrice() * model.getQuantity();
+                restaurants = database.getInstance().getReference("restaurants").child(model.getRestaurantId());
+
+                restaurants.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+                        holder.restaurantName.setText(restaurant.getName());
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                        // Failed to read value
+                        Log.i("hello", "Failed to read value.", error.toException());
+                    }
+                });
+
+                //total += Float.parseFloat(String.valueOf(holder.tvCartValue.getText()));
 
 
                 holder.btnAdd.setOnClickListener(new View.OnClickListener() {
@@ -181,6 +228,7 @@ public class ShoppingCart extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
+                                    total += model.getPrice();
                                     Toast.makeText(ShoppingCart.this, "Cantitate modificata", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(ShoppingCart.this, "Eroare la modificarea cantitatii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
@@ -194,29 +242,31 @@ public class ShoppingCart extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         int quantity = Integer.parseInt(holder.tvQuantityDisplay.getText().toString()) - 1;
-                        holder.tvQuantityDisplay.setText(String.valueOf(quantity));
-                        model.setQuantity(quantity);
+                        if (quantity >= 1) {
+                            holder.tvQuantityDisplay.setText(String.valueOf(quantity));
+                            model.setQuantity(quantity);
 
-                        Food updatedFood = new Food(model.getId(), model.getName(), model.getPrice(), model.getDescription(),
-                                model.getQuantity(), model.getImage(), model.getRestaurantId());
+                            Food updatedFood = new Food(model.getId(), model.getName(), model.getPrice(), model.getDescription(),
+                                    model.getQuantity(), model.getImage(), model.getRestaurantId());
 
-                        cart.child(model.getId()).setValue(updatedFood).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(ShoppingCart.this, "Cantitate modificata", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(ShoppingCart.this, "Eroare la modificarea cantitatii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            cart.child(model.getId()).setValue(updatedFood).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        total -= model.getPrice();
+                                        Toast.makeText(ShoppingCart.this, "Cantitate modificata", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(ShoppingCart.this, "Eroare la modificarea cantitatii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                     }
                 });
 
-                if(total > 0) {
+                if (total > 0) {
                     tvTotalPrice.setText(total + " LEI");
-                } else
-                {
+                } else {
                     tvTotalPrice.setText("0 LEI");
                 }
 
@@ -248,13 +298,14 @@ public class ShoppingCart extends AppCompatActivity {
             }
         };
 
+        adapter.startListening();
         recyclerView.setAdapter(adapter);
 
     }
 
+
     @Override
     protected void onStart() {
         super.onStart();
-        adapter.startListening();
     }
 }
