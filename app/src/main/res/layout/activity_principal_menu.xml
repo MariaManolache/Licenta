@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PrincipalMenu">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerMenu"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_marginTop="50dp"
-        android:scrollbars="vertical"></androidx.recyclerview.widget.RecyclerView>
 
     <!--    <include-->
 <!--        android:id="@+id/include"-->
@@ -21,11 +14,15 @@
 <!--        android:layout_marginTop="100dp" />-->
 
     <FrameLayout
+        android:id="@+id/flCategories"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:textAlignment="center"
         android:outlineAmbientShadowColor="@color/teal_200"
         android:background="@drawable/categories"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:targetApi="p">
 
         <TextView
@@ -42,12 +39,23 @@
 
     </FrameLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerMenu"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/flCategories"
+        android:scrollbars="vertical"></androidx.recyclerview.widget.RecyclerView>
 
     <FrameLayout
+        android:id="@+id/flRestaurants"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="200dp"
         android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerMenu"
         android:outlineAmbientShadowColor="@color/teal_200"
         android:background="@drawable/categories"
         tools:targetApi="p">
@@ -71,7 +79,9 @@
         android:id="@+id/recyclerRestaurants"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginTop="250dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/flRestaurants"
         android:scrollbars="vertical"></androidx.recyclerview.widget.RecyclerView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -79,10 +89,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginLeft="350dp"
-        android:layout_marginTop="480dp"
+        android:layout_marginTop="8dp"
         android:backgroundTint="@color/buttonBackground"
-        app:srcCompat="@drawable/ic_baseline_shopping_cart_24" />
+        android:contentDescription="@string/cart"
+        android:src="@drawable/ic_baseline_shopping_cart_24"
+        app:flow_horizontalAlign="end"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerRestaurants" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -92,9 +107,15 @@
         app:itemBackground="@color/teal_800"
         app:itemIconTint="@drawable/selector"
         app:itemTextColor="@drawable/selector"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fab"
+        app:layout_constraintVertical_bias="1.0"
         app:menu="@menu/menu_navigation"></com.google.android.material.bottomnavigation.BottomNavigationView>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 
 
 

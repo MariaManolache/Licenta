@@ -1,4 +1,4 @@
-package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
+package eu.ase.ro.grupa1086.licentamanolachemariacatalina.food;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,6 +28,7 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 import java.util.List;
 
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Cart;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
@@ -99,8 +100,10 @@ public class FoodInfo extends AppCompatActivity {
             }
             if(origin != null && origin.equals("activityShoppingCart")) {
                 foodId = getIntent().getStringExtra("idCartItem");
+                Log.i("idCart", foodId);
                 if (!foodId.isEmpty()) {
                     quantityFromCart = getIntent().getStringExtra("quantity");
+                    Log.i("idCart", quantityFromCart);
                     getFoodInfoFromCart(foodId);
                 }
             }
@@ -213,7 +216,6 @@ public class FoodInfo extends AppCompatActivity {
         cart.child(foodId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(food != null) {
                     food = snapshot.getValue(Food.class);
 //
 //                for(Food cartItem : cartFood) {
@@ -233,7 +235,7 @@ public class FoodInfo extends AppCompatActivity {
                     description.setText(food.getDescription());
                     quantity.setText(quantityFromCart);
                     food.setQuantity(Integer.parseInt(String.valueOf(quantity.getText())));
-                }
+
             }
 
             @Override

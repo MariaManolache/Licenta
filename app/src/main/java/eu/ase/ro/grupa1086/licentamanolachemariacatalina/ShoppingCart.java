@@ -8,13 +8,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.ArraySet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,16 +31,16 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Cart;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.SwipeHelper;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.food.FoodInfo;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.CartViewHolder;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.RestaurantViewHolder;
 
 public class ShoppingCart extends AppCompatActivity {
 
@@ -115,6 +113,7 @@ public class ShoppingCart extends AppCompatActivity {
 //
         loadFood();
 
+
     }
 
 
@@ -147,6 +146,14 @@ public class ShoppingCart extends AppCompatActivity {
                     Log.i("hello", cartList.get(i).toString());
                 }
 
+                btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent placeOrder = new Intent(ShoppingCart.this, PlaceOrder.class);
+                        placeOrder.putExtra("total", total);
+                        startActivity(placeOrder);
+                    }
+                });
                 // cart.removeEventListener(this);
             }
 
@@ -277,7 +284,7 @@ public class ShoppingCart extends AppCompatActivity {
 
                         Toast.makeText(getApplicationContext(), local.getName(), Toast.LENGTH_LONG).show();
                         Intent foodInfo = new Intent(ShoppingCart.this, FoodInfo.class);
-                        foodInfo.putExtra("idCartItem", adapter.getRef(position).getKey());
+                        foodInfo.putExtra("idCartItem", local.getId());
                         foodInfo.putExtra("quantity", String.valueOf(local.getQuantity()));
                         foodInfo.putExtra("origin", "activityShoppingCart");
                         startActivity(foodInfo);
@@ -302,6 +309,7 @@ public class ShoppingCart extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
     }
+
 
 
     @Override

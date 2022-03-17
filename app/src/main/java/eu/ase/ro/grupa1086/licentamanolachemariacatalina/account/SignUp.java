@@ -167,6 +167,7 @@ public class SignUp extends AppCompatActivity {
                                 @Override
                                 public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                                     super.onCodeSent(s, forceResendingToken);
+                                    firebaseAuth.getFirebaseAuthSettings().setAppVerificationDisabledForTesting(true);
                                     Intent phoneValidationIntent = new Intent(SignUp.this, PhoneNumberValidation.class);
 //                                    phoneValidationIntent.putExtra("id", id);
                                     phoneValidationIntent.putExtra("name", name);

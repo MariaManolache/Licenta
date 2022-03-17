@@ -35,8 +35,7 @@
     <string name="food_name">Numele felului de mancare</string>
     <string name="food_description">Descrierea felului de mancare</string>
     <string name="restaurants_list_title">Lista restaurantelor</string>
-    <string name="total">Total:</string>
-    <string name="place_order">Plaseaza comanda</string>
+    <string name="total">Total: </string>
     <string name="title_activity_account">Account</string>
     <string name="menu_title">Meniu</string>
     <string name="orders">Comenzi</string>
@@ -63,4 +62,22 @@
     <string name="search_restaurant">Cauta restaurantul dorit</string>
     <string name="search_favourite_restaurant">Cauta-ti restaurantul preferat</string>
     <string name="cart">Cos</string>
+    <string name="pick_address">Alege adresa de livrare</string>
+    <string name="street">Strada</string>
+    <string name="number">Numar</string>
+    <string name="block">Bloc</string>
+    <string name="entrance">Scara</string>
+    <string name="floor">Etaj</string>
+    <string name="apartment">Apartament</string>
+    <string name="shipping_address">Introdu adresa de livrare:</string>
+    <string name="pick_payment_method">Alege metoda de plata:</string>
+    <string name="place_order">Plaseaza comanda</string>
+    <string name="register">Inregistreaza-te</string>
+    <string name="currency">\" RON\"</string>
+
+    <string-array name="paymentMethod">
+        <item>Numerar</item>
+        <item>Card la livrare</item>
+        <item>Card online</item>
+    </string-array>
 </resources>

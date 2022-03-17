@@ -18,9 +18,10 @@
             android:exported="false" />
         <activity
             android:name=".PlaceOrder"
-            android:exported="false" />
+            android:exported="false"
+            android:label="@string/place_order"/>
         <activity
-            android:name=".Account"
+            android:name=".account.Account"
             android:exported="false"
             android:label="@string/account" />
         <activity
@@ -28,14 +29,14 @@
             android:exported="false"
             android:label="@string/cart"/>
         <activity
-            android:name=".FoodList"
+            android:name=".food.FoodList"
             android:exported="false" />
         <activity
             android:name=".RestaurantsList"
             android:exported="false"
             android:label="@string/restaurants_list_title" />
         <activity
-            android:name=".FoodInfo"
+            android:name=".food.FoodInfo"
             android:exported="false" />
         <activity
             android:name=".Home"

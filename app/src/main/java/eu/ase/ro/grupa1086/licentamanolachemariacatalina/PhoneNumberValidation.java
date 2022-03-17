@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Address;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.AddressList;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Cart;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
@@ -37,9 +39,11 @@ public class PhoneNumberValidation extends AppCompatActivity {
     private EditText etValidationCode;
     private DatabaseReference databaseReference;
     private DatabaseReference databaseReferenceShoppingCart;
+    private DatabaseReference databaseReferenceAddresses;
     private FirebaseAuth firebaseAuth;
     private ProgressBar progressBar;
     private List<Food> foodList;
+    private List<Address> addressesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,7 @@ public class PhoneNumberValidation extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBarPhoneValidation);
         firebaseAuth = FirebaseAuth.getInstance();
         foodList = new ArrayList<>();
+        addressesList = new ArrayList<>();
 
         String name = getIntent().getStringExtra("name");
         String email = getIntent().getStringExtra("email");
@@ -121,9 +126,25 @@ public class PhoneNumberValidation extends AppCompatActivity {
                                         }
                                     }
                                 });
+
+                                databaseReferenceAddresses = FirebaseDatabase.getInstance().getReference("addresses").child(id);
+                                AddressList addressList = new AddressList(id, addressesList);
+                                databaseReferenceAddresses.setValue(addressList).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(PhoneNumberValidation.this, "Lista de adrese creata", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            Toast.makeText(PhoneNumberValidation.this, "Eroare la crearea listei de adrese" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+
                             } else {
                                 Toast.makeText(PhoneNumberValidation.this, "Eroare la crearea contului" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                             }
+
+
 
                         }
                     });
