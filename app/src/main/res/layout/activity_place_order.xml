@@ -18,15 +18,37 @@
         android:fontFamily="@font/alata"
         app:layout_constraintTop_toTopOf="parent"></TextView>
 
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/tvAddress"
+        app:layout_constraintEnd_toEndOf="parent">
+
+    <RadioButton
+        android:id="@+id/radioBtnCurrentLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/current_location" />
+
+    <RadioButton
+        android:id="@+id/radioBtnAnotherLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_another_address" />
+
+    </RadioGroup>
 
     <LinearLayout
         android:id="@+id/firstRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvAddress">
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup">
 
         <FrameLayout
             android:layout_width="wrap_content"
@@ -108,6 +130,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/firstRow">
@@ -186,6 +209,7 @@
         </FrameLayout>
     </LinearLayout>
 
+
     <TextView
         android:id="@+id/tvPaymentMethod"
         android:layout_width="match_parent"
@@ -206,6 +230,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvPaymentMethod" />
 
+    <TextView
+        android:id="@+id/tvCoordinates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/paymentSpinner"></TextView>
+
+    <TextView
+        android:id="@+id/tvCurrentAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/tvCoordinates"></TextView>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"

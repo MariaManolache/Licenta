@@ -80,4 +80,8 @@
         <item>Card la livrare</item>
         <item>Card online</item>
     </string-array>
+    <string name="title_activity_delivery_location">DeliveryLocation</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="current_location">Locatia curenta</string>
+    <string name="add_another_address">Adauga alta adresa</string>
 </resources>

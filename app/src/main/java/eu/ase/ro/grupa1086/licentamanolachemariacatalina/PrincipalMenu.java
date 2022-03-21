@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -54,6 +55,8 @@ public class PrincipalMenu extends AppCompatActivity {
     FloatingActionButton shoppingCart;
     BottomNavigationView bottomNavigationView;
 
+    Button btnMaps;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +90,16 @@ public class PrincipalMenu extends AppCompatActivity {
 
         loadMenu();
         loadRestaurants();
+
+        btnMaps = findViewById(R.id.btnMaps);
+
+    btnMaps.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent maps = new Intent(PrincipalMenu.this, MapsActivity.class);
+            startActivity(maps);
+        }
+    });
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.restaurantsMenu);
