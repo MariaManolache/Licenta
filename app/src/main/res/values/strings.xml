@@ -84,4 +84,10 @@
     <string name="title_activity_maps">MapsActivity</string>
     <string name="current_location">Locatia curenta</string>
     <string name="add_another_address">Adauga alta adresa</string>
+    <string name="city">Oras</string>
+    <string name="region">Judet</string>
+    <string name="select_maps_address">Selecteaza o adresa de pe harta</string>
+    <string name="choose_address">Alegere adresa</string>
+    <string name="pickedAddress">Adresa aleasa:</string>
+    <string name="choose_wanted_address">Selectati adresa dorita</string>
 </resources>

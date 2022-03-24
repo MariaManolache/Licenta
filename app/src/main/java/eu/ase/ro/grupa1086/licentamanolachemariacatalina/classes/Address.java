@@ -11,17 +11,25 @@ public class Address implements Serializable {
     private String entrance;
     private String floor;
     private String apartment;
+    private String city;
+    private String region;
     private String idUser;
+    private String mapsAddress;
 
     public Address() {
 
     }
 
-    public Address(String idUser) {
-        this.idUser = idUser;
+    public Address(String id, String mapsAddress) {
+        this.id = id;
+        this.mapsAddress = mapsAddress;
     }
 
-    public Address(String id, String street, String number, String block, String entrance, String floor, String apartment, String idUser) {
+//    public Address(String idUser) {
+//        this.idUser = idUser;
+//    }
+
+    public Address(String id, String street, String number, String block, String entrance, String floor, String apartment, String city, String region, String idUser) {
         this.id = id;
         this.street = street;
         this.number = number;
@@ -29,7 +37,23 @@ public class Address implements Serializable {
         this.entrance = entrance;
         this.floor = floor;
         this.apartment = apartment;
+        this.city = city;
+        this.region = region;
         this.idUser = idUser;
+    }
+
+    public Address(String id, String street, String number, String block, String entrance, String floor, String apartment, String city, String region, String idUser, String mapsAddress) {
+        this.id = id;
+        this.street = street;
+        this.number = number;
+        this.block = block;
+        this.entrance = entrance;
+        this.floor = floor;
+        this.apartment = apartment;
+        this.city = city;
+        this.region = region;
+        this.idUser = idUser;
+        this.mapsAddress = mapsAddress;
     }
 
     public String getId() {
@@ -96,16 +120,41 @@ public class Address implements Serializable {
         this.idUser = idUser;
     }
 
+    public String getMapsAddress() {
+        return mapsAddress;
+    }
+
+    public void setMapsAddress(String mapsAddress) {
+        this.mapsAddress = mapsAddress;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
     @Override
     public String toString() {
         return "Address{" +
-                "id='" + id + '\'' +
-                ", street='" + street + '\'' +
+                "street='" + street + '\'' +
                 ", number='" + number + '\'' +
                 ", block='" + block + '\'' +
                 ", entrance='" + entrance + '\'' +
                 ", floor='" + floor + '\'' +
                 ", apartment='" + apartment + '\'' +
+                ", city='" + city + '\'' +
+                ", region='" + region + '\'' +
                 '}';
     }
 }

@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
     tools:context=".PlaceOrder">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/tvAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/shipping_address"
-        android:textSize="30sp"
+        android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:fontFamily="@font/alata"
@@ -22,23 +26,64 @@
         android:id="@+id/radioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/tvAddress"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvAddress">
 
-    <RadioButton
-        android:id="@+id/radioBtnCurrentLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/current_location" />
+        <RadioButton
+            android:id="@+id/radioBtnCurrentLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alata"
+            android:textSize="20sp"
+            android:text="@string/current_location" />
 
-    <RadioButton
-        android:id="@+id/radioBtnAnotherLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/add_another_address" />
+        <RadioButton
+            android:id="@+id/radioBtnAnotherLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alata"
+            android:textSize="20sp"
+            android:text="@string/add_another_address" />
+
+        <RadioButton
+            android:id="@+id/radioBtnMapsLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alata"
+            android:textSize="20sp"
+            android:text="@string/select_maps_address" />
 
     </RadioGroup>
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/mapRow"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:gravity="center_horizontal"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/paymentSpinner">-->
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/btnImageMap"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:backgroundTint="@color/teal_800"-->
+<!--            android:shadowColor="@color/black"-->
+<!--            android:src="@drawable/ic_baseline_map_24"></ImageButton>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvSelectAddressOnMap"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/choose_wanted_address"-->
+<!--            android:fontFamily="@font/alata"-->
+<!--            android:textSize="20sp"></TextView>-->
+
+<!--    </LinearLayout>-->
+
 
     <LinearLayout
         android:id="@+id/firstRow"
@@ -209,16 +254,94 @@
         </FrameLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/thirdRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/secondRow">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="65dp"
+            android:layout_marginTop="20dp"
+            android:padding="10dp"
+            android:outlineAmbientShadowColor="@android:color/darker_gray"
+            android:background="@drawable/border_address"
+            tools:targetApi="p">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCity"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/alata"
+                android:hint="@string/city"
+                android:inputType="textPostalAddress"
+                android:textColorHint="@color/violet"
+                android:textAlignment="center"
+                android:textColor="@color/violet"
+                android:textSize="20dp"
+                android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="65dp"
+            android:layout_margin="20dp"
+            android:padding="10dp"
+            android:outlineAmbientShadowColor="@android:color/darker_gray"
+            android:background="@drawable/border_address"
+            tools:targetApi="p">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etRegion"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/alata"
+                android:hint="@string/region"
+                android:inputType="textPostalAddress"
+                android:textColorHint="@color/violet"
+                android:textAlignment="center"
+                android:textColor="@color/violet"
+                android:textSize="20dp"
+                android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fourthRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/thirdRow">
+
+        <Button
+            android:id="@+id/btnConfirmAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confirma adresa"></Button>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tvPaymentMethod"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/pick_payment_method"
-        android:textSize="30sp"
+        android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/secondRow"
+        app:layout_constraintTop_toBottomOf="@+id/fourthRow"
         android:fontFamily="@font/alata"></TextView>
 
     <Spinner
@@ -231,13 +354,37 @@
         app:layout_constraintTop_toBottomOf="@+id/tvPaymentMethod" />
 
     <TextView
+        android:id="@+id/tvPickedAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/pickedAddress"
+        android:visibility="gone"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/paymentSpinner"
+        android:fontFamily="@font/alata"></TextView>
+
+    <TextView
+        android:id="@+id/tvPickedAddressInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Strada Liviu Rebreanu 46-58, Bucuresti"
+        android:textSize="20sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvPickedAddress"
+        android:fontFamily="@font/alata"></TextView>
+
+    <TextView
         android:id="@+id/tvCoordinates"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/paymentSpinner"></TextView>
+        app:layout_constraintTop_toBottomOf="@+id/tvPickedAddress"></TextView>
 
     <TextView
         android:id="@+id/tvCurrentAddress"
@@ -255,8 +402,7 @@
         android:layout_alignParentBottom="true"
         app:cardBackgroundColor="@color/teal_700"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/tvPickedAddressInfo">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -307,3 +453,4 @@
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
