@@ -90,4 +90,6 @@
     <string name="choose_address">Alegere adresa</string>
     <string name="pickedAddress">Adresa aleasa:</string>
     <string name="choose_wanted_address">Selectati adresa dorita</string>
+    <string name="title_activity_confirmation_order">ConfirmationOrder</string>
+    <string name="return_to_main_menu">Reveniti la meniul principal</string>
 </resources>

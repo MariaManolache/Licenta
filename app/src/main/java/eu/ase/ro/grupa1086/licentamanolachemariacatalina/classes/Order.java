@@ -12,12 +12,13 @@ public class Order implements Serializable {
     private Address address;
     private List<Food> cart;
     private Status status;
+    private List<String> restaurantAddress;
 
     public Order() {
 
     }
 
-    public Order(String id, float total, String userId, PaymentMethod paymentMethod, Address address,List<Food> cart, Status status) {
+    public Order(String id, float total, String userId, PaymentMethod paymentMethod, Address address,List<Food> cart, Status status, List<String> restaurantAddress) {
         this.id = id;
         this.total = total;
         this.userId = userId;
@@ -25,6 +26,7 @@ public class Order implements Serializable {
         this.address = address;
         this.cart = cart;
         this.status = status;
+        this.restaurantAddress = restaurantAddress;
     }
 
     public String getId() {
@@ -82,6 +84,14 @@ public class Order implements Serializable {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public List<String> getRestaurantAddress() {
+        return restaurantAddress;
+    }
+
+    public void setRestaurantAddress(List<String> restaurantAddress) {
+        this.restaurantAddress = restaurantAddress;
     }
 
     @Override

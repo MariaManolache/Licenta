@@ -52,7 +52,10 @@ import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Address;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Order;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.PaymentMethod;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Status;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.food.FoodInfo;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.food.FoodList;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.observers.DisposableSingleObserver;
@@ -86,6 +89,7 @@ public class PlaceOrder extends AppCompatActivity {
     DatabaseReference cart;
     DatabaseReference addresses;
     DatabaseReference orders;
+    DatabaseReference restaurants;
 
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
@@ -115,6 +119,8 @@ public class PlaceOrder extends AppCompatActivity {
     String apartment;
     String city;
     String region;
+
+    List<String> restaurantAddresses = new ArrayList<String>();
 
 //    ImageButton mapButton;
 
@@ -159,6 +165,7 @@ public class PlaceOrder extends AppCompatActivity {
         cart = database.getInstance().getReference("carts").child(userId).child("foodList");
         addresses = database.getInstance().getReference("addresses").child(userId).child("addresses");
         orders = database.getInstance().getReference("orders").child(userId);
+        restaurants = database.getInstance().getReference("restaurants");
 
         tvAddress = findViewById(R.id.tvPickedAddress);
         tvAddressInfo = findViewById(R.id.tvPickedAddressInfo);
@@ -316,13 +323,20 @@ public class PlaceOrder extends AppCompatActivity {
                                 String orderId = orders.push().getKey();
                                 PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentSpinner.getSelectedItem().toString().toUpperCase().replace(" ", "_"));
                                 Status status = Status.plasata;
-                                Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status);
+                                Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, restaurantAddresses);
 
                                 orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
                                             Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
+
+                                            Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
+                                            confirmationOrder.putExtra("orderId", orderId);
+                                            confirmationOrder.putExtra("origin", "addAnotherAddress");
+                                            startActivity(confirmationOrder);
+                                            finish();
+
                                         } else {
                                             Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                         }
@@ -395,13 +409,20 @@ public class PlaceOrder extends AppCompatActivity {
                                                         String orderId = orders.push().getKey();
                                                         PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentSpinner.getSelectedItem().toString().toUpperCase().replace(" ", "_"));
                                                         Status status = Status.plasata;
-                                                        Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status);
+                                                        Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, restaurantAddresses);
 
+                                                        Log.i("restaurant", String.valueOf(restaurantAddresses));
                                                         orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> task) {
                                                                 if (task.isSuccessful()) {
                                                                     Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
+
+                                                                    Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
+                                                                    confirmationOrder.putExtra("orderId", orderId);
+                                                                    confirmationOrder.putExtra("origin", "currentAddress");
+                                                                    startActivity(confirmationOrder);
+                                                                    finish();
                                                                 } else {
                                                                     Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                                                 }
@@ -426,9 +447,6 @@ public class PlaceOrder extends AppCompatActivity {
                                         });
 
 
-//                                                tvCoordinates.setText(coordinates);
-//                                                tvCoordinates.setVisibility(View.VISIBLE);
-
                                     }
                                 });
                         break;
@@ -451,7 +469,6 @@ public class PlaceOrder extends AppCompatActivity {
                         fourthRow.setVisibility(View.VISIBLE);
                         tvAddressInfo.setVisibility(View.GONE);
                         tvAddress.setVisibility(View.GONE);
-//                        mapRow.setVisibility(View.VISIBLE);
 
                         btnConfirmAddress.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -460,14 +477,6 @@ public class PlaceOrder extends AppCompatActivity {
                                 finish();
                             }
                         });
-
-//                        mapButton.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                startActivity(new Intent(getApplicationContext(), MapsActivity.class));
-//                                finish();
-//                            }
-//                        });
 
 
                         if (mapsAddress != null && longitude != 0.0 && latitude != 0.0) {
@@ -518,13 +527,20 @@ public class PlaceOrder extends AppCompatActivity {
                                             String orderId = orders.push().getKey();
                                             PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentSpinner.getSelectedItem().toString().toUpperCase().replace(" ", "_"));
                                             Status status = Status.plasata;
-                                            Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status);
+                                            Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, restaurantAddresses);
 
                                             orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     if (task.isSuccessful()) {
                                                         Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
+
+                                                        Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
+                                                        confirmationOrder.putExtra("orderId", orderId);
+                                                        confirmationOrder.putExtra("origin", "mapsLocation");
+                                                        startActivity(confirmationOrder);
+                                                        finish();
+
                                                     } else {
                                                         Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                                     }
@@ -558,16 +574,6 @@ public class PlaceOrder extends AppCompatActivity {
             }
         });
 
-//        if(selectedText.equals(R.string.current_location)) {
-//            firstRow.setVisibility(View.VISIBLE);
-//            secondRow.setVisibility(View.VISIBLE);
-//        }
-//
-//        if(selectedText.equals(R.string.add_another_address)) {
-//            firstRow.setVisibility(View.GONE);
-//            secondRow.setVisibility(View.GONE);
-//        }
-
         cart.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -576,9 +582,24 @@ public class PlaceOrder extends AppCompatActivity {
                     Food food = dataSnapshot.getValue(Food.class);
                     cartList.add(food);
                     total += food.getPrice() * food.getQuantity();
+                    restaurants.child(food.getRestaurantId()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            Restaurant restaurant = snapshot.getValue(Restaurant.class);
+                            restaurantAddresses.add(restaurant.getAddress());
+                            Log.i("incercare", restaurant.toString());
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
                 }
 
-                tvTotal.setText(String.valueOf(total + " LEI"));
+                tvTotal.setText(total + " LEI");
             }
 
             @Override
@@ -587,11 +608,6 @@ public class PlaceOrder extends AppCompatActivity {
             }
         });
 
-
-//        if(getIntent() != null) {
-//            total = getIntent().getStringExtra("total");
-//            tvTotal.setText(total);
-//        }
     }
 
     private String getAddressFromLatLng(double latitude, double longitude) {

@@ -12,16 +12,18 @@ public class Restaurant implements Serializable {
     private String image;
     private String categoryId;
     private String categoryIdName;
+    private String address;
 
     public Restaurant() {
     }
 
-    public Restaurant(String id, String name, String image, String categoryId) {
+    public Restaurant(String id, String name, String image, String categoryId, String address) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.categoryId = categoryId;
         this.categoryIdName = categoryId + name;
+        this.address = address;
     }
 
     public String getId() {
@@ -64,6 +66,14 @@ public class Restaurant implements Serializable {
         this.categoryIdName = categoryIdName;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     @Override
     public String toString() {
         return "Restaurant{" +
@@ -71,6 +81,8 @@ public class Restaurant implements Serializable {
                 ", name='" + name + '\'' +
                 ", image='" + image + '\'' +
                 ", categoryId='" + categoryId + '\'' +
+                ", categoryIdName='" + categoryIdName + '\'' +
+                ", address='" + address + '\'' +
                 '}';
     }
 }

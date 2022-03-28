@@ -32,6 +32,10 @@
             android:value="AIzaSyAbg-2wF83FMLewDZHmYeHGba7Feq0ODlc" />
 
         <activity
+            android:name=".ConfirmationOrder"
+            android:exported="false"
+            android:label="@string/title_activity_confirmation_order" />
+        <activity
             android:name=".MapsActivity"
             android:exported="false"
             android:label="@string/title_activity_maps" />
