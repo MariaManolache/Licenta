@@ -29,7 +29,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAbg-2wF83FMLewDZHmYeHGba7Feq0ODlc" />
+            android:value="AIzaSyCysjrCb9e2N5sNip39CegvBxQTgUCmphU" />
 
         <activity
             android:name=".ConfirmationOrder"

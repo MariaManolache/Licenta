@@ -187,6 +187,7 @@ public class PlaceOrder extends AppCompatActivity {
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @SuppressLint("MissingPermission")
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+
                 switch (checkedId) {
                     case R.id.radioBtnAnotherLocation:
                         firstRow.setVisibility(View.VISIBLE);
@@ -331,6 +332,7 @@ public class PlaceOrder extends AppCompatActivity {
                                         if (task.isSuccessful()) {
                                             Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
 
+                                            cart.removeValue();
                                             Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
                                             confirmationOrder.putExtra("orderId", orderId);
                                             confirmationOrder.putExtra("origin", "addAnotherAddress");
@@ -352,6 +354,7 @@ public class PlaceOrder extends AppCompatActivity {
                         secondRow.setVisibility(View.GONE);
                         thirdRow.setVisibility(View.GONE);
                         fourthRow.setVisibility(View.GONE);
+                        tvAddress.setVisibility(View.VISIBLE);
 
                         initializeLocation();
 
@@ -449,6 +452,14 @@ public class PlaceOrder extends AppCompatActivity {
 
                                     }
                                 });
+
+                        tvAddress.setVisibility(View.VISIBLE);
+                        if(tvAddress.getVisibility() == View.GONE) {
+                            btnPlaceOrder.setEnabled(false);
+                        }
+                        if(tvAddress.getVisibility() == View.VISIBLE) {
+                            btnPlaceOrder.setEnabled(true);
+                        }
                         break;
 
                     case R.id.radioBtnMapsLocation:
@@ -501,6 +512,7 @@ public class PlaceOrder extends AppCompatActivity {
                                     tvAddressInfo.setVisibility(View.VISIBLE);
                                     tvAddress.setVisibility(View.VISIBLE);
 
+                                    btnPlaceOrder.setEnabled(true);
 
                                     String addressId = addresses.push().getKey();
 
@@ -534,6 +546,7 @@ public class PlaceOrder extends AppCompatActivity {
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     if (task.isSuccessful()) {
                                                         Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
+
 
                                                         Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
                                                         confirmationOrder.putExtra("orderId", orderId);
@@ -569,6 +582,13 @@ public class PlaceOrder extends AppCompatActivity {
                             Toast.makeText(PlaceOrder.this, "Nu s-a selectat nici o adresa de pe harta", Toast.LENGTH_LONG).show();
                         }
 
+                        //tvAddress.setVisibility(View.VISIBLE);
+                        if(tvAddress.getVisibility() == View.GONE) {
+                            btnPlaceOrder.setEnabled(false);
+                        }
+                        if(tvAddress.getVisibility() == View.VISIBLE) {
+                            btnPlaceOrder.setEnabled(true);
+                        }
                         break;
                 }
             }
@@ -608,6 +628,12 @@ public class PlaceOrder extends AppCompatActivity {
             }
         });
 
+        if(tvAddress.getVisibility() == View.GONE) {
+            btnPlaceOrder.setEnabled(false);
+        }
+        if(tvAddress.getVisibility() == View.VISIBLE) {
+            btnPlaceOrder.setEnabled(true);
+        }
     }
 
     private String getAddressFromLatLng(double latitude, double longitude) {

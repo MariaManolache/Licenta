@@ -1,26 +1,44 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.loader.content.AsyncTaskLoader;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Path;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.akexorcist.googledirection.DirectionCallback;
+import com.akexorcist.googledirection.GoogleDirection;
+import com.akexorcist.googledirection.constant.RequestResult;
+import com.akexorcist.googledirection.constant.TransportMode;
+import com.akexorcist.googledirection.model.Direction;
+import com.akexorcist.googledirection.model.Info;
+import com.akexorcist.googledirection.model.Leg;
+import com.akexorcist.googledirection.util.DirectionConverter;
 import com.directions.route.AbstractRouting;
 import com.directions.route.Route;
 import com.directions.route.RouteException;
 import com.directions.route.Routing;
 import com.directions.route.RoutingListener;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -34,6 +52,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.maps.DirectionsApi;
 import com.google.maps.DirectionsApiRequest;
 import com.google.maps.GeoApiContext;
+import com.google.maps.android.SphericalUtil;
 import com.google.maps.model.DirectionsLeg;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.DirectionsRoute;
@@ -64,6 +83,7 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
 
     FirebaseDatabase database;
     DatabaseReference orders;
+    DatabaseReference cart;
 
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
@@ -72,10 +92,17 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
     Address userAddress;
     String mapsAddress;
     //LatLng latLngUserAddress;
+    TextView tvDistance;
+    TextView tvTime;
+
+    LatLng clientAddress;
+    List<LatLng> restaurantCoordinates = new ArrayList<LatLng>();
 
     List<String> restaurantAddresses = new ArrayList<String>();
 
     List<LatLng> latLngRestaurantAddresses = new ArrayList<LatLng>();
+
+    Button btnReturnToMainMenu;
 
     private List<Polyline> polylines;
     private static final int[] COLORS = new int[]{androidx.navigation.ui.R.color.design_default_color_primary_dark, com.google.android.material.R.color.design_default_color_primary_variant, androidx.navigation.ui.R.color.design_default_color_primary};
@@ -92,22 +119,56 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
 
         database = FirebaseDatabase.getInstance();
 
+        tvDistance = findViewById(R.id.tvDistance);
+        tvTime = findViewById(R.id.tvTime);
+
+        btnReturnToMainMenu = findViewById(R.id.btnReturnToMainMenu);
+
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
         userId = user.getUid();
         orders = database.getInstance().getReference("orders").child(userId);
+        cart = database.getInstance().getReference("carts").child(userId).child("foodList");
+
+        cart.removeValue();
+
+//        cart.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//                    Food food = dataSnapshot.getValue(Food.class);
+//                    cart.child(food.getId()).removeValue();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
 
         if (getIntent() != null && getIntent().getExtras() != null) {
             String origin = getIntent().getExtras().getString("origin");
             if (origin != null && (origin.equals("currentAddress") || origin.equals("mapsLocation"))) {
                 orderId = getIntent().getStringExtra("orderId");
 
-                orders.child(orderId).child("address").addValueEventListener(new ValueEventListener() {
+                if (ActivityCompat.checkSelfPermission(this,
+                        android.Manifest.permission.ACCESS_FINE_LOCATION) !=
+                        PackageManager.PERMISSION_GRANTED &&
+                        ActivityCompat.checkSelfPermission(this,
+                                android.Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                                PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+
+                    orders.child(orderId).child("address").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Address address = snapshot.getValue(Address.class);
                         mapsAddress = address.getMapsAddress();
                         Log.i("mapsAddress", mapsAddress);
+
+                        clientAddress = getLocationFromAddress(mapsAddress);
 
                         orders.child(orderId).child("restaurantAddress").addValueEventListener(new ValueEventListener() {
                             @Override
@@ -116,6 +177,15 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
                                     String strAddress= snapshot2.getValue(String.class);
                                     restaurantAddresses.add(strAddress);
                                     Log.i("mapsAddress", strAddress);
+                                    restaurantCoordinates.add(getLocationFromAddress(strAddress));
+
+                                    float results[] = new float[10];
+                                    Double distance = SphericalUtil.computeDistanceBetween(clientAddress, restaurantCoordinates.get(0));
+                                    Location.distanceBetween(restaurantCoordinates.get(0).latitude, restaurantCoordinates.get(0).longitude, clientAddress.latitude, clientAddress.longitude, results);
+//                                    tvDistance.setText("Distanta " + String.valueOf(results[0]));
+                                    tvDistance.setText("Distanta " + String.format("%.2f", distance / 1000) + " km");
+
+                                    getDestinationInfo(restaurantCoordinates.get(0));
 
                                     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                                             .findFragmentById(R.id.map);
@@ -130,6 +200,7 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
 
                             }
                         });
+
 
                     }
 
@@ -172,6 +243,15 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
                 });
             }
         }
+
+        btnReturnToMainMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mainMenu = new Intent(ConfirmationOrder.this, PrincipalMenu.class);
+                startActivity(mainMenu);
+                finish();
+            }
+        });
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -217,6 +297,10 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
         }
 
         mMap.addMarker(new MarkerOptions().position(latLngUserAddress).title("Marker adresa utilizator"));
+
+//        for(int i = 0; i < latLngRestaurantAddresses.size(); i++) {
+//            mMap.addMarker(new MarkerOptions().position(latLngRestaurantAddresses.get(i)).title("Marker " + i));
+//        }
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngUserAddress, 15));
 
 
@@ -456,4 +540,72 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
 //            super.onPostExecute(s);
 //        }
 //    }
+
+
+    private void getDestinationInfo(LatLng latLngDestination) {
+        //progressDialog();
+        String serverKey = "AIzaSyCysjrCb9e2N5sNip39CegvBxQTgUCmphU"; // Api Key For Google Direction API \\
+        final LatLng origin = new LatLng(clientAddress.latitude, clientAddress.longitude);
+        final LatLng destination = latLngDestination;
+        //-------------Using AK Exorcist Google Direction Library---------------\\
+        GoogleDirection.withServerKey(serverKey)
+                .from(origin)
+                .to(destination)
+                .transportMode(TransportMode.DRIVING)
+                .execute(new DirectionCallback() {
+
+                    @Override
+                    public void onDirectionSuccess(Direction direction, String rawBody) {
+//                        dismissDialog(0);
+                        String status = direction.getStatus();
+                        if (status.equals(RequestResult.OK)) {
+                            com.akexorcist.googledirection.model.Route route = direction.getRouteList().get(0);
+                            Leg leg = route.getLegList().get(0);
+                            Info distanceInfo = leg.getDistance();
+                            Info durationInfo = leg.getDuration();
+                            String distance = distanceInfo.getText();
+                            String duration = durationInfo.getText();
+                            tvTime.setText(duration);
+
+                            //------------Displaying Distance and Time-----------------\\
+ //                           showingDistanceTime(distance, duration); // Showing distance and time to the user in the UI \\
+//                            String message = "Total Distance is " + distance + " and Estimated Time is " + duration;
+//                            StaticMethods.customSnackBar(consumerHomeActivity.parentLayout, message,
+//                                    getResources().getColor(R.color.colorPrimary),
+//                                    getResources().getColor(R.color.colorWhite), 3000);
+
+                            //--------------Drawing Path-----------------\\
+                            ArrayList<LatLng> directionPositionList = leg.getDirectionPoint();
+                            PolylineOptions polylineOptions = DirectionConverter.createPolyline(getApplicationContext(),
+                                    directionPositionList, 5, getResources().getColor(R.color.purple_200));
+                            mMap.addPolyline(polylineOptions);
+                            //--------------------------------------------\\
+
+                            //-----------Zooming the map according to marker bounds-------------\\
+                            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                            builder.include(origin);
+                            builder.include(destination);
+                            LatLngBounds bounds = builder.build();
+
+                            int width = getResources().getDisplayMetrics().widthPixels;
+                            int height = getResources().getDisplayMetrics().heightPixels;
+                            int padding = (int) (width * 0.20); // offset from edges of the map 10% of screen
+
+                            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+                            mMap.animateCamera(cu);
+                            //------------------------------------------------------------------\\
+
+                        } else if (status.equals(RequestResult.NOT_FOUND)) {
+                            Toast.makeText(getApplicationContext(), "No routes exist", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onDirectionFailure(Throwable t) {
+                        // Do something here
+                    }
+                });
+        //-------------------------------------------------------------------------------\\
+
+    }
 }

@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +60,8 @@ public class ShoppingCart extends AppCompatActivity {
     String id;
     Float total = 0.0f;
 
+    ImageView emptyCart;
+    TextView tvEmptyCart;
 
     List<Food> cartList = new ArrayList<Food>();
 
@@ -77,6 +80,14 @@ public class ShoppingCart extends AppCompatActivity {
         id = user.getUid();
         cart = database.getInstance().getReference("carts").child(id).child("foodList");
 
+        emptyCart = findViewById(R.id.emptyCart);
+        tvEmptyCart = findViewById(R.id.tvEmptyCart);
+
+        if(cart.equals(null)) {
+            emptyCart.setVisibility(View.VISIBLE);
+            tvEmptyCart.setVisibility(View.VISIBLE);
+        }
+
         //RecyclerView
         recyclerView = findViewById(R.id.cartList);
         recyclerView.setHasFixedSize(true);
@@ -93,7 +104,14 @@ public class ShoppingCart extends AppCompatActivity {
                             total -= deletedFood.getPrice() * deletedFood.getQuantity();
                             DatabaseReference cartItem = cart.child(deletedFood.getId());
                             cartItem.removeValue();
+                            cartList.remove(deletedFood);
                             recyclerView.setAdapter(adapter);
+
+                            if(cartList.size() == 0) {
+                                emptyCart.setVisibility(View.VISIBLE);
+                                tvEmptyCart.setVisibility(View.VISIBLE);
+                                btnPlaceOrder.setEnabled(false);
+                            }
                 }));
             }
         };
@@ -140,6 +158,16 @@ public class ShoppingCart extends AppCompatActivity {
 //                    cartList.add(f);
 //                }
 //                cartList = foods;
+
+                if(cartList.size() == 0) {
+                    emptyCart.setVisibility(View.VISIBLE);
+                    tvEmptyCart.setVisibility(View.VISIBLE);
+                    btnPlaceOrder.setEnabled(false);
+                } else {
+                    emptyCart.setVisibility(View.GONE);
+                    tvEmptyCart.setVisibility(View.GONE);
+                    btnPlaceOrder.setEnabled(true);
+                }
 
                 for (int i = 0; i < cartList.size(); i++) {
                     loadListFood(cartList.get(i).getRestaurantId());

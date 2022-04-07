@@ -92,4 +92,6 @@
     <string name="choose_wanted_address">Selectati adresa dorita</string>
     <string name="title_activity_confirmation_order">ConfirmationOrder</string>
     <string name="return_to_main_menu">Reveniti la meniul principal</string>
+    <string name="estimated_arrival_time">12:20-12:30</string>
+    <string name="pick_a_location">Alege o locatie pe harta</string>
 </resources>
