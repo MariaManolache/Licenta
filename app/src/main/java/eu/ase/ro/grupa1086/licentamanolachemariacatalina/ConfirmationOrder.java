@@ -230,10 +230,38 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
                         mapsAddress = coordinatesString;
                         Log.i("mapsAddress", mapsAddress);
 
-                        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                                .findFragmentById(R.id.map);
-                        assert mapFragment != null;
-                        mapFragment.getMapAsync(ConfirmationOrder.this);
+                        clientAddress = getLocationFromAddress(mapsAddress);
+                        orders.child(orderId).child("restaurantAddress").addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot snapshot2 : dataSnapshot.getChildren()) {
+                                    String strAddress= snapshot2.getValue(String.class);
+                                    restaurantAddresses.add(strAddress);
+                                    Log.i("mapsAddress", strAddress);
+                                    restaurantCoordinates.add(getLocationFromAddress(strAddress));
+
+                                    float results[] = new float[10];
+                                    Double distance = SphericalUtil.computeDistanceBetween(clientAddress, restaurantCoordinates.get(0));
+                                    Location.distanceBetween(restaurantCoordinates.get(0).latitude, restaurantCoordinates.get(0).longitude, clientAddress.latitude, clientAddress.longitude, results);
+//                                    tvDistance.setText("Distanta " + String.valueOf(results[0]));
+                                    tvDistance.setText("Distanta " + String.format("%.2f", distance / 1000) + " km");
+
+                                    getDestinationInfo(restaurantCoordinates.get(0));
+
+                                    SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                                            .findFragmentById(R.id.map);
+                                    assert mapFragment != null;
+                                    mapFragment.getMapAsync(ConfirmationOrder.this);
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
                     }
 
                     @Override

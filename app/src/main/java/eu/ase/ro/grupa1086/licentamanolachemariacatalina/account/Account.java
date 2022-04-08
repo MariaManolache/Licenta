@@ -31,6 +31,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.app.AppCompatActivity;
 
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.OrdersList;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.PrincipalMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
@@ -134,6 +135,10 @@ public class Account extends AppCompatActivity {
                         overridePendingTransition(0, 0);
                         return true;
                     case R.id.account:
+                        return true;
+                    case R.id.orders:
+                        startActivity(new Intent(getApplicationContext(), OrdersList.class));
+                        overridePendingTransition(0, 0);
                         return true;
                 }
                 return false;

@@ -280,6 +280,14 @@ public class PlaceOrder extends AppCompatActivity {
                                 tvAddressInfo.setText(result);
                                 tvAddressInfo.setVisibility(View.VISIBLE);
                                 tvAddress.setVisibility(View.VISIBLE);
+
+                                tvAddress.setVisibility(View.VISIBLE);
+                                if(tvAddress.getVisibility() == View.GONE) {
+                                    btnPlaceOrder.setEnabled(false);
+                                }
+                                if(tvAddress.getVisibility() == View.VISIBLE) {
+                                    btnPlaceOrder.setEnabled(true);
+                                }
                             }
                         });
 
@@ -307,7 +315,10 @@ public class PlaceOrder extends AppCompatActivity {
 
                                 String coordinatesString = coordinates.toString();
 
-                                newAddress = new Address(addressId, street, number, block, entrance, floor, apartment, city, region, userId, getLocationFromAddress(coordinatesString).toString());
+                                LatLng coordinatesNewAddress = getLocationFromAddress(coordinatesString);
+                                String address = getAddressFromLatLng(coordinatesNewAddress.latitude, coordinatesNewAddress.longitude);
+
+                                newAddress = new Address(addressId, street, number, block, entrance, floor, apartment, city, region, userId, address);
 
 
                                 addresses.child(addressId).setValue(newAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -348,6 +359,7 @@ public class PlaceOrder extends AppCompatActivity {
                             }
 
                         });
+
                         break;
                     case R.id.radioBtnCurrentLocation:
                         firstRow.setVisibility(View.GONE);

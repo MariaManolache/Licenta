@@ -116,6 +116,10 @@ public class PrincipalMenu extends AppCompatActivity {
                         return true;
                     case R.id.restaurantsMenu:
                         return true;
+                    case R.id.orders:
+                        startActivity(new Intent(getApplicationContext(), OrdersList.class));
+                        overridePendingTransition(0, 0);
+                        return true;
                 }
                 return false;
             }

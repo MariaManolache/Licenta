@@ -62,6 +62,7 @@ public class ShoppingCart extends AppCompatActivity {
 
     ImageView emptyCart;
     TextView tvEmptyCart;
+    Button btnStartShopping;
 
     List<Food> cartList = new ArrayList<Food>();
 
@@ -82,6 +83,7 @@ public class ShoppingCart extends AppCompatActivity {
 
         emptyCart = findViewById(R.id.emptyCart);
         tvEmptyCart = findViewById(R.id.tvEmptyCart);
+        btnStartShopping = findViewById(R.id.btnStartShopping);
 
         if(cart.equals(null)) {
             emptyCart.setVisibility(View.VISIBLE);
@@ -162,10 +164,20 @@ public class ShoppingCart extends AppCompatActivity {
                 if(cartList.size() == 0) {
                     emptyCart.setVisibility(View.VISIBLE);
                     tvEmptyCart.setVisibility(View.VISIBLE);
+                    btnStartShopping.setVisibility(View.VISIBLE);
+                    btnStartShopping.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent principalMenu = new Intent(ShoppingCart.this, PrincipalMenu.class);
+                            startActivity(principalMenu);
+                            finish();
+                        }
+                    });
                     btnPlaceOrder.setEnabled(false);
                 } else {
                     emptyCart.setVisibility(View.GONE);
                     tvEmptyCart.setVisibility(View.GONE);
+                    btnStartShopping.setVisibility(View.GONE);
                     btnPlaceOrder.setEnabled(true);
                 }
 

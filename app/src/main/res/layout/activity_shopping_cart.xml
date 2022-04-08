@@ -36,6 +36,18 @@
         android:layout_marginTop="150dp"
         android:fontFamily="@font/alata"></TextView>
 
+    <Button
+        android:id="@+id/btnStartShopping"
+        android:text="Incepe cumparaturile"
+        android:visibility="gone"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="450dp"
+        android:layout_width="match_parent"
+        android:backgroundTint="@color/teal_100"
+        android:shadowColor="@color/black"
+        android:layout_height="wrap_content"></Button>
+
     <androidx.cardview.widget.CardView
         android:layout_alignParentBottom="true"
         app:cardBackgroundColor="@color/teal_700"

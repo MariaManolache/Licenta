@@ -15,7 +15,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LicentaManolacheMariaCatalina"
         tools:replace="android:theme">
-
+        <activity
+            android:name=".OrderDetails"
+            android:exported="false" />
+        <activity
+            android:name=".OrdersList"
+            android:exported="false"
+            android:label="@string/order_history" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
