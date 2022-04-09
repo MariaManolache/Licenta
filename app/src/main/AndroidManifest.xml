@@ -16,8 +16,12 @@
         android:theme="@style/Theme.LicentaManolacheMariaCatalina"
         tools:replace="android:theme">
         <activity
-            android:name=".OrderDetails"
+            android:name=".AddressesList"
             android:exported="false" />
+        <activity
+            android:name=".OrderDetails"
+            android:exported="false"
+            android:label="@string/order_details" />
         <activity
             android:name=".OrdersList"
             android:exported="false"

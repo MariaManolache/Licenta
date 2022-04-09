@@ -95,4 +95,7 @@
     <string name="estimated_arrival_time">12:20-12:30</string>
     <string name="pick_a_location">Alege o locatie pe harta</string>
     <string name="order_history">Istoricul comenzilor</string>
+    <string name="order_details">Detaliile comenzii</string>
+    <string name="address_name">Adresa#1</string>
+    <string name="address_example">Strada ...</string>
 </resources>

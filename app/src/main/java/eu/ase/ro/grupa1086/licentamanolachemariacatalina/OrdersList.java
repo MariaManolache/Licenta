@@ -113,8 +113,6 @@ public class OrdersList extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull OrderViewHolder holder, int position, @NonNull Order model) {
 
-                String id = restaurants.child(model.getCart().get(0).getRestaurantId()).toString();
-
                 restaurantName = null;
                 restaurantImage = null;
 
@@ -131,7 +129,7 @@ public class OrdersList extends AppCompatActivity {
                             holder.restaurantsName.setText(restaurantName);
                             holder.orderStatus.setText(String.valueOf(model.getStatus()));
                             holder.orderAddress.setText(String.valueOf(model.getAddress().getMapsAddress()));
-                            holder.orderPriceTotal.setText("Total: " + model.getTotal());
+                            holder.orderPriceTotal.setText("Total: " + model.getTotal() + " lei");
                             Picasso.with(getBaseContext()).load(restaurantImage)
                                     .into(holder.restaurantImage);
 
@@ -148,7 +146,7 @@ public class OrdersList extends AppCompatActivity {
                                         Intent orderDetails = new Intent(OrdersList.this, OrderDetails.class);
                                         orderDetails.putExtra("orderId", adapter.getRef(position).getKey());
                                         orderDetails.putExtra("restaurantName", restaurant.getName());
-                                        orderDetails.putExtra("restaurantImage", restaurantImage);
+                                        orderDetails.putExtra("restaurantImage", restaurant.getImage());
                                         orderDetails.putExtra("orderStatus", String.valueOf(local.getStatus()));
                                         orderDetails.putExtra("address", model.getAddress().getMapsAddress());
                                         orderDetails.putExtra("total", String.valueOf(local.getTotal()));
@@ -174,17 +172,19 @@ public class OrdersList extends AppCompatActivity {
                         restaurants.child(model.getCart().get(i).getRestaurantId()).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                Restaurant restaurant = snapshot.getValue(Restaurant.class);
-                                Log.i("restaurant", restaurant.toString());
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                                if (restaurantName == null) {
-                                    restaurantName = restaurant.getName();
-                                } else {
-                                    if (!restaurantName.contains(restaurant.getName())) {
-                                        restaurantName += ", " + restaurant.getName();
+                                    Restaurant restaurant = snapshot.getValue(Restaurant.class);
+                                    Log.i("restaurant", restaurant.toString());
+
+                                    if (restaurantName == null) {
+                                        restaurantName = restaurant.getName();
+                                    } else {
+                                        if (!restaurantName.contains(restaurant.getName())) {
+                                            restaurantName += ", " + restaurant.getName();
+                                        }
                                     }
-                                }
-                                restaurantImage = restaurant.getImage();
+                                    restaurantImage = restaurant.getImage();
 
 //                            if(restaurantName == null) {
 //                                restaurantName = restaurant.getName();
@@ -195,34 +195,35 @@ public class OrdersList extends AppCompatActivity {
 //                                restaurantImage = restaurant.getImage();
 ////                            }
 
-                                holder.restaurantsName.setText(restaurantName);
-                                holder.orderStatus.setText(String.valueOf(model.getStatus()));
-                                holder.orderAddress.setText(String.valueOf(model.getAddress().getMapsAddress()));
-                                holder.orderPriceTotal.setText("Total: " + model.getTotal());
-                                Picasso.with(getBaseContext()).load(restaurantImage)
-                                        .into(holder.restaurantImage);
+                                    holder.restaurantsName.setText(restaurantName);
+                                    holder.orderStatus.setText(String.valueOf(model.getStatus()));
+                                    holder.orderAddress.setText(String.valueOf(model.getAddress().getMapsAddress()));
+                                    holder.orderPriceTotal.setText("Total: " + model.getTotal() + " lei");
+                                    Picasso.with(getBaseContext()).load(restaurantImage)
+                                            .into(holder.restaurantImage);
 
-                                final Order local = model;
-                                holder.setItemClickListener(new ItemClickListener() {
-                                    @Override
-                                    public void onClick(View view, int position, boolean isLongClick) {
+                                    final Order local = model;
+                                    holder.setItemClickListener(new ItemClickListener() {
+                                        @Override
+                                        public void onClick(View view, int position, boolean isLongClick) {
 
-                                        if(!isLongClick) {
-                                            Toast.makeText(OrdersList.this, model.getCart().toString(), Toast.LENGTH_LONG).show();
-                                        } else {
-                                            Intent orderDetails = new Intent(OrdersList.this, OrderDetails.class);
-                                            orderDetails.putExtra("orderId", adapter.getRef(position).getKey());
-                                            orderDetails.putExtra("restaurantName", restaurantName);
-                                            orderDetails.putExtra("restaurantImage", restaurantImage);
-                                            orderDetails.putExtra("orderStatus", String.valueOf(local.getStatus()));
-                                            orderDetails.putExtra("address", model.getAddress().getMapsAddress());
-                                            orderDetails.putExtra("total", String.valueOf(local.getTotal()));
-                                            startActivity(orderDetails);
+                                            if (!isLongClick) {
+                                                Toast.makeText(OrdersList.this, model.getCart().toString(), Toast.LENGTH_LONG).show();
+                                            } else {
+                                                Intent orderDetails = new Intent(OrdersList.this, OrderDetails.class);
+                                                orderDetails.putExtra("orderId", adapter.getRef(position).getKey());
+                                                orderDetails.putExtra("restaurantName", restaurantName);
+                                                orderDetails.putExtra("restaurantImage", restaurantImage);
+                                                orderDetails.putExtra("orderStatus", String.valueOf(local.getStatus()));
+                                                orderDetails.putExtra("address", model.getAddress().getMapsAddress());
+                                                orderDetails.putExtra("total", String.valueOf(local.getTotal()));
+                                                startActivity(orderDetails);
+                                            }
+
                                         }
+                                    });
 
-                                    }
-                                });
-
+                                }
                             }
 
                             @Override

@@ -2,6 +2,7 @@ package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -47,6 +48,7 @@ public class ShoppingCart extends AppCompatActivity {
 
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
+    CardView cardView;
 
     FirebaseDatabase database;
     DatabaseReference cart;
@@ -84,10 +86,14 @@ public class ShoppingCart extends AppCompatActivity {
         emptyCart = findViewById(R.id.emptyCart);
         tvEmptyCart = findViewById(R.id.tvEmptyCart);
         btnStartShopping = findViewById(R.id.btnStartShopping);
+        cardView = findViewById(R.id.cardView);
 
-        if(cart.equals(null)) {
+        if (cart.equals(null)) {
             emptyCart.setVisibility(View.VISIBLE);
             tvEmptyCart.setVisibility(View.VISIBLE);
+            cardView.setVisibility(View.GONE);
+        } else {
+            cardView.setVisibility(View.VISIBLE);
         }
 
         //RecyclerView
@@ -107,32 +113,43 @@ public class ShoppingCart extends AppCompatActivity {
                             DatabaseReference cartItem = cart.child(deletedFood.getId());
                             cartItem.removeValue();
                             cartList.remove(deletedFood);
+
+                            Log.i("cartList", cartList.toString());
+                            Log.i("cartList", cartItem.toString());
+
+                            cart.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (cartList.size() == 0) {
+                                        emptyCart.setVisibility(View.VISIBLE);
+                                        tvEmptyCart.setVisibility(View.VISIBLE);
+                                        cardView.setVisibility(View.GONE);
+                                        btnPlaceOrder.setEnabled(false);
+                                        adapter.onDataChanged();
+                                        adapter.notifyItemChanged(0);
+                                        recyclerView.setAdapter(adapter);
+
+//                                Intent emptyCart = new Intent(ShoppingCart.this, ShoppingCart.class);
+//                                startActivity(emptyCart);
+//                                finish();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                             recyclerView.setAdapter(adapter);
 
-                            if(cartList.size() == 0) {
-                                emptyCart.setVisibility(View.VISIBLE);
-                                tvEmptyCart.setVisibility(View.VISIBLE);
-                                btnPlaceOrder.setEnabled(false);
-                            }
-                }));
+                        }));
             }
         };
 
         tvTotalPrice = findViewById(R.id.total);
         btnPlaceOrder = findViewById(R.id.btnPlaceOrder);
 
-
-        Set<String> restaurantsId = new HashSet<>();
-
-//        cartList = (List<Food>) cart;
-//        for (Food f: cartList) {
-//            Log.i("info2", f.toString());
-//        }
-
-//       loadListFood();
-//
         loadFood();
-
 
     }
 
@@ -156,15 +173,11 @@ public class ShoppingCart extends AppCompatActivity {
                     total += food.getPrice() * food.getQuantity();
                 }
 
-//                for (Food f: foods) {
-//                    cartList.add(f);
-//                }
-//                cartList = foods;
-
-                if(cartList.size() == 0) {
+                if (cartList.size() == 0) {
                     emptyCart.setVisibility(View.VISIBLE);
                     tvEmptyCart.setVisibility(View.VISIBLE);
                     btnStartShopping.setVisibility(View.VISIBLE);
+                    cardView.setVisibility(View.GONE);
                     btnStartShopping.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -178,6 +191,7 @@ public class ShoppingCart extends AppCompatActivity {
                     emptyCart.setVisibility(View.GONE);
                     tvEmptyCart.setVisibility(View.GONE);
                     btnStartShopping.setVisibility(View.GONE);
+                    cardView.setVisibility(View.VISIBLE);
                     btnPlaceOrder.setEnabled(true);
                 }
 
@@ -349,7 +363,6 @@ public class ShoppingCart extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
     }
-
 
 
     @Override

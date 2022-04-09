@@ -62,9 +62,9 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<MyViewHolder>{
         Food food = foodList.get(position);
         holder.restaurantName.setText(String.format("Restaurant: %s", "test"));
         holder.foodName.setText(String.format("Produs: %s",food.getName()));
-        holder.foodQuantity.setText(String.format("Cantitate: %s",food.getQuantity()));
-        holder.foodPrice.setText(String.format("Pret: %s",String.valueOf(food.getPrice())));
-        holder.foodTotal.setText(String.format("Total: %s",String.valueOf(food.getPrice() * food.getQuantity())));
+        holder.foodQuantity.setText(String.valueOf(food.getQuantity()));
+        holder.foodPrice.setText(String.valueOf(food.getPrice()));
+        holder.foodTotal.setText(String.valueOf(food.getPrice() * food.getQuantity()));
 //        Picasso.with(getBaseContext()).load(food.getImage())
 //                .into(holder.foodImage);
 

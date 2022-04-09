@@ -5,27 +5,40 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Order;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Status;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.OrderDetailsAdapter;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.OrderDetailsViewHolder;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.OrderViewHolder;
 
 public class OrderDetails extends AppCompatActivity {
 
@@ -42,7 +55,10 @@ public class OrderDetails extends AppCompatActivity {
     String total;
     String address;
 
+    FirebaseRecyclerAdapter<Food, OrderDetailsViewHolder> adapter;
+
     DatabaseReference cart;
+    DatabaseReference restaurants;
     FirebaseDatabase database;
     FirebaseUser user;
 
@@ -67,7 +83,7 @@ public class OrderDetails extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         foodList.setLayoutManager(layoutManager);
 
-        if(getIntent() != null) {
+        if (getIntent() != null) {
             orderId = getIntent().getStringExtra("orderId");
             restaurantNameString = getIntent().getStringExtra("restaurantName");
             restaurantImageString = getIntent().getStringExtra("restaurantImage");
@@ -79,37 +95,118 @@ public class OrderDetails extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
         cart = database.getReference("orders").child(user.getUid()).child(orderId).child("cart");
+        restaurants = database.getReference("restaurants");
 
         restaurantName.setText(restaurantNameString);
         //restaurantImage.setImageURI(Uri.parse(restaurantImageString));
         orderStatus.setText(status);
-        orderTotal.setText(total);
+        orderTotal.setText(total + " lei");
         orderAddress.setText(address);
 
         Picasso.with(getBaseContext()).load(restaurantImageString)
                 .into(restaurantImage);
 
-        cart.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Food food = dataSnapshot.getValue(Food.class);
-                    Log.i("foods", food.toString());
-                    foods.add(food);
-                }
+        loadOrderDetails();
 
-                OrderDetailsAdapter adapter = new OrderDetailsAdapter(foods);
-                adapter.notifyDataSetChanged();
-                foodList.setAdapter(adapter);
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+//        cart.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//                    Food food = dataSnapshot.getValue(Food.class);
+//                    Log.i("foods", food.toString());
+//                    foods.add(food);
+//                }
+//
+//                loadOrderDetails();
+//
+////                OrderDetailsAdapter adapter = new OrderDetailsAdapter(foods);
+////                adapter.notifyDataSetChanged();
+////                foodList.setAdapter(adapter);
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
 
 
     }
+
+    private void loadOrderDetails() {
+
+        Query query = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("orders")
+                .child(user.getUid())
+                .child(orderId)
+                .child("cart")
+                .orderByChild("restaurantId")
+                .limitToLast(50);
+
+        FirebaseRecyclerOptions<Food> options =
+                new FirebaseRecyclerOptions.Builder<Food>()
+                        .setQuery(query, Food.class)
+                        .build();
+
+        adapter = new FirebaseRecyclerAdapter<Food, OrderDetailsViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull OrderDetailsViewHolder holder, int position, @NonNull Food model) {
+
+                holder.foodName.setText(model.getName());
+
+                restaurants.child(model.getRestaurantId()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Restaurant restaurant = snapshot.getValue(Restaurant.class);
+                        holder.restaurantName.setText(restaurant.getName() + " : ");
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                holder.foodPrice.setText(String.valueOf(model.getPrice()));
+                holder.foodQuantity.setText(String.valueOf(model.getQuantity()));
+                holder.foodTotal.setText(model.getPrice() * model.getQuantity() + " lei");
+                Picasso.with(getBaseContext()).load(model.getImage())
+                        .into(holder.foodImage);
+
+                final Food local = model;
+                holder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+
+                        Toast.makeText(OrderDetails.this, model.getName(), Toast.LENGTH_LONG).show();
+
+                    }
+                });
+            }
+
+
+            @NonNull
+            @Override
+            public OrderDetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.order_detail_layout, parent, false);
+                view.setMinimumWidth(parent.getMeasuredWidth());
+
+                return new OrderDetailsViewHolder(view);
+            }
+        };
+
+        foodList.setAdapter(adapter);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapter.startListening();
+    }
 }
+
+

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/teal_100"
     tools:context=".PlaceOrder">
 
 <androidx.constraintlayout.widget.ConstraintLayout
@@ -11,25 +12,74 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
+    <LinearLayout
+        android:id="@+id/savedAddresses"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/tvSavedAddresses"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:text="Alege una dintre adresele salvate"
+            android:fontFamily="@font/alata"
+            android:textStyle="bold"
+            android:textSize="20sp"></TextView>
+
+        <ImageView
+            android:id="@+id/rightArrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:foregroundGravity="right"
+            android:src="@drawable/ic_baseline_arrow_forward_24"></ImageView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/newAddresses"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/savedAddresses">
+
     <TextView
         android:id="@+id/tvAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/shipping_address"
-        android:textSize="25sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_weight="0.3"
+        android:text="Introdu o noua adresa"
+        android:textSize="20sp"
+        android:textStyle="bold"
         android:fontFamily="@font/alata"
-        app:layout_constraintTop_toTopOf="parent"></TextView>
+      ></TextView>
+
+    <ImageView
+        android:id="@+id/downArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:foregroundGravity="right"
+        android:src="@drawable/ic_baseline_arrow_downward_24"></ImageView>
+
+    </LinearLayout>
 
     <RadioGroup
         android:id="@+id/radioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvAddress">
+        app:layout_constraintTop_toBottomOf="@+id/newAddresses">
 
         <RadioButton
             android:id="@+id/radioBtnCurrentLocation"
@@ -339,6 +389,7 @@
         android:layout_height="wrap_content"
         android:text="@string/pick_payment_method"
         android:textSize="25sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fourthRow"

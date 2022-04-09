@@ -44,16 +44,18 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="450dp"
         android:layout_width="match_parent"
-        android:backgroundTint="@color/teal_100"
+        android:backgroundTint="@color/teal_200"
         android:shadowColor="@color/black"
         android:layout_height="wrap_content"></Button>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_alignParentBottom="true"
         app:cardBackgroundColor="@color/teal_700"
         android:layout_alignParentEnd="true"
         android:layout_width="match_parent"
-        android:layout_height="100dp">
+        android:layout_height="100dp"
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="match_parent"

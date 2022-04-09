@@ -105,6 +105,7 @@ public class PlaceOrder extends AppCompatActivity {
     String mapsAddress;
     TextView tvAddress;
     TextView tvAddressInfo;
+    TextView tvNewAddress;
     Button btnConfirmAddress;
 
     Address newAddress;
@@ -121,6 +122,10 @@ public class PlaceOrder extends AppCompatActivity {
     String region;
 
     List<String> restaurantAddresses = new ArrayList<String>();
+
+    TextView tvSavedAddresses;
+    String idSavedAddress;
+    int same = 0;
 
 //    ImageButton mapButton;
 
@@ -169,7 +174,29 @@ public class PlaceOrder extends AppCompatActivity {
 
         tvAddress = findViewById(R.id.tvPickedAddress);
         tvAddressInfo = findViewById(R.id.tvPickedAddressInfo);
+
+        tvSavedAddresses = findViewById(R.id.tvSavedAddresses);
+        tvNewAddress = findViewById(R.id.tvAddress);
 //        mapButton = findViewById(R.id.btnImageMap);
+
+        tvNewAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (radioGroup.getVisibility() == View.GONE) {
+                    radioGroup.setVisibility(View.VISIBLE);
+                } else {
+                    radioGroup.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        tvSavedAddresses.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent savedAddresses = new Intent(PlaceOrder.this, AddressesList.class);
+                startActivity(savedAddresses);
+            }
+        });
 
         RadioGroup rg = (RadioGroup) findViewById(R.id.radioGroup);
 
@@ -182,7 +209,99 @@ public class PlaceOrder extends AppCompatActivity {
                 latitude = getIntent().getDoubleExtra("latitude", 0.0);
                 longitude = getIntent().getDoubleExtra("longitude", 0.0);
             }
+            if (origin != null && origin.equals("savedAddresses")) {
+                idSavedAddress = getIntent().getStringExtra("addressId");
+            }
         }
+
+        if (idSavedAddress != null) {
+            addresses.child(idSavedAddress).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Address address = snapshot.getValue(Address.class);
+                    tvAddressInfo.setVisibility(View.VISIBLE);
+                    tvAddress.setVisibility(View.VISIBLE);
+                    tvAddressInfo.setText(address.getMapsAddress());
+
+                    if (tvAddress.getVisibility() == View.GONE) {
+                        btnPlaceOrder.setEnabled(false);
+                    }
+                    if (tvAddress.getVisibility() == View.VISIBLE) {
+                        btnPlaceOrder.setEnabled(true);
+                    }
+
+
+                    btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String orderId = orders.push().getKey();
+                            PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentSpinner.getSelectedItem().toString().toUpperCase().replace(" ", "_"));
+                            Status status = Status.plasata;
+                            Order order = new Order(orderId, total, userId, paymentMethod, address, cartList, status, restaurantAddresses);
+
+                            orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
+
+                                        cart.removeValue();
+                                        Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
+                                        confirmationOrder.putExtra("orderId", orderId);
+                                        confirmationOrder.putExtra("origin", "savedAddress");
+                                        startActivity(confirmationOrder);
+                                        finish();
+
+                                    } else {
+                                        Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                        }
+                    });
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+
+        cart.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                total = 0.0f;
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Food food = dataSnapshot.getValue(Food.class);
+                    cartList.add(food);
+                    total += food.getPrice() * food.getQuantity();
+                    restaurants.child(food.getRestaurantId()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            Restaurant restaurant = snapshot.getValue(Restaurant.class);
+                            restaurantAddresses.add(restaurant.getAddress());
+                            Log.i("incercare", restaurant.toString());
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                }
+
+                tvTotal.setText(total + " LEI");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @SuppressLint("MissingPermission")
@@ -282,10 +401,10 @@ public class PlaceOrder extends AppCompatActivity {
                                 tvAddress.setVisibility(View.VISIBLE);
 
                                 tvAddress.setVisibility(View.VISIBLE);
-                                if(tvAddress.getVisibility() == View.GONE) {
+                                if (tvAddress.getVisibility() == View.GONE) {
                                     btnPlaceOrder.setEnabled(false);
                                 }
-                                if(tvAddress.getVisibility() == View.VISIBLE) {
+                                if (tvAddress.getVisibility() == View.VISIBLE) {
                                     btnPlaceOrder.setEnabled(true);
                                 }
                             }
@@ -320,17 +439,37 @@ public class PlaceOrder extends AppCompatActivity {
 
                                 newAddress = new Address(addressId, street, number, block, entrance, floor, apartment, city, region, userId, address);
 
-
-                                addresses.child(addressId).setValue(newAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                same = 0;
+                                addresses.addValueEventListener(new ValueEventListener() {
                                     @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Toast.makeText(PlaceOrder.this, "Adresa adaugata", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(PlaceOrder.this, "Eroare la adaugarea adresei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                            Address address1 = dataSnapshot.getValue(Address.class);
+                                            if(address1.getMapsAddress().equals(newAddress.getMapsAddress())) {
+                                                same = 1;
+                                            }
+                                        }
+
+                                        if(same != 1) {
+                                            addresses.child(addressId).setValue(newAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Toast.makeText(PlaceOrder.this, "Adresa adaugata", Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        Toast.makeText(PlaceOrder.this, "Eroare la adaugarea adresei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                                    }
+                                                }
+                                            });
                                         }
                                     }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
                                 });
+
 
                                 String orderId = orders.push().getKey();
                                 PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentSpinner.getSelectedItem().toString().toUpperCase().replace(" ", "_"));
@@ -410,16 +549,37 @@ public class PlaceOrder extends AppCompatActivity {
                                                         newAddress = new Address(addressId, s);
 
 
-                                                        addresses.child(addressId).setValue(newAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        same = 0;
+                                                        addresses.addValueEventListener(new ValueEventListener() {
                                                             @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                if (task.isSuccessful()) {
-                                                                    Toast.makeText(PlaceOrder.this, "Adresa adaugata", Toast.LENGTH_SHORT).show();
-                                                                } else {
-                                                                    Toast.makeText(PlaceOrder.this, "Eroare la adaugarea adresei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                                                    Address address1 = dataSnapshot.getValue(Address.class);
+                                                                    if(address1.getMapsAddress().equals(newAddress.getMapsAddress())) {
+                                                                        same = 1;
+                                                                    }
+                                                                }
+
+                                                                if(same != 1) {
+                                                                    addresses.child(addressId).setValue(newAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                            if (task.isSuccessful()) {
+                                                                                Toast.makeText(PlaceOrder.this, "Adresa adaugata", Toast.LENGTH_SHORT).show();
+                                                                            } else {
+                                                                                Toast.makeText(PlaceOrder.this, "Eroare la adaugarea adresei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                                                            }
+                                                                        }
+                                                                    });
                                                                 }
                                                             }
+
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                                            }
                                                         });
+
 
                                                         String orderId = orders.push().getKey();
                                                         PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentSpinner.getSelectedItem().toString().toUpperCase().replace(" ", "_"));
@@ -466,10 +626,10 @@ public class PlaceOrder extends AppCompatActivity {
                                 });
 
                         tvAddress.setVisibility(View.VISIBLE);
-                        if(tvAddress.getVisibility() == View.GONE) {
+                        if (tvAddress.getVisibility() == View.GONE) {
                             btnPlaceOrder.setEnabled(false);
                         }
-                        if(tvAddress.getVisibility() == View.VISIBLE) {
+                        if (tvAddress.getVisibility() == View.VISIBLE) {
                             btnPlaceOrder.setEnabled(true);
                         }
                         break;
@@ -482,7 +642,7 @@ public class PlaceOrder extends AppCompatActivity {
                                 mapsAddress = getIntent().getStringExtra("address");
                                 latitude = getIntent().getDoubleExtra("latitude", 0.0);
                                 longitude = getIntent().getDoubleExtra("longitude", 0.0);
-                               // rg.check(R.id.radioBtnMapsLocation);
+                                // rg.check(R.id.radioBtnMapsLocation);
                             }
                         }
 
@@ -537,16 +697,38 @@ public class PlaceOrder extends AppCompatActivity {
                                     btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            addresses.child(addressId).setValue(newAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                                            same = 0;
+                                            addresses.addValueEventListener(new ValueEventListener() {
                                                 @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if (task.isSuccessful()) {
-                                                        Toast.makeText(PlaceOrder.this, "Adresa adaugata", Toast.LENGTH_SHORT).show();
-                                                    } else {
-                                                        Toast.makeText(PlaceOrder.this, "Eroare la adaugarea adresei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                                        Address address1 = dataSnapshot.getValue(Address.class);
+                                                        if(address1.getMapsAddress().equals(newAddress.getMapsAddress())) {
+                                                            same = 1;
+                                                        }
+                                                    }
+
+                                                    if(same != 1) {
+                                                        addresses.child(addressId).setValue(newAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    Toast.makeText(PlaceOrder.this, "Adresa adaugata", Toast.LENGTH_SHORT).show();
+                                                                } else {
+                                                                    Toast.makeText(PlaceOrder.this, "Eroare la adaugarea adresei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                                                }
+                                                            }
+                                                        });
                                                     }
                                                 }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
                                             });
+
 
                                             String orderId = orders.push().getKey();
                                             PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentSpinner.getSelectedItem().toString().toUpperCase().replace(" ", "_"));
@@ -595,10 +777,10 @@ public class PlaceOrder extends AppCompatActivity {
                         }
 
                         //tvAddress.setVisibility(View.VISIBLE);
-                        if(tvAddress.getVisibility() == View.GONE) {
+                        if (tvAddress.getVisibility() == View.GONE) {
                             btnPlaceOrder.setEnabled(false);
                         }
-                        if(tvAddress.getVisibility() == View.VISIBLE) {
+                        if (tvAddress.getVisibility() == View.VISIBLE) {
                             btnPlaceOrder.setEnabled(true);
                         }
                         break;
@@ -606,44 +788,11 @@ public class PlaceOrder extends AppCompatActivity {
             }
         });
 
-        cart.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                total = 0.0f;
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Food food = dataSnapshot.getValue(Food.class);
-                    cartList.add(food);
-                    total += food.getPrice() * food.getQuantity();
-                    restaurants.child(food.getRestaurantId()).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            Restaurant restaurant = snapshot.getValue(Restaurant.class);
-                            restaurantAddresses.add(restaurant.getAddress());
-                            Log.i("incercare", restaurant.toString());
 
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-
-                }
-
-                tvTotal.setText(total + " LEI");
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-        if(tvAddress.getVisibility() == View.GONE) {
+        if (tvAddress.getVisibility() == View.GONE) {
             btnPlaceOrder.setEnabled(false);
         }
-        if(tvAddress.getVisibility() == View.VISIBLE) {
+        if (tvAddress.getVisibility() == View.VISIBLE) {
             btnPlaceOrder.setEnabled(true);
         }
     }

@@ -149,7 +149,7 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
 
         if (getIntent() != null && getIntent().getExtras() != null) {
             String origin = getIntent().getExtras().getString("origin");
-            if (origin != null && (origin.equals("currentAddress") || origin.equals("mapsLocation"))) {
+            if (origin != null && (origin.equals("currentAddress") || origin.equals("mapsLocation") || origin.equals("savedAddress"))) {
                 orderId = getIntent().getStringExtra("orderId");
 
                 if (ActivityCompat.checkSelfPermission(this,
@@ -270,6 +270,7 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
                     }
                 });
             }
+
         }
 
         btnReturnToMainMenu.setOnClickListener(new View.OnClickListener() {
