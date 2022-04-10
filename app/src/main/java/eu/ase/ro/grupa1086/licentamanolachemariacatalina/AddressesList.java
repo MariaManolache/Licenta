@@ -39,10 +39,16 @@ public class AddressesList extends AppCompatActivity {
     DatabaseReference addresses;
     FirebaseUser user;
 
+    String origin;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addresses_list);
+
+        if(getIntent() != null) {
+            origin = getIntent().getStringExtra("origin");
+        }
 
         database = FirebaseDatabase.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -75,7 +81,8 @@ public class AddressesList extends AppCompatActivity {
         adapter = new FirebaseRecyclerAdapter<Address, AddressViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull AddressViewHolder holder, int position, @NonNull Address model) {
-                holder.addressName.setText("Adresa#" + position + 1);
+                int nextPosition = position + 1;
+                holder.addressName.setText("Adresa#" + nextPosition);
                 holder.addressDetails.setText(model.getMapsAddress());
 
                 final Address local = model;
@@ -84,11 +91,14 @@ public class AddressesList extends AppCompatActivity {
                     public void onClick(View view, int position, boolean isLongClick) {
 
                         Toast.makeText(AddressesList.this, model.getMapsAddress(), Toast.LENGTH_LONG).show();
-                        Intent placeOrder = new Intent(AddressesList.this, PlaceOrder.class);
-                        placeOrder.putExtra("origin", "savedAddresses");
-                        placeOrder.putExtra("addressId", model.getId());
-                        startActivity(placeOrder);
-                        finish();
+
+                        if(origin.equals("placeOrder")) {
+                            Intent placeOrder = new Intent(AddressesList.this, PlaceOrder.class);
+                            placeOrder.putExtra("origin", "savedAddresses");
+                            placeOrder.putExtra("addressId", model.getId());
+                            startActivity(placeOrder);
+                            finish();
+                        }
                     }
                 });
             }

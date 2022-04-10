@@ -16,8 +16,13 @@
         android:theme="@style/Theme.LicentaManolacheMariaCatalina"
         tools:replace="android:theme">
         <activity
+            android:name=".AccountDetails"
+            android:exported="false"
+            android:label="@string/account_details"/>
+        <activity
             android:name=".AddressesList"
-            android:exported="false" />
+            android:exported="false"
+            android:label="@string/my_addresses" />
         <activity
             android:name=".OrderDetails"
             android:exported="false"
@@ -51,7 +56,8 @@
             android:label="@string/title_activity_maps" />
         <activity
             android:name=".PhoneNumberValidation"
-            android:exported="false" />
+            android:exported="false"
+            android:label="@string/check_phone_number"/>
         <activity
             android:name=".PlaceOrder"
             android:exported="false"
@@ -85,7 +91,8 @@
             android:exported="false" />
         <activity
             android:name=".account.ResetPassword"
-            android:exported="false" />
+            android:exported="false"
+            android:label="@string/reset_password" />
         <activity
             android:name=".PrincipalMenu"
             android:exported="false"
@@ -98,13 +105,16 @@
             android:exported="true" />
         <activity
             android:name=".account.SignUp"
-            android:exported="true" />
+            android:exported="true"
+            android:label="@string/create_account" />
         <activity
             android:name=".account.SignIn"
-            android:exported="true" />
+            android:exported="true"
+            android:label="@string/connect_to_account" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/app">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

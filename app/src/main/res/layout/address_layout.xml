@@ -3,13 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    app:cardCornerRadius="10dp"
+    android:layout_margin="10dp"
     app:cardElevation="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imgAddress"
+            android:src="@drawable/ic_baseline_home_24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/addressName"
@@ -20,6 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"></TextView>
 
+        </LinearLayout>
 
         <LinearLayout
             android:layout_marginTop="16dp"

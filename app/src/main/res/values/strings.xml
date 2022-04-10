@@ -40,11 +40,10 @@
     <string name="menu_title">Meniu</string>
     <string name="orders">Comenzi</string>
     <string name="next_step">Mergi la pasul urmator</string>
-    <string name="create_account">Creare cont</string>
     <string name="connect">Conectare</string>
     <string name="validate_phone_number">Valideaza-ti numarul de telefon</string>
     <string name="password">Parola</string>
-    <string name="register_here">Nu ai cont? Inregistreaza-te aici</string>
+    <string name="register_here">Nu ai cont? Inregistreaza-te aici.</string>
     <string name="connect_to_account">Conecteaza-te</string>
     <string name="forgot_password">Ai uitat parola? Click aici pentru resetare.</string>
     <string name="email">Email</string>
@@ -98,4 +97,15 @@
     <string name="order_details">Detaliile comenzii</string>
     <string name="address_name">Adresa#1</string>
     <string name="address_example">Strada ...</string>
+    <string name="my_addresses">Adresele mele</string>
+    <string name="welcome_name">Bine ai venit, Maria!</string>
+    <string name="my_profile">Profilul meu</string>
+    <string name="sign_out">Deconectare</string>
+    <string name="check_phone_number">Verifica numarul de telefon</string>
+    <string name="reset_password">Resetare parola</string>
+    <string name="create_account">Creare cont</string>
+    <string name="example_email">numeprenume@gmail.com</string>
+    <string name="example_phone_number">+40723232323</string>
+    <string name="app">Aplicatie</string>
+    <string name="account_details">Detaliile contului</string>
 </resources>

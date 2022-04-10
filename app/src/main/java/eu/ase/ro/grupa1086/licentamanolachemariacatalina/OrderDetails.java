@@ -59,6 +59,7 @@ public class OrderDetails extends AppCompatActivity {
 
     DatabaseReference cart;
     DatabaseReference restaurants;
+    DatabaseReference restaurantAddresses;
     FirebaseDatabase database;
     FirebaseUser user;
 
@@ -90,24 +91,26 @@ public class OrderDetails extends AppCompatActivity {
             address = getIntent().getStringExtra("address");
             status = getIntent().getStringExtra("orderStatus");
             total = getIntent().getStringExtra("total");
+
+            restaurantName.setText(restaurantNameString);
+            //restaurantImage.setImageURI(Uri.parse(restaurantImageString));
+            orderStatus.setText(status);
+            orderTotal.setText(total + " lei");
+            orderAddress.setText(address);
+
+            Picasso.with(getBaseContext()).load(restaurantImageString)
+                    .into(restaurantImage);
+
         }
 
         database = FirebaseDatabase.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
-        cart = database.getReference("orders").child(user.getUid()).child(orderId).child("cart");
+        cart = database.getReference().child("orders").child(user.getUid()).child(orderId).child("cart");
         restaurants = database.getReference("restaurants");
+        restaurantAddresses = database.getReference("orders").child(user.getUid()).child(orderId).child("restaurantAddress");
 
-        restaurantName.setText(restaurantNameString);
-        //restaurantImage.setImageURI(Uri.parse(restaurantImageString));
-        orderStatus.setText(status);
-        orderTotal.setText(total + " lei");
-        orderAddress.setText(address);
-
-        Picasso.with(getBaseContext()).load(restaurantImageString)
-                .into(restaurantImage);
 
         loadOrderDetails();
-
 //        cart.addValueEventListener(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -136,13 +139,8 @@ public class OrderDetails extends AppCompatActivity {
 
     private void loadOrderDetails() {
 
-        Query query = FirebaseDatabase.getInstance()
-                .getReference()
-                .child("orders")
-                .child(user.getUid())
-                .child(orderId)
-                .child("cart")
-                .orderByChild("restaurantId")
+        Query query = cart
+                .orderByChild("id")
                 .limitToLast(50);
 
         FirebaseRecyclerOptions<Food> options =
@@ -156,11 +154,31 @@ public class OrderDetails extends AppCompatActivity {
 
                 holder.foodName.setText(model.getName());
 
-                restaurants.child(model.getRestaurantId()).addValueEventListener(new ValueEventListener() {
+                restaurantAddresses.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Restaurant restaurant = snapshot.getValue(Restaurant.class);
-                        holder.restaurantName.setText(restaurant.getName() + " : ");
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+                            if(model.getRestaurantId().equals(restaurant.getId())) {
+                                holder.restaurantName.setText(restaurant.getName() + " : ");
+                            }
+                        }
+
+                        holder.foodPrice.setText(String.valueOf(model.getPrice()));
+                        holder.foodQuantity.setText(String.valueOf(model.getQuantity()));
+                        holder.foodTotal.setText(model.getPrice() * model.getQuantity() + " lei");
+                        Picasso.with(getBaseContext()).load(model.getImage())
+                                .into(holder.foodImage);
+
+                        final Food local = model;
+                        holder.setItemClickListener(new ItemClickListener() {
+                            @Override
+                            public void onClick(View view, int position, boolean isLongClick) {
+
+                                Toast.makeText(OrderDetails.this, model.getName(), Toast.LENGTH_LONG).show();
+
+                            }
+                        });
                     }
 
                     @Override
@@ -169,21 +187,20 @@ public class OrderDetails extends AppCompatActivity {
                     }
                 });
 
-                holder.foodPrice.setText(String.valueOf(model.getPrice()));
-                holder.foodQuantity.setText(String.valueOf(model.getQuantity()));
-                holder.foodTotal.setText(model.getPrice() * model.getQuantity() + " lei");
-                Picasso.with(getBaseContext()).load(model.getImage())
-                        .into(holder.foodImage);
+//                restaurants.child(model.getRestaurantId()).addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        Restaurant restaurant = snapshot.getValue(Restaurant.class);
+//                        holder.restaurantName.setText(restaurant.getName() + " : ");
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
 
-                final Food local = model;
-                holder.setItemClickListener(new ItemClickListener() {
-                    @Override
-                    public void onClick(View view, int position, boolean isLongClick) {
 
-                        Toast.makeText(OrderDetails.this, model.getName(), Toast.LENGTH_LONG).show();
-
-                    }
-                });
             }
 
 

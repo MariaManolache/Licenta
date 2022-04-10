@@ -3,11 +3,13 @@ package eu.ase.ro.grupa1086.licentamanolachemariacatalina.account;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +33,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.app.AppCompatActivity;
 
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.AccountDetails;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.AddressesList;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.OrdersList;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.PrincipalMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
@@ -54,6 +58,9 @@ public class Account extends AppCompatActivity {
     LayoutInflater inflater;
     BottomNavigationView bottomNavigationView;
 
+    FrameLayout firstFrameLayout;
+    FrameLayout secondFrameLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +80,7 @@ public class Account extends AppCompatActivity {
 //                assert user != null;
 
                 if(user != null)
-                    name.setText(user.getName());
+                    name.setText("Bine ai venit, " + user.getName() + "!");
 
             }
 
@@ -87,9 +94,12 @@ public class Account extends AppCompatActivity {
         btnVerifyEmail = findViewById(R.id.btnVerify);
         name = findViewById(R.id.tvName);
 
+        firstFrameLayout = findViewById(R.id.firstFrameLayout);
+        secondFrameLayout = findViewById(R.id.secondFrameLayout);
+
         inflater = this.getLayoutInflater();
 
-        resetAlert = new AlertDialog.Builder(this);
+        resetAlert = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
 
         if(!firebaseAuth.getCurrentUser().isEmailVerified()) {
             btnVerifyEmail.setVisibility(View.VISIBLE);
@@ -118,6 +128,23 @@ public class Account extends AppCompatActivity {
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(getApplicationContext(), SignIn.class));
                 finish();
+            }
+        });
+
+        firstFrameLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myProfile = new Intent(Account.this, AccountDetails.class);
+                startActivity(myProfile);
+            }
+        });
+
+        secondFrameLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myAddresses = new Intent(Account.this, AddressesList.class);
+                myAddresses.putExtra("origin", "account");
+                startActivity(myAddresses);
             }
         });
 

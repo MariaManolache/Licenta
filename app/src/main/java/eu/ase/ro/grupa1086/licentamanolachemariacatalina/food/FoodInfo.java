@@ -217,12 +217,6 @@ public class FoodInfo extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                     food = snapshot.getValue(Food.class);
-//
-//                for(Food cartItem : cartFood) {
-//                    if(cartItem.getId().equals(foodId)) {
-//                        food = cartItem;
-//                    }
-//                }
 
                     //image
                     Picasso.with(getBaseContext()).load(food.getImage())
@@ -230,7 +224,7 @@ public class FoodInfo extends AppCompatActivity {
 
                     collapsingToolbarLayout.setTitle(food.getName());
 
-                    price.setText(String.valueOf(food.getPrice()));
+                    price.setText(food.getPrice() + " lei");
                     name.setText(food.getName());
                     description.setText(food.getDescription());
                     quantity.setText(quantityFromCart);

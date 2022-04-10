@@ -55,7 +55,7 @@ public class PrincipalMenu extends AppCompatActivity {
     FloatingActionButton shoppingCart;
     BottomNavigationView bottomNavigationView;
 
-    Button btnMaps;
+//    Button btnMaps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,15 +91,15 @@ public class PrincipalMenu extends AppCompatActivity {
         loadMenu();
         loadRestaurants();
 
-        btnMaps = findViewById(R.id.btnMaps);
-
-    btnMaps.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent maps = new Intent(PrincipalMenu.this, MapsActivity.class);
-            startActivity(maps);
-        }
-    });
+//        btnMaps = findViewById(R.id.btnMaps);
+//
+//    btnMaps.setOnClickListener(new View.OnClickListener() {
+//        @Override
+//        public void onClick(View v) {
+//            Intent maps = new Intent(PrincipalMenu.this, MapsActivity.class);
+//            startActivity(maps);
+//        }
+//    });
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.restaurantsMenu);
@@ -111,7 +111,7 @@ public class PrincipalMenu extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.account:
                         startActivity(new Intent(getApplicationContext(), Account.class));
-                        //finish();
+                        finish();
                         overridePendingTransition(0, 0);
                         return true;
                     case R.id.restaurantsMenu:
@@ -119,6 +119,7 @@ public class PrincipalMenu extends AppCompatActivity {
                     case R.id.orders:
                         startActivity(new Intent(getApplicationContext(), OrdersList.class));
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                 }
                 return false;

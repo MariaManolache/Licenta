@@ -16,6 +16,33 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_height="600dp"></androidx.recyclerview.widget.RecyclerView>
 
+    <ImageView
+        android:id="@+id/imgNoOrderFound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:src="@drawable/ic_no_order_found"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"></ImageView>
+
+    <TextView
+        android:id="@+id/tvNoOrderFound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="Esti nou aici? Plaseaza-ti acum prima comanda!"
+        android:textSize="25sp"
+        android:fontFamily="@font/alata"
+        android:textColor="@color/violet"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.824"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgNoOrderFound"
+        app:layout_constraintVertical_bias="0.0"></TextView>
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"

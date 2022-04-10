@@ -121,11 +121,12 @@ public class PlaceOrder extends AppCompatActivity {
     String city;
     String region;
 
-    List<String> restaurantAddresses = new ArrayList<String>();
+    List<Restaurant> restaurantAddresses = new ArrayList<Restaurant>();
 
     TextView tvSavedAddresses;
     String idSavedAddress;
     int same = 0;
+    int sameAddress = 0;
 
 //    ImageButton mapButton;
 
@@ -194,6 +195,7 @@ public class PlaceOrder extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent savedAddresses = new Intent(PlaceOrder.this, AddressesList.class);
+                savedAddresses.putExtra("origin", "placeOrder");
                 startActivity(savedAddresses);
             }
         });
@@ -281,7 +283,15 @@ public class PlaceOrder extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             Restaurant restaurant = snapshot.getValue(Restaurant.class);
-                            restaurantAddresses.add(restaurant.getAddress());
+                            for (Restaurant alreadySavedRestaurant : restaurantAddresses) {
+                                if(restaurant.getId().equals(alreadySavedRestaurant.getId())) {
+                                    sameAddress = 1;
+                                }
+                            }
+                            if(sameAddress == 0) {
+                                restaurantAddresses.add(restaurant);
+                            }
+
                             Log.i("incercare", restaurant.toString());
 
                         }

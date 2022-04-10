@@ -73,6 +73,7 @@ import java.util.List;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Address;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Order;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
 //import eu.ase.ro.grupa1086.licentamanolachemariacatalina.databinding.ActivityConfirmationOrderBinding;
 
 public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCallback, RoutingListener {
@@ -98,7 +99,7 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
     LatLng clientAddress;
     List<LatLng> restaurantCoordinates = new ArrayList<LatLng>();
 
-    List<String> restaurantAddresses = new ArrayList<String>();
+    List<Restaurant> restaurantAddresses = new ArrayList<Restaurant>();
 
     List<LatLng> latLngRestaurantAddresses = new ArrayList<LatLng>();
 
@@ -174,10 +175,10 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 for (DataSnapshot snapshot2 : dataSnapshot.getChildren()) {
-                                    String strAddress= snapshot2.getValue(String.class);
-                                    restaurantAddresses.add(strAddress);
-                                    Log.i("mapsAddress", strAddress);
-                                    restaurantCoordinates.add(getLocationFromAddress(strAddress));
+                                    Restaurant restaurantAddress = snapshot2.getValue(Restaurant.class);
+                                    restaurantAddresses.add(restaurantAddress);
+                                    Log.i("mapsAddress", restaurantAddress.toString());
+                                    restaurantCoordinates.add(getLocationFromAddress(restaurantAddress.getAddress()));
 
                                     float results[] = new float[10];
                                     Double distance = SphericalUtil.computeDistanceBetween(clientAddress, restaurantCoordinates.get(0));
@@ -235,10 +236,10 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 for (DataSnapshot snapshot2 : dataSnapshot.getChildren()) {
-                                    String strAddress= snapshot2.getValue(String.class);
-                                    restaurantAddresses.add(strAddress);
-                                    Log.i("mapsAddress", strAddress);
-                                    restaurantCoordinates.add(getLocationFromAddress(strAddress));
+                                    Restaurant restaurantAddress = snapshot2.getValue(Restaurant.class);
+                                    restaurantAddresses.add(restaurantAddress);
+                                    Log.i("mapsAddress", restaurantAddress.toString());
+                                    restaurantCoordinates.add(getLocationFromAddress(restaurantAddress.getAddress()));
 
                                     float results[] = new float[10];
                                     Double distance = SphericalUtil.computeDistanceBetween(clientAddress, restaurantCoordinates.get(0));
@@ -305,8 +306,8 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
         LatLng latLngUserAddress = new LatLng(getLocationFromAddress(mapsAddress).latitude, getLocationFromAddress(mapsAddress).longitude);
 
 
-        for (String address: restaurantAddresses) {
-            LatLng restaurantAddress = new LatLng(getLocationFromAddress(address).latitude,getLocationFromAddress(address).longitude);
+        for (Restaurant address: restaurantAddresses) {
+            LatLng restaurantAddress = new LatLng(getLocationFromAddress(address.getAddress()).latitude,getLocationFromAddress(address.getAddress()).longitude);
             latLngRestaurantAddresses.add(restaurantAddress);
             Log.i("mapsAddress", String.valueOf(restaurantAddress));
         }

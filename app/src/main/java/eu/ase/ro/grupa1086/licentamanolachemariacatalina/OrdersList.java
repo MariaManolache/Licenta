@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -27,6 +29,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.Account;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
@@ -46,12 +51,18 @@ public class OrdersList extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference orders;
     DatabaseReference restaurants;
+    DatabaseReference restaurantAddresses;
     FirebaseUser user;
 
     String restaurantName;
     String restaurantImage;
 
     BottomNavigationView bottomNavigationView;
+
+    ImageView imgNoOrderFound;
+    TextView tvNoOrderFound;
+
+    List<Order> orderList = new ArrayList<Order>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +79,14 @@ public class OrdersList extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+        imgNoOrderFound = findViewById(R.id.imgNoOrderFound);
+        tvNoOrderFound = findViewById(R.id.tvNoOrderFound);
+
         loadOrders();
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.orders);
+
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -80,13 +95,14 @@ public class OrdersList extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.account:
                         startActivity(new Intent(getApplicationContext(), Account.class));
-                        //finish();
+                        finish();
                         overridePendingTransition(0, 0);
                         return true;
                     case R.id.restaurantsMenu:
                         startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
-                        //finish();
+                        finish();
                         overridePendingTransition(0, 0);
+                        return true;
                     case R.id.orders:
                         return true;
                 }
@@ -104,6 +120,14 @@ public class OrdersList extends AppCompatActivity {
                 .orderByChild("id")
                 .limitToLast(50);
 
+        if(query == null) {
+            imgNoOrderFound.setVisibility(View.VISIBLE);
+            tvNoOrderFound.setVisibility(View.VISIBLE);
+        } else {
+            imgNoOrderFound.setVisibility(View.GONE);
+            tvNoOrderFound.setVisibility(View.GONE);
+        }
+
         FirebaseRecyclerOptions<Order> options =
                 new FirebaseRecyclerOptions.Builder<Order>()
                         .setQuery(query, Order.class)
@@ -115,124 +139,198 @@ public class OrdersList extends AppCompatActivity {
 
                 restaurantName = null;
                 restaurantImage = null;
+                orderList.add(model);
 
-                if (model.getCart().size() == 1) {
-                    restaurants.child(model.getCart().get(0).getRestaurantId()).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            Restaurant restaurant = snapshot.getValue(Restaurant.class);
-                            //Log.i("restaurant", restaurant.toString());
-
-                            restaurantName = restaurant.getName();
-                            restaurantImage = restaurant.getImage();
-
-                            holder.restaurantsName.setText(restaurantName);
-                            holder.orderStatus.setText(String.valueOf(model.getStatus()));
-                            holder.orderAddress.setText(String.valueOf(model.getAddress().getMapsAddress()));
-                            holder.orderPriceTotal.setText("Total: " + model.getTotal() + " lei");
-                            Picasso.with(getBaseContext()).load(restaurantImage)
-                                    .into(holder.restaurantImage);
-
-                            restaurantName = null;
-
-                            final Order local = model;
-                            holder.setItemClickListener(new ItemClickListener() {
-                                @Override
-                                public void onClick(View view, int position, boolean isLongClick) {
-
-                                    if(!isLongClick) {
-                                        Toast.makeText(OrdersList.this, model.getCart().toString(), Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Intent orderDetails = new Intent(OrdersList.this, OrderDetails.class);
-                                        orderDetails.putExtra("orderId", adapter.getRef(position).getKey());
-                                        orderDetails.putExtra("restaurantName", restaurant.getName());
-                                        orderDetails.putExtra("restaurantImage", restaurant.getImage());
-                                        orderDetails.putExtra("orderStatus", String.valueOf(local.getStatus()));
-                                        orderDetails.putExtra("address", model.getAddress().getMapsAddress());
-                                        orderDetails.putExtra("total", String.valueOf(local.getTotal()));
-                                        startActivity(orderDetails);
-                                    }
-
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-
-                } else {
-                    for (int i = 0; i < model.getCart().size(); i++) {
-                        Log.i("restaurants", String.valueOf(model.getCart().size()));
-//                        restaurantName = null;
-//                        restaurantImage = null;
-
-                        restaurants.child(model.getCart().get(i).getRestaurantId()).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-
-                                    Restaurant restaurant = snapshot.getValue(Restaurant.class);
-                                    Log.i("restaurant", restaurant.toString());
-
-                                    if (restaurantName == null) {
-                                        restaurantName = restaurant.getName();
-                                    } else {
-                                        if (!restaurantName.contains(restaurant.getName())) {
-                                            restaurantName += ", " + restaurant.getName();
-                                        }
-                                    }
-                                    restaurantImage = restaurant.getImage();
-
-//                            if(restaurantName == null) {
-//                                restaurantName = restaurant.getName();
-//                            } else {
-//                                restaurantName += ", " + restaurant.getName();
-//                            }
-////                            if(restaurantImage == null) {
-//                                restaurantImage = restaurant.getImage();
-////                            }
-
-                                    holder.restaurantsName.setText(restaurantName);
-                                    holder.orderStatus.setText(String.valueOf(model.getStatus()));
-                                    holder.orderAddress.setText(String.valueOf(model.getAddress().getMapsAddress()));
-                                    holder.orderPriceTotal.setText("Total: " + model.getTotal() + " lei");
-                                    Picasso.with(getBaseContext()).load(restaurantImage)
-                                            .into(holder.restaurantImage);
-
-                                    final Order local = model;
-                                    holder.setItemClickListener(new ItemClickListener() {
-                                        @Override
-                                        public void onClick(View view, int position, boolean isLongClick) {
-
-                                            if (!isLongClick) {
-                                                Toast.makeText(OrdersList.this, model.getCart().toString(), Toast.LENGTH_LONG).show();
-                                            } else {
-                                                Intent orderDetails = new Intent(OrdersList.this, OrderDetails.class);
-                                                orderDetails.putExtra("orderId", adapter.getRef(position).getKey());
-                                                orderDetails.putExtra("restaurantName", restaurantName);
-                                                orderDetails.putExtra("restaurantImage", restaurantImage);
-                                                orderDetails.putExtra("orderStatus", String.valueOf(local.getStatus()));
-                                                orderDetails.putExtra("address", model.getAddress().getMapsAddress());
-                                                orderDetails.putExtra("total", String.valueOf(local.getTotal()));
-                                                startActivity(orderDetails);
-                                            }
-
-                                        }
-                                    });
-
-                                }
+                orders.child(model.getId()).child("restaurantAddress").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+                            if(restaurantName == null) {
+                                restaurantName = restaurant.getName();
+                                restaurantImage = restaurant.getImage();
+                            } else {
+                                restaurantName += ", " + restaurant.getName();
                             }
+                        }
 
+                        holder.restaurantsName.setText(restaurantName);
+                        holder.orderStatus.setText(String.valueOf(model.getStatus()));
+                        holder.orderAddress.setText(String.valueOf(model.getAddress().getMapsAddress()));
+                        holder.orderPriceTotal.setText("Total: " + model.getTotal() + " lei");
+                        Picasso.with(getBaseContext()).load(restaurantImage)
+                                .into(holder.restaurantImage);
+
+                        String restaurantName2 = restaurantName;
+                        String restaurantImage2 = restaurantImage;
+                        restaurantName = null;
+                        restaurantImage = null;
+
+                        final Order local = model;
+                        holder.setItemClickListener(new ItemClickListener() {
                             @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
+                            public void onClick(View view, int position, boolean isLongClick) {
+
+                                if(!isLongClick) {
+                                    Toast.makeText(OrdersList.this, model.getCart().toString(), Toast.LENGTH_LONG).show();
+                                } else {
+                                    Intent orderDetails = new Intent(OrdersList.this, OrderDetails.class);
+                                    orderDetails.putExtra("orderId", model.getId());
+                                    orderDetails.putExtra("restaurantName", restaurantName2);
+                                    orderDetails.putExtra("restaurantImage", restaurantImage2);
+                                    orderDetails.putExtra("orderStatus", String.valueOf(local.getStatus()));
+                                    orderDetails.putExtra("address", model.getAddress().getMapsAddress());
+                                    orderDetails.putExtra("total", String.valueOf(local.getTotal()));
+                                    startActivity(orderDetails);
+                                }
 
                             }
                         });
+
                     }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+//                if (model.getCart().size() == 1) {
+//                    restaurants.child(model.getCart().get(0).getRestaurantId()).addValueEventListener(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                            Restaurant restaurant = snapshot.getValue(Restaurant.class);
+//                            //Log.i("restaurant", restaurant.toString());
+//
+//                            restaurantName = restaurant.getName();
+//                            restaurantImage = restaurant.getImage();
+//
+//                            holder.restaurantsName.setText(restaurantName);
+//                            holder.orderStatus.setText(String.valueOf(model.getStatus()));
+//                            holder.orderAddress.setText(String.valueOf(model.getAddress().getMapsAddress()));
+//                            holder.orderPriceTotal.setText("Total: " + model.getTotal() + " lei");
+//                            Picasso.with(getBaseContext()).load(restaurantImage)
+//                                    .into(holder.restaurantImage);
+//
+//                            restaurantName = null;
+//
+//                            final Order local = model;
+//                            holder.setItemClickListener(new ItemClickListener() {
+//                                @Override
+//                                public void onClick(View view, int position, boolean isLongClick) {
+//
+//                                    if(!isLongClick) {
+//                                        Toast.makeText(OrdersList.this, model.getCart().toString(), Toast.LENGTH_LONG).show();
+//                                    } else {
+//                                        Intent orderDetails = new Intent(OrdersList.this, OrderDetails.class);
+//                                        orderDetails.putExtra("orderId", model.getId());
+//                                        orderDetails.putExtra("restaurantName", restaurant.getName());
+//                                        orderDetails.putExtra("restaurantImage", restaurant.getImage());
+//                                        orderDetails.putExtra("orderStatus", String.valueOf(local.getStatus()));
+//                                        orderDetails.putExtra("address", model.getAddress().getMapsAddress());
+//                                        orderDetails.putExtra("total", String.valueOf(local.getTotal()));
+//                                        startActivity(orderDetails);
+//                                    }
+//
+//                                }
+//                            });
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError error) {
+//
+//                        }
+//                    });
+//
+//                } else {
+//
+//                    for (int i = 0; i < model.getCart().size(); i++) {
+//                        Log.i("restaurants", String.valueOf(model.getCart().size()));
+////                        restaurantName = null;
+////                        restaurantImage = null;
+//
+//                        restaurants.child(model.getCart().get(i).getRestaurantId()).addValueEventListener(new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//
+//                                    Restaurant restaurant = snapshot.getValue(Restaurant.class);
+//                                    Log.i("restaurant", restaurant.toString());
+//
+//                                    if (restaurantName == null) {
+//                                        restaurantName = restaurant.getName();
+//                                    } else {
+//                                        if (!restaurantName.contains(restaurant.getName())) {
+//                                            restaurantName += ", " + restaurant.getName();
+//                                        }
+//                                    }
+//                                    restaurantImage = restaurant.getImage();
+//
+////                            if(restaurantName == null) {
+////                                restaurantName = restaurant.getName();
+////                            } else {
+////                                restaurantName += ", " + restaurant.getName();
+////                            }
+//////                            if(restaurantImage == null) {
+////                                restaurantImage = restaurant.getImage();
+//////                            }
+//
+//                                    holder.restaurantsName.setText(restaurantName);
+//                                    holder.orderStatus.setText(String.valueOf(model.getStatus()));
+//                                    holder.orderAddress.setText(String.valueOf(model.getAddress().getMapsAddress()));
+//                                    holder.orderPriceTotal.setText("Total: " + model.getTotal() + " lei");
+//                                    Picasso.with(getBaseContext()).load(restaurantImage)
+//                                            .into(holder.restaurantImage);
+//
+//                                    final Order local = model;
+//                                    holder.setItemClickListener(new ItemClickListener() {
+//                                        @Override
+//                                        public void onClick(View view, int position, boolean isLongClick) {
+//
+//                                            if (!isLongClick) {
+//                                                Toast.makeText(OrdersList.this, model.getCart().toString(), Toast.LENGTH_LONG).show();
+//                                            } else {
+//                                                Intent orderDetails = new Intent(OrdersList.this, OrderDetails.class);
+//                                                orderDetails.putExtra("orderId", model.getId());
+//                                                orderDetails.putExtra("restaurantName", restaurantName);
+//                                                orderDetails.putExtra("restaurantImage", restaurantImage);
+//                                                orderDetails.putExtra("orderStatus", String.valueOf(local.getStatus()));
+//                                                orderDetails.putExtra("address", model.getAddress().getMapsAddress());
+//                                                orderDetails.putExtra("total", String.valueOf(local.getTotal()));
+//                                                startActivity(orderDetails);
+//                                            }
+//
+//                                        }
+//                                    });
+//
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(@NonNull DatabaseError error) {
+//
+//                            }
+//                        });
+//                    }
+//
+//                }
+
+                if(orderList.size() == 0) {
+                    Log.i("ordersList", String.valueOf(orderList.size()));
+                    imgNoOrderFound.setVisibility(View.VISIBLE);
+                    tvNoOrderFound.setVisibility(View.VISIBLE);
+
+                    tvNoOrderFound.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent principalMenu = new Intent(OrdersList.this, PrincipalMenu.class);
+                            startActivity(principalMenu);
+                            finish();
+                        }
+                    });
+                } else {
+                    imgNoOrderFound.setVisibility(View.GONE);
+                    tvNoOrderFound.setVisibility(View.GONE);
                 }
             }
 
@@ -246,6 +344,7 @@ public class OrdersList extends AppCompatActivity {
                 return new OrderViewHolder(view);
             }
         };
+
 
         recyclerView.setAdapter(adapter);
     }
