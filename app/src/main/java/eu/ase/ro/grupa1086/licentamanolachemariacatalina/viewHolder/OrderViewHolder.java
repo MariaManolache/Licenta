@@ -5,6 +5,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
@@ -21,6 +22,11 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
 
     private ItemClickListener itemClickListener;
 
+    private RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
+
+    public RecyclerView secondRecyclerView;
+    public RecyclerView.LayoutManager secondLayoutManager;
+
     public OrderViewHolder(@NonNull View itemView) {
         super(itemView);
 
@@ -29,6 +35,9 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
         orderAddress = itemView.findViewById(R.id.orderAddress);
         orderPriceTotal = itemView.findViewById(R.id.orderPriceTotal);
         restaurantImage = itemView.findViewById(R.id.restaurantImage);
+
+        secondRecyclerView = itemView.findViewById(R.id.orderDetails);
+        //secondRecyclerView.setHasFixedSize(true);
 
         itemView.setOnClickListener(this);
         itemView.setOnLongClickListener(this);

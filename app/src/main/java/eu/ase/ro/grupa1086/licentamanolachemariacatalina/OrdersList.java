@@ -35,23 +35,30 @@ import java.util.List;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.Account;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Order;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.food.FoodList;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.OrderDetailsViewHolder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.OrderViewHolder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.RestaurantViewHolder;
 
 public class OrdersList extends AppCompatActivity {
 
     public RecyclerView recyclerView;
+    //public RecyclerView secondRecyclerView;
     public RecyclerView.LayoutManager layoutManager;
+    public RecyclerView.LayoutManager secondLayoutManager;
 
     FirebaseRecyclerAdapter<Order, OrderViewHolder> adapter;
+    FirebaseRecyclerAdapter<Food, OrderDetailsViewHolder> secondAdapter;
+
 
     FirebaseDatabase database;
     DatabaseReference orders;
     DatabaseReference restaurants;
     DatabaseReference restaurantAddresses;
+    DatabaseReference cart;
     FirebaseUser user;
 
     String restaurantName;
@@ -73,6 +80,8 @@ public class OrdersList extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         orders = database.getReference("orders").child(user.getUid());
         restaurants = database.getReference("restaurants");
+        restaurantAddresses = database.getReference("orders").child(user.getUid());
+        cart = database.getReference().child("orders").child(user.getUid());
 
         recyclerView = (RecyclerView) findViewById(R.id.ordersList);
         recyclerView.setHasFixedSize(true);
@@ -81,6 +90,12 @@ public class OrdersList extends AppCompatActivity {
 
         imgNoOrderFound = findViewById(R.id.imgNoOrderFound);
         tvNoOrderFound = findViewById(R.id.tvNoOrderFound);
+
+//        secondRecyclerView = findViewById(R.id.orderDetails);
+//        //secondRecyclerView.setHasFixedSize(true);
+//        secondLayoutManager = new LinearLayoutManager(this);
+//        secondRecyclerView.setLayoutManager(secondLayoutManager);
+
 
         loadOrders();
 
@@ -172,7 +187,101 @@ public class OrdersList extends AppCompatActivity {
                             public void onClick(View view, int position, boolean isLongClick) {
 
                                 if(!isLongClick) {
-                                    Toast.makeText(OrdersList.this, model.getCart().toString(), Toast.LENGTH_LONG).show();
+                                    //Toast.makeText(OrdersList.this, model.getCart().toString(), Toast.LENGTH_LONG).show();
+//                                    loadOrderDetails(model.getId());
+
+                                    cart = database.getReference().child("orders").child(user.getUid()).child(model.getId()).child("cart");
+                                    restaurantAddresses = database.getReference("orders").child(user.getUid()).child(model.getId()).child("restaurantAddress");
+
+                                    Query query = cart
+                                            .orderByChild("id")
+                                            .limitToLast(50);
+
+                                    FirebaseRecyclerOptions<Food> options =
+                                            new FirebaseRecyclerOptions.Builder<Food>()
+                                                    .setQuery(query, Food.class)
+                                                    .build();
+
+                                    secondAdapter = new FirebaseRecyclerAdapter<Food, OrderDetailsViewHolder>(options) {
+                                        @Override
+                                        protected void onBindViewHolder(@NonNull OrderDetailsViewHolder holder2, int position, @NonNull Food model) {
+
+                                            holder2.foodName.setText(model.getName());
+
+                                            restaurantAddresses.addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                                        Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+                                                        if(model.getRestaurantId().equals(restaurant.getId())) {
+                                                            holder2.restaurantName.setText(restaurant.getName() + " : ");
+                                                        }
+                                                    }
+
+                                                    holder2.foodPrice.setText(String.valueOf(model.getPrice()));
+                                                    holder2.foodQuantity.setText(String.valueOf(model.getQuantity()));
+                                                    holder2.foodTotal.setText(model.getPrice() * model.getQuantity() + " lei");
+                                                    Picasso.with(getBaseContext()).load(model.getImage())
+                                                            .into(holder2.foodImage);
+
+                                                    final Food local = model;
+                                                    holder2.setItemClickListener(new ItemClickListener() {
+                                                        @Override
+                                                        public void onClick(View view, int position, boolean isLongClick) {
+
+                                                            Toast.makeText(OrdersList.this, model.getName(), Toast.LENGTH_LONG).show();
+
+                                                        }
+                                                    });
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+
+//                restaurants.child(model.getRestaurantId()).addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        Restaurant restaurant = snapshot.getValue(Restaurant.class);
+//                        holder.restaurantName.setText(restaurant.getName() + " : ");
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+
+
+                                        }
+
+
+                                        @NonNull
+                                        @Override
+                                        public OrderDetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                                            View view = LayoutInflater.from(parent.getContext())
+                                                    .inflate(R.layout.order_detail_layout, parent, false);
+                                            view.setMinimumWidth(parent.getMeasuredWidth());
+
+                                            return new OrderDetailsViewHolder(view);
+                                        }
+                                    };
+
+//                                    secondRecyclerView.setAdapter(secondAdapter);
+//                                    secondAdapter.startListening();
+                                    if(holder.secondRecyclerView.getVisibility() == View.GONE) {
+                                        holder.secondRecyclerView.setVisibility(View.VISIBLE);
+                                    } else {
+                                        holder.secondRecyclerView.setVisibility(View.GONE);
+                                    }
+                                    secondLayoutManager = new LinearLayoutManager(getApplicationContext());
+                                    //holder.secondRecyclerView.setHasFixedSize(true);
+                                    holder.secondRecyclerView.setLayoutManager(secondLayoutManager);
+                                    holder.secondRecyclerView.setAdapter(secondAdapter);
+                                    secondAdapter.startListening();
+
                                 } else {
                                     Intent orderDetails = new Intent(OrdersList.this, OrderDetails.class);
                                     orderDetails.putExtra("orderId", model.getId());
@@ -349,9 +458,115 @@ public class OrdersList extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
+    private void loadOrderDetails(String orderId) {
+        cart = database.getReference().child("orders").child(user.getUid()).child(orderId).child("cart");
+        restaurantAddresses = database.getReference("orders").child(user.getUid()).child(orderId).child("restaurantAddress");
+
+        Query query = cart
+                .orderByChild("id")
+                .limitToLast(50);
+
+        FirebaseRecyclerOptions<Food> options =
+                new FirebaseRecyclerOptions.Builder<Food>()
+                        .setQuery(query, Food.class)
+                        .build();
+
+        secondAdapter = new FirebaseRecyclerAdapter<Food, OrderDetailsViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull OrderDetailsViewHolder holder, int position, @NonNull Food model) {
+
+                holder.foodName.setText(model.getName());
+
+                restaurantAddresses.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+                            if(model.getRestaurantId().equals(restaurant.getId())) {
+                                holder.restaurantName.setText(restaurant.getName() + " : ");
+                            }
+                        }
+
+                        holder.foodPrice.setText(String.valueOf(model.getPrice()));
+                        holder.foodQuantity.setText(String.valueOf(model.getQuantity()));
+                        holder.foodTotal.setText(model.getPrice() * model.getQuantity() + " lei");
+                        Picasso.with(getBaseContext()).load(model.getImage())
+                                .into(holder.foodImage);
+
+                        final Food local = model;
+                        holder.setItemClickListener(new ItemClickListener() {
+                            @Override
+                            public void onClick(View view, int position, boolean isLongClick) {
+
+                                Toast.makeText(OrdersList.this, model.getName(), Toast.LENGTH_LONG).show();
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+//                restaurants.child(model.getRestaurantId()).addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        Restaurant restaurant = snapshot.getValue(Restaurant.class);
+//                        holder.restaurantName.setText(restaurant.getName() + " : ");
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+
+
+            }
+
+
+            @NonNull
+            @Override
+            public OrderDetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.order_detail_layout, parent, false);
+                view.setMinimumWidth(parent.getMeasuredWidth());
+
+                return new OrderDetailsViewHolder(view);
+            }
+        };
+
+        //secondRecyclerView.setAdapter(secondAdapter);
+        secondAdapter.startListening();
+
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
         adapter.startListening();
+        //secondAdapter.startListening();
+    }
+}
+
+class ParentViewHolder
+        extends RecyclerView.ViewHolder {
+
+    private TextView ParentItemTitle;
+    private RecyclerView ChildRecyclerView;
+
+    ParentViewHolder(final View itemView) {
+        super(itemView);
+
+        ParentItemTitle
+                = itemView
+                .findViewById(
+                        R.id.ordersList);
+        ChildRecyclerView
+                = itemView
+                .findViewById(
+                        R.id.orderDetails);
     }
 }
