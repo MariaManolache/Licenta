@@ -139,11 +139,11 @@ public class ResetPassword extends AppCompatActivity {
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(ResetPassword.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                                    //Toast.makeText(ResetPassword.this, e.getMessage(), Toast.LENGTH_LONG).show();
                                 }
                             });
                         }  else {
-                            Toast.makeText(ResetPassword.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(ResetPassword.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

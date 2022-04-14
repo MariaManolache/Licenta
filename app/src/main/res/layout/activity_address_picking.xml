@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/teal_100"
+    tools:context=".AddressPicking">
+
+    <TextView
+        android:id="@+id/tvAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/pick_wanted_option"
+        android:textAlignment="center"
+        android:textColor="@color/violet"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/alata"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        ></TextView>
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvAddress">
+
+
+        <RadioButton
+            android:id="@+id/radioBtnCurrentLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alata"
+            android:textColor="@color/violet"
+            android:textSize="20sp"
+            android:text="@string/current_location" />
+
+        <RadioButton
+            android:id="@+id/radioBtnAnotherLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alata"
+            android:textColor="@color/violet"
+            android:textSize="20sp"
+            android:text="@string/add_another_address" />
+
+        <RadioButton
+            android:id="@+id/radioBtnMapsLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alata"
+            android:textColor="@color/violet"
+            android:textSize="20sp"
+            android:text="@string/select_maps_address" />
+
+    </RadioGroup>
+
+    <LinearLayout
+        android:id="@+id/firstRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="65dp"
+            android:layout_marginTop="20dp"
+            android:padding="10dp"
+            android:background="@drawable/border_address"
+            android:outlineAmbientShadowColor="@android:color/darker_gray"
+            tools:targetApi="p">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etStreet"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/alata"
+                android:hint="@string/street"
+                android:inputType="textPostalAddress"
+                android:textAlignment="center"
+                android:textColor="@color/violet"
+                android:textColorHint="@color/violet"
+                android:textSize="20dp"
+                android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="65dp"
+            android:layout_margin="20dp"
+            android:padding="10dp"
+            android:background="@drawable/border_address"
+            android:outlineAmbientShadowColor="@android:color/darker_gray"
+            tools:targetApi="p">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etStreetNumber"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/alata"
+                android:hint="@string/number"
+                android:inputType="textPostalAddress"
+                android:textAlignment="center"
+                android:textColor="@color/violet"
+                android:textColorHint="@color/violet"
+                android:textSize="20dp"
+                android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="65dp"
+            android:layout_marginTop="20dp"
+            android:padding="10dp"
+            android:background="@drawable/border_address"
+            android:outlineAmbientShadowColor="@android:color/darker_gray"
+            android:textAlignment="center"
+            tools:targetApi="p">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etBlock"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/alata"
+                android:hint="@string/block"
+                android:inputType="textPostalAddress"
+                android:textAlignment="center"
+                android:textColor="@color/violet"
+                android:textColorHint="@color/violet"
+                android:textSize="20dp"
+                android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+        </FrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/secondRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/firstRow">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="65dp"
+            android:layout_marginTop="20dp"
+            android:padding="10dp"
+            android:outlineAmbientShadowColor="@android:color/darker_gray"
+            android:background="@drawable/border_address"
+            tools:targetApi="p">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etEntrance"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/alata"
+                android:hint="@string/entrance"
+                android:inputType="textPostalAddress"
+                android:textColorHint="@color/violet"
+                android:textAlignment="center"
+                android:textColor="@color/violet"
+                android:textSize="20dp"
+                android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="65dp"
+            android:layout_margin="20dp"
+            android:padding="10dp"
+            android:outlineAmbientShadowColor="@android:color/darker_gray"
+            android:background="@drawable/border_address"
+            tools:targetApi="p">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etFloor"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/alata"
+                android:hint="@string/floor"
+                android:inputType="textPostalAddress"
+                android:textColorHint="@color/violet"
+                android:textAlignment="center"
+                android:textColor="@color/violet"
+                android:textSize="20dp"
+                android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="65dp"
+            android:layout_marginTop="20dp"
+            android:padding="10dp"
+            android:outlineAmbientShadowColor="@android:color/darker_gray"
+            android:background="@drawable/border_address"
+            tools:targetApi="p">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etApartment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/alata"
+                android:hint="@string/apartment"
+                android:inputType="textPostalAddress"
+                android:textColorHint="@color/violet"
+                android:textAlignment="center"
+                android:textColor="@color/violet"
+                android:textSize="20dp"
+                android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+        </FrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/thirdRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/secondRow">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="65dp"
+            android:layout_marginTop="20dp"
+            android:padding="10dp"
+            android:outlineAmbientShadowColor="@android:color/darker_gray"
+            android:background="@drawable/border_address"
+            tools:targetApi="p">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCity"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/alata"
+                android:hint="@string/city"
+                android:inputType="textPostalAddress"
+                android:textColorHint="@color/violet"
+                android:textAlignment="center"
+                android:textColor="@color/violet"
+                android:textSize="20dp"
+                android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="65dp"
+            android:layout_margin="20dp"
+            android:padding="10dp"
+            android:outlineAmbientShadowColor="@android:color/darker_gray"
+            android:background="@drawable/border_address"
+            tools:targetApi="p">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etRegion"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/alata"
+                android:hint="@string/region"
+                android:inputType="textPostalAddress"
+                android:textColorHint="@color/violet"
+                android:textAlignment="center"
+                android:textColor="@color/violet"
+                android:textSize="20dp"
+                android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fourthRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/thirdRow">
+
+        <Button
+            android:id="@+id/btnConfirmAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Confirma adresa"></Button>
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,7 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatRatingBar;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.loader.content.AsyncTaskLoader;
@@ -13,6 +14,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -104,6 +106,7 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
     List<LatLng> latLngRestaurantAddresses = new ArrayList<LatLng>();
 
     Button btnReturnToMainMenu;
+    TextView tvRating;
 
     private List<Polyline> polylines;
     private static final int[] COLORS = new int[]{androidx.navigation.ui.R.color.design_default_color_primary_dark, com.google.android.material.R.color.design_default_color_primary_variant, androidx.navigation.ui.R.color.design_default_color_primary};
@@ -122,6 +125,8 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
 
         tvDistance = findViewById(R.id.tvDistance);
         tvTime = findViewById(R.id.tvTime);
+
+        tvRating = findViewById(R.id.tvRating);
 
         btnReturnToMainMenu = findViewById(R.id.btnReturnToMainMenu);
 
@@ -211,6 +216,13 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
                     }
                 });
 
+                tvRating.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showRatingDialog();
+                    }
+                });
+
             }
             if (origin != null && origin.equals("addAnotherAddress")) {
                 orderId = getIntent().getStringExtra("orderId");
@@ -285,6 +297,10 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+    }
+
+    private void showRatingDialog() {
+
     }
 
     /**

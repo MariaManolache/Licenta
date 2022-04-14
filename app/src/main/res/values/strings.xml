@@ -61,7 +61,7 @@
     <string name="search_restaurant">Cauta restaurantul dorit</string>
     <string name="search_favourite_restaurant">Cauta-ti restaurantul preferat</string>
     <string name="cart">Cos</string>
-    <string name="pick_address">Alege adresa de livrare</string>
+    <string name="pick_address">Alege adresa de livrare:</string>
     <string name="street">Strada</string>
     <string name="number">Numar</string>
     <string name="block">Bloc</string>
@@ -108,4 +108,10 @@
     <string name="example_phone_number">+40723232323</string>
     <string name="app">Aplicatie</string>
     <string name="account_details">Detaliile contului</string>
+    <string name="enter_new_address">Introdu o noua adresa</string>
+    <string name="pick_wanted_option">Alege optiunea dorita:</string>
+    <string name="exclamation_mark">!</string>
+    <string name="welcome_account">Bine ai venit, </string>
+    <string name="all_restaurants">Toate restaurantele</string>
+    <string name="ten_minutes">10 min.</string>
 </resources>

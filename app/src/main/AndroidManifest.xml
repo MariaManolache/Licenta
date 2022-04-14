@@ -16,9 +16,17 @@
         android:theme="@style/Theme.LicentaManolacheMariaCatalina"
         tools:replace="android:theme">
         <activity
+            android:name=".CompleteFoodList"
+            android:exported="false"
+            android:label="@string/all_restaurants"/>
+        <activity
+            android:name=".AddressPicking"
+            android:exported="false"
+            android:label="@string/enter_new_address" />
+        <activity
             android:name=".AccountDetails"
             android:exported="false"
-            android:label="@string/account_details"/>
+            android:label="@string/account_details" />
         <activity
             android:name=".AddressesList"
             android:exported="false"
@@ -57,7 +65,7 @@
         <activity
             android:name=".PhoneNumberValidation"
             android:exported="false"
-            android:label="@string/check_phone_number"/>
+            android:label="@string/check_phone_number" />
         <activity
             android:name=".PlaceOrder"
             android:exported="false"

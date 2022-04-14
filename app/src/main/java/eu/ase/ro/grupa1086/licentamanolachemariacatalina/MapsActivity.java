@@ -11,6 +11,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SearchView;
@@ -63,7 +64,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        setContentView(binding.getRoot());
 
         searchView = findViewById(R.id.searchViewLocation);
-        noLocationFoundAlert = new AlertDialog.Builder(this);
+        noLocationFoundAlert = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
         fabPickedAddressed = findViewById(R.id.fabPickedAddress);
         pickedAddress = findViewById(R.id.pickedAddress);
 

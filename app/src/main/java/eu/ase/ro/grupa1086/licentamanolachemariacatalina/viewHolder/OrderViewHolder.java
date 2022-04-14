@@ -19,6 +19,8 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
     public TextView orderAddress;
     public TextView orderPriceTotal;
     public ImageView restaurantImage;
+    public ImageView downArrow;
+    public ImageView upArrow;
 
     private ItemClickListener itemClickListener;
 
@@ -35,6 +37,8 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
         orderAddress = itemView.findViewById(R.id.orderAddress);
         orderPriceTotal = itemView.findViewById(R.id.orderPriceTotal);
         restaurantImage = itemView.findViewById(R.id.restaurantImage);
+        downArrow = itemView.findViewById(R.id.downArrow);
+        upArrow = itemView.findViewById(R.id.upArrow);
 
         secondRecyclerView = itemView.findViewById(R.id.orderDetails);
         //secondRecyclerView.setHasFixedSize(true);

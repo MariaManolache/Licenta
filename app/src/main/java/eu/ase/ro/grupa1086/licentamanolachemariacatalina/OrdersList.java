@@ -190,6 +190,18 @@ public class OrdersList extends AppCompatActivity {
                                     //Toast.makeText(OrdersList.this, model.getCart().toString(), Toast.LENGTH_LONG).show();
 //                                    loadOrderDetails(model.getId());
 
+                                    if(holder.downArrow.getVisibility() == View.VISIBLE) {
+                                        holder.downArrow.setVisibility(View.GONE);
+                                    } else {
+                                        holder.downArrow.setVisibility(View.VISIBLE);
+                                    }
+
+                                    if(holder.upArrow.getVisibility() == View.VISIBLE) {
+                                        holder.upArrow.setVisibility(View.GONE);
+                                    } else {
+                                        holder.upArrow.setVisibility(View.VISIBLE);
+                                    }
+
                                     cart = database.getReference().child("orders").child(user.getUid()).child(model.getId()).child("cart");
                                     restaurantAddresses = database.getReference("orders").child(user.getUid()).child(model.getId()).child("restaurantAddress");
 

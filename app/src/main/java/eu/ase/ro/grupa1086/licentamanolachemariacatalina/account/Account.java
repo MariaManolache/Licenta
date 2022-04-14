@@ -39,12 +39,10 @@ import eu.ase.ro.grupa1086.licentamanolachemariacatalina.OrdersList;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.PrincipalMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.databinding.ActivityAccountBinding;
 
 public class Account extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private ActivityAccountBinding binding;
 
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
@@ -53,7 +51,7 @@ public class Account extends AppCompatActivity {
     Button btnLogout;
     TextView verifyMessage;
     Button btnVerifyEmail;
-    AlertDialog.Builder resetAlert;
+    AlertDialog.Builder deleteAlert;
     private DatabaseReference databaseReferenceCart;
     LayoutInflater inflater;
     BottomNavigationView bottomNavigationView;
@@ -80,7 +78,7 @@ public class Account extends AppCompatActivity {
 //                assert user != null;
 
                 if(user != null)
-                    name.setText("Bine ai venit, " + user.getName() + "!");
+                    name.setText(getString(R.string.welcome_account) + " " + user.getName() + getString(R.string.exclamation_mark));
 
             }
 
@@ -99,7 +97,7 @@ public class Account extends AppCompatActivity {
 
         inflater = this.getLayoutInflater();
 
-        resetAlert = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
+        deleteAlert = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
 
         if(!firebaseAuth.getCurrentUser().isEmailVerified()) {
             btnVerifyEmail.setVisibility(View.VISIBLE);
@@ -187,7 +185,7 @@ public class Account extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(), ResetPassword.class));
         }
         if(item.getItemId() == R.id.deleteAccount) {
-            resetAlert.setTitle("Doresti sa iti stergi contul?")
+            deleteAlert.setTitle("Doresti sa iti stergi contul?")
                     .setMessage("Esti sigur? Actiunea nu este reversibila.")
                     .setPositiveButton("Da", new DialogInterface.OnClickListener() {
                         @Override
@@ -260,5 +258,12 @@ public class Account extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(!firebaseAuth.getCurrentUser().isEmailVerified()) {
+            btnVerifyEmail.setVisibility(View.VISIBLE);
+            verifyMessage.setVisibility(View.VISIBLE);
+        }
+    }
 }

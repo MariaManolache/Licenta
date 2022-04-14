@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -66,24 +67,26 @@ public class PlaceOrder extends AppCompatActivity {
     Float total;
     TextView tvTotal;
     Button btnPlaceOrder;
-    LinearLayout firstRow;
-    LinearLayout secondRow;
-    LinearLayout thirdRow;
-    LinearLayout fourthRow;
+    FrameLayout firstFrameLayout;
+    FrameLayout secondFrameLayout;
+//    LinearLayout firstRow;
+//    LinearLayout secondRow;
+//    LinearLayout thirdRow;
+//    LinearLayout fourthRow;
 //    LinearLayout mapRow;
 
-    EditText etStreet;
-    EditText etNumber;
-    EditText etBlock;
-    EditText etEntrance;
-    EditText etFloor;
-    EditText etApartment;
-    RadioGroup radioGroup;
-    EditText etCity;
-    EditText etRegion;
-
-    TextView tvCoordinates;
-    TextView tvCurrentAddress;
+//    EditText etStreet;
+//    EditText etNumber;
+//    EditText etBlock;
+//    EditText etEntrance;
+//    EditText etFloor;
+//    EditText etApartment;
+//    RadioGroup radioGroup;
+//    EditText etCity;
+//    EditText etRegion;
+//
+//    TextView tvCoordinates;
+//    TextView tvCurrentAddress;
 
     FirebaseDatabase database;
     DatabaseReference cart;
@@ -97,29 +100,30 @@ public class PlaceOrder extends AppCompatActivity {
 
     List<Food> cartList = new ArrayList<Food>();
 
-    LocationRequest locationRequest;
-    LocationCallback locationCallback;
-    FusedLocationProviderClient fusedLocationProviderClient;
-    Location currentLocation;
+//    LocationRequest locationRequest;
+//    LocationCallback locationCallback;
+//    FusedLocationProviderClient fusedLocationProviderClient;
+//    Location currentLocation;
 
     String mapsAddress;
     TextView tvAddress;
     TextView tvAddressInfo;
     TextView tvNewAddress;
-    Button btnConfirmAddress;
+//    Button btnConfirmAddress;
 
     Address newAddress;
+    String currentAddress;
     Double latitude;
     Double longitude;
-
-    String street;
-    String number;
-    String block;
-    String entrance;
-    String floor;
-    String apartment;
-    String city;
-    String region;
+//
+//    String street;
+//    String number;
+//    String block;
+//    String entrance;
+//    String floor;
+//    String apartment;
+//    String city;
+//    String region;
 
     List<Restaurant> restaurantAddresses = new ArrayList<Restaurant>();
 
@@ -127,6 +131,8 @@ public class PlaceOrder extends AppCompatActivity {
     String idSavedAddress;
     int same = 0;
     int sameAddress = 0;
+
+    String anotherAddress;
 
 //    ImageButton mapButton;
 
@@ -140,25 +146,25 @@ public class PlaceOrder extends AppCompatActivity {
                 R.layout.spinner_layout);
         paymentSpinner.setAdapter(adapter);
 
-        firstRow = findViewById(R.id.firstRow);
-        secondRow = findViewById(R.id.secondRow);
-        thirdRow = findViewById(R.id.thirdRow);
-        fourthRow = findViewById(R.id.fourthRow);
-//        mapRow = findViewById(R.id.mapRow);
-
-        btnConfirmAddress = findViewById(R.id.btnConfirmAddress);
-        etStreet = findViewById(R.id.etStreet);
-        etNumber = findViewById(R.id.etStreetNumber);
-        etBlock = findViewById(R.id.etBlock);
-        etEntrance = findViewById(R.id.etEntrance);
-        etFloor = findViewById(R.id.etFloor);
-        etApartment = findViewById(R.id.etApartment);
-        tvCoordinates = findViewById(R.id.tvCoordinates);
-        tvCurrentAddress = findViewById(R.id.tvCurrentAddress);
-        radioGroup = findViewById(R.id.radioGroup);
-
-        etCity = findViewById(R.id.etCity);
-        etRegion = findViewById(R.id.etRegion);
+//        firstRow = findViewById(R.id.firstRow);
+//        secondRow = findViewById(R.id.secondRow);
+//        thirdRow = findViewById(R.id.thirdRow);
+//        fourthRow = findViewById(R.id.fourthRow);
+////        mapRow = findViewById(R.id.mapRow);
+//
+//        btnConfirmAddress = findViewById(R.id.btnConfirmAddress);
+//        etStreet = findViewById(R.id.etStreet);
+//        etNumber = findViewById(R.id.etStreetNumber);
+//        etBlock = findViewById(R.id.etBlock);
+//        etEntrance = findViewById(R.id.etEntrance);
+//        etFloor = findViewById(R.id.etFloor);
+//        etApartment = findViewById(R.id.etApartment);
+//        tvCoordinates = findViewById(R.id.tvCoordinates);
+//        tvCurrentAddress = findViewById(R.id.tvCurrentAddress);
+//        radioGroup = findViewById(R.id.radioGroup);
+//
+//        etCity = findViewById(R.id.etCity);
+//        etRegion = findViewById(R.id.etRegion);
 
         tvTotal = findViewById(R.id.total);
         btnPlaceOrder = findViewById(R.id.btnPlaceOrder);
@@ -176,22 +182,27 @@ public class PlaceOrder extends AppCompatActivity {
         tvAddress = findViewById(R.id.tvPickedAddress);
         tvAddressInfo = findViewById(R.id.tvPickedAddressInfo);
 
+        firstFrameLayout = findViewById(R.id.firstFrameLayout);
+        secondFrameLayout = findViewById(R.id.secondFrameLayout);
+
         tvSavedAddresses = findViewById(R.id.tvSavedAddresses);
         tvNewAddress = findViewById(R.id.tvAddress);
 //        mapButton = findViewById(R.id.btnImageMap);
 
-        tvNewAddress.setOnClickListener(new View.OnClickListener() {
+        secondFrameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (radioGroup.getVisibility() == View.GONE) {
-                    radioGroup.setVisibility(View.VISIBLE);
-                } else {
-                    radioGroup.setVisibility(View.GONE);
-                }
+//                if (radioGroup.getVisibility() == View.GONE) {
+//                    radioGroup.setVisibility(View.VISIBLE);
+//                } else {
+//                    radioGroup.setVisibility(View.GONE);
+//                }
+                Intent addressPicking = new Intent(PlaceOrder.this, AddressPicking.class);
+                startActivity(addressPicking);
             }
         });
 
-        tvSavedAddresses.setOnClickListener(new View.OnClickListener() {
+        firstFrameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent savedAddresses = new Intent(PlaceOrder.this, AddressesList.class);
@@ -200,19 +211,312 @@ public class PlaceOrder extends AppCompatActivity {
             }
         });
 
-        RadioGroup rg = (RadioGroup) findViewById(R.id.radioGroup);
+//        RadioGroup rg = (RadioGroup) findViewById(R.id.radioGroup);
 
 
         if (getIntent() != null && getIntent().getExtras() != null) {
             String origin = getIntent().getExtras().getString("origin");
             if (origin != null && origin.equals("mapsActivity")) {
-                rg.check(R.id.radioBtnMapsLocation);
                 mapsAddress = getIntent().getStringExtra("address");
                 latitude = getIntent().getDoubleExtra("latitude", 0.0);
                 longitude = getIntent().getDoubleExtra("longitude", 0.0);
+
+                String coordinates = new StringBuilder()
+                        .append(latitude)
+                        .append("/")
+                        .append(longitude).toString();
+
+                Single<String> singleAddress = Single.just(getAddressFromLatLng(latitude,
+                        longitude));
+
+                Disposable disposable = singleAddress.subscribeWith(new DisposableSingleObserver<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+//                                                tvCoordinates.setText(coordinates);
+//                                                tvCurrentAddress.setText(s);
+//                                                tvCoordinates.setVisibility(View.VISIBLE);
+//                                                tvCurrentAddress.setVisibility(View.VISIBLE);
+
+                        tvAddressInfo.setText(s);
+                        tvAddressInfo.setVisibility(View.VISIBLE);
+                        tvAddress.setVisibility(View.VISIBLE);
+
+                        btnPlaceOrder.setEnabled(true);
+
+                        String addressId = addresses.push().getKey();
+
+                        newAddress = new Address(addressId, s);
+
+//                            tvAddressInfo.setText(mapsAddress);
+//                            tvAddressInfo.setVisibility(View.VISIBLE);
+//                            tvAddress.setVisibility(View.VISIBLE);
+
+                        btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                same = 0;
+                                addresses.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                            Address address1 = dataSnapshot.getValue(Address.class);
+                                            if(address1.getMapsAddress().equals(newAddress.getMapsAddress())) {
+                                                same = 1;
+                                            }
+                                        }
+
+                                        if(same != 1) {
+                                            addresses.child(addressId).setValue(newAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Toast.makeText(PlaceOrder.this, "Adresa adaugata", Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        Toast.makeText(PlaceOrder.this, "Eroare la adaugarea adresei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+
+                                String orderId = orders.push().getKey();
+                                PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentSpinner.getSelectedItem().toString().toUpperCase().replace(" ", "_"));
+                                Status status = Status.plasata;
+                                Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, restaurantAddresses);
+
+                                orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
+
+
+                                            Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
+                                            confirmationOrder.putExtra("orderId", orderId);
+                                            confirmationOrder.putExtra("origin", "mapsLocation");
+                                            startActivity(confirmationOrder);
+                                            finish();
+
+                                        } else {
+                                            Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+//                        tvCoordinates.setText(e.getMessage());
+//                        tvCurrentAddress.setText(e.getMessage());
+//                        tvCoordinates.setVisibility(View.VISIBLE);
+//                        tvCurrentAddress.setVisibility(View.VISIBLE);
+
+                        tvAddressInfo.setText(e.getMessage());
+                        tvAddressInfo.setVisibility(View.VISIBLE);
+                        tvAddress.setVisibility(View.VISIBLE);
+                    }
+                });
+
+
+                if (tvAddress.getVisibility() == View.GONE) {
+                    btnPlaceOrder.setEnabled(false);
+                }
+                if (tvAddress.getVisibility() == View.VISIBLE) {
+                    btnPlaceOrder.setEnabled(true);
+                }
+
             }
             if (origin != null && origin.equals("savedAddresses")) {
                 idSavedAddress = getIntent().getStringExtra("addressId");
+            }
+            if(origin != null && origin.equals("currentLocation")) {
+                currentAddress = getIntent().getStringExtra("currentAddress");
+
+                tvAddressInfo.setVisibility(View.VISIBLE);
+                //tvAddress.setVisibility(View.VISIBLE);
+                //tvAddress.setText(currentAddress);
+
+                btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
+                    @SuppressLint("MissingPermission")
+                    @Override
+                    public void onClick(View v) {
+                        String addressId = addresses.push().getKey();
+
+                        newAddress = new Address(addressId, currentAddress);
+
+
+                        same = 0;
+                        addresses.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                    Address address1 = dataSnapshot.getValue(Address.class);
+                                    if(address1.getMapsAddress().equals(newAddress.getMapsAddress())) {
+                                        same = 1;
+                                    }
+                                }
+
+                                if(same != 1) {
+                                    addresses.child(addressId).setValue(newAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(PlaceOrder.this, "Adresa adaugata", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(PlaceOrder.this, "Eroare la adaugarea adresei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+
+                        String orderId = orders.push().getKey();
+                        PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentSpinner.getSelectedItem().toString().toUpperCase().replace(" ", "_"));
+                        Status status = Status.plasata;
+                        Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, restaurantAddresses);
+
+                        Log.i("restaurant", String.valueOf(restaurantAddresses));
+                        orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
+
+                                    Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
+                                    confirmationOrder.putExtra("orderId", orderId);
+                                    confirmationOrder.putExtra("origin", "currentAddress");
+                                    startActivity(confirmationOrder);
+                                    finish();
+                                } else {
+                                    Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+                    }
+
+                });
+
+                tvAddress.setVisibility(View.VISIBLE);
+                if (tvAddress.getVisibility() == View.GONE) {
+                    btnPlaceOrder.setEnabled(false);
+                }
+                if (tvAddress.getVisibility() == View.VISIBLE) {
+                    btnPlaceOrder.setEnabled(true);
+                }
+
+            }
+            if (origin != null && origin.equals("anotherAddress")) {
+                anotherAddress = getIntent().getStringExtra("result");
+                String street = getIntent().getStringExtra("street");
+                String number = getIntent().getStringExtra("number");
+                String city = getIntent().getStringExtra("city");
+                String region = getIntent().getStringExtra("region");
+                String block = getIntent().getStringExtra("block");
+                String entrance = getIntent().getStringExtra("entrance");
+                String floor = getIntent().getStringExtra("floor");
+                String apartment = getIntent().getStringExtra("apartment");
+
+                StringBuilder coordinates = new StringBuilder();
+                coordinates.append(street);
+                coordinates.append(number);
+                coordinates.append(city);
+                coordinates.append(region);
+
+                String coordinatesString = coordinates.toString();
+
+                LatLng coordinatesNewAddress = getLocationFromAddress(coordinatesString);
+                String address = getAddressFromLatLng(coordinatesNewAddress.latitude, coordinatesNewAddress.longitude);
+
+                tvAddressInfo.setVisibility(View.VISIBLE);
+                tvAddress.setVisibility(View.VISIBLE);
+                tvAddressInfo.setText(address);
+
+                btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        String addressId = addresses.push().getKey();
+
+
+                        newAddress = new Address(addressId, street, number, block, entrance, floor, apartment, city, region, userId, address);
+
+                        same = 0;
+                        addresses.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                    Address address1 = dataSnapshot.getValue(Address.class);
+                                    if (address1.getMapsAddress().equals(newAddress.getMapsAddress())) {
+                                        same = 1;
+                                    }
+                                }
+
+                                if (same != 1) {
+                                    addresses.child(addressId).setValue(newAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(PlaceOrder.this, "Adresa adaugata", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(PlaceOrder.this, "Eroare la adaugarea adresei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+
+                        String orderId = orders.push().getKey();
+                        PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentSpinner.getSelectedItem().toString().toUpperCase().replace(" ", "_"));
+                        Status status = Status.plasata;
+                        Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, restaurantAddresses);
+
+                        orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
+
+                                    cart.removeValue();
+                                    Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
+                                    confirmationOrder.putExtra("orderId", orderId);
+                                    confirmationOrder.putExtra("origin", "addAnotherAddress");
+                                    startActivity(confirmationOrder);
+                                    finish();
+
+                                } else {
+                                    Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+
+                    }
+
+                });
             }
         }
 
@@ -284,11 +588,11 @@ public class PlaceOrder extends AppCompatActivity {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             Restaurant restaurant = snapshot.getValue(Restaurant.class);
                             for (Restaurant alreadySavedRestaurant : restaurantAddresses) {
-                                if(restaurant.getId().equals(alreadySavedRestaurant.getId())) {
+                                if (restaurant.getId().equals(alreadySavedRestaurant.getId())) {
                                     sameAddress = 1;
                                 }
                             }
-                            if(sameAddress == 0) {
+                            if (sameAddress == 0) {
                                 restaurantAddresses.add(restaurant);
                             }
 
@@ -312,501 +616,502 @@ public class PlaceOrder extends AppCompatActivity {
 
             }
         });
-
-        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @SuppressLint("MissingPermission")
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-                switch (checkedId) {
-                    case R.id.radioBtnAnotherLocation:
-                        firstRow.setVisibility(View.VISIBLE);
-                        secondRow.setVisibility(View.VISIBLE);
-                        thirdRow.setVisibility(View.VISIBLE);
-                        fourthRow.setVisibility(View.VISIBLE);
-//                        tvCoordinates.setVisibility(View.GONE);
-//                        tvCurrentAddress.setVisibility(View.GONE);
-                        tvAddressInfo.setVisibility(View.GONE);
-                        tvAddress.setVisibility(View.GONE);
-
-
-//                        btnCoordinates.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                String street = etStreet.getText().toString();
-//                                String number = etNumber.getText().toString();
-//                                String city = etCity.getText().toString();
-//                                String region = etRegion.getText().toString();
-//
-//                                StringBuilder stringBuilder = new StringBuilder();
-//                                stringBuilder.append(street);
-//                                stringBuilder.append(number);
-//                                stringBuilder.append(city);
-//                                stringBuilder.append(region);
-//
-//                                String result = stringBuilder.toString();
-//                                coordinates.setText(getLocationFromAddress(result).toString());
-//
-//                                Single<LatLng> singleAddress = Single.just(getLocationFromAddress(result));
-
-//                                Disposable disposable = singleAddress.subscribeWith(new DisposableSingleObserver<String>() {
-//                                    @Override
-//                                    public void onSuccess(String s) {
-//                                        //tvCoordinates.setText(singleAddress);
-//                                        tvCurrentAddress.setText(s);
-//                                        tvCoordinates.setVisibility(View.VISIBLE);
-//                                        tvCurrentAddress.setVisibility(View.VISIBLE);
-//                                    }
-//
-//                                    @Override
-//                                    public void onError(Throwable e) {
-//                                        tvCoordinates.setText(e.getMessage());
-//                                        tvCurrentAddress.setText(e.getMessage());
-//                                        tvCoordinates.setVisibility(View.VISIBLE);
-//                                        tvCurrentAddress.setVisibility(View.VISIBLE);
-//                                    }
-//                                });
-//                            }
-//                        });
-
-                        btnConfirmAddress.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                street = etStreet.getText().toString();
-                                number = etNumber.getText().toString();
-                                block = etBlock.getText().toString();
-                                entrance = etEntrance.getText().toString();
-                                floor = etFloor.getText().toString();
-                                apartment = etApartment.getText().toString();
-                                city = etCity.getText().toString();
-                                region = etRegion.getText().toString();
-
-
-                                if (TextUtils.isEmpty(street)) {
-                                    etStreet.setError("Strada este necesara pentru plasarea comenzii");
-                                    return;
-                                }
-
-                                if (TextUtils.isEmpty(number)) {
-                                    etNumber.setError("Numarul strazii este necesar pentru plasarea comenzii");
-                                    return;
-                                }
-
-
-                                StringBuilder stringBuilder = new StringBuilder();
-                                stringBuilder.append(street + " ");
-                                stringBuilder.append(number + " ");
-                                stringBuilder.append(block + " ");
-                                stringBuilder.append(entrance + " ");
-                                stringBuilder.append(floor + " ");
-                                stringBuilder.append(apartment + " ");
-                                stringBuilder.append(city + " ");
-                                stringBuilder.append(region + " ");
-
-                                String result = stringBuilder.toString();
-
-
-//                                tvAddressInfo.setText(getLocationFromAddress(result).toString());
-                                tvAddressInfo.setText(result);
-                                tvAddressInfo.setVisibility(View.VISIBLE);
-                                tvAddress.setVisibility(View.VISIBLE);
-
-                                tvAddress.setVisibility(View.VISIBLE);
-                                if (tvAddress.getVisibility() == View.GONE) {
-                                    btnPlaceOrder.setEnabled(false);
-                                }
-                                if (tvAddress.getVisibility() == View.VISIBLE) {
-                                    btnPlaceOrder.setEnabled(true);
-                                }
-                            }
-                        });
-
-                        btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                if (TextUtils.isEmpty(street)) {
-                                    etStreet.setError("Strada este necesara pentru plasarea comenzii");
-                                    return;
-                                }
-
-                                if (TextUtils.isEmpty(number)) {
-                                    etNumber.setError("Numarul strazii este necesar pentru plasarea comenzii");
-                                    return;
-                                }
-
-                                String addressId = addresses.push().getKey();
-
-                                StringBuilder coordinates = new StringBuilder();
-                                coordinates.append(street);
-                                coordinates.append(number);
-                                coordinates.append(city);
-                                coordinates.append(region);
-
-                                String coordinatesString = coordinates.toString();
-
-                                LatLng coordinatesNewAddress = getLocationFromAddress(coordinatesString);
-                                String address = getAddressFromLatLng(coordinatesNewAddress.latitude, coordinatesNewAddress.longitude);
-
-                                newAddress = new Address(addressId, street, number, block, entrance, floor, apartment, city, region, userId, address);
-
-                                same = 0;
-                                addresses.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                            Address address1 = dataSnapshot.getValue(Address.class);
-                                            if(address1.getMapsAddress().equals(newAddress.getMapsAddress())) {
-                                                same = 1;
-                                            }
-                                        }
-
-                                        if(same != 1) {
-                                            addresses.child(addressId).setValue(newAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if (task.isSuccessful()) {
-                                                        Toast.makeText(PlaceOrder.this, "Adresa adaugata", Toast.LENGTH_SHORT).show();
-                                                    } else {
-                                                        Toast.makeText(PlaceOrder.this, "Eroare la adaugarea adresei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                                                    }
-                                                }
-                                            });
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                    }
-                                });
-
-
-                                String orderId = orders.push().getKey();
-                                PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentSpinner.getSelectedItem().toString().toUpperCase().replace(" ", "_"));
-                                Status status = Status.plasata;
-                                Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, restaurantAddresses);
-
-                                orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
-
-                                            cart.removeValue();
-                                            Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
-                                            confirmationOrder.putExtra("orderId", orderId);
-                                            confirmationOrder.putExtra("origin", "addAnotherAddress");
-                                            startActivity(confirmationOrder);
-                                            finish();
-
-                                        } else {
-                                            Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                });
-
-                            }
-
-                        });
-
-                        break;
-                    case R.id.radioBtnCurrentLocation:
-                        firstRow.setVisibility(View.GONE);
-                        secondRow.setVisibility(View.GONE);
-                        thirdRow.setVisibility(View.GONE);
-                        fourthRow.setVisibility(View.GONE);
-                        tvAddress.setVisibility(View.VISIBLE);
-
-                        initializeLocation();
-
-                        fusedLocationProviderClient.getLastLocation()
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(getApplicationContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        tvCoordinates.setVisibility(View.GONE);
-                                    }
-                                })
-                                .addOnCompleteListener(new OnCompleteListener<Location>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Location> task) {
-                                        String coordinates = new StringBuilder()
-                                                .append(task.getResult().getLatitude())
-                                                .append("/")
-                                                .append(task.getResult().getLongitude()).toString();
-
-                                        Single<String> singleAddress = Single.just(getAddressFromLatLng(task.getResult().getLatitude(),
-                                                task.getResult().getLongitude()));
-
-                                        Disposable disposable = singleAddress.subscribeWith(new DisposableSingleObserver<String>() {
-                                            @Override
-                                            public void onSuccess(String s) {
-//                                                tvCoordinates.setText(coordinates);
-//                                                tvCurrentAddress.setText(s);
-//                                                tvCoordinates.setVisibility(View.VISIBLE);
-//                                                tvCurrentAddress.setVisibility(View.VISIBLE);
-
-                                                tvAddressInfo.setText(s);
-                                                tvAddressInfo.setVisibility(View.VISIBLE);
-                                                tvAddress.setVisibility(View.VISIBLE);
-
-                                                btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
-                                                    @SuppressLint("MissingPermission")
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        String addressId = addresses.push().getKey();
-
-                                                        newAddress = new Address(addressId, s);
-
-
-                                                        same = 0;
-                                                        addresses.addValueEventListener(new ValueEventListener() {
-                                                            @Override
-                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                                                    Address address1 = dataSnapshot.getValue(Address.class);
-                                                                    if(address1.getMapsAddress().equals(newAddress.getMapsAddress())) {
-                                                                        same = 1;
-                                                                    }
-                                                                }
-
-                                                                if(same != 1) {
-                                                                    addresses.child(addressId).setValue(newAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                        @Override
-                                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                                            if (task.isSuccessful()) {
-                                                                                Toast.makeText(PlaceOrder.this, "Adresa adaugata", Toast.LENGTH_SHORT).show();
-                                                                            } else {
-                                                                                Toast.makeText(PlaceOrder.this, "Eroare la adaugarea adresei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                                                                            }
-                                                                        }
-                                                                    });
-                                                                }
-                                                            }
-
-                                                            @Override
-                                                            public void onCancelled(@NonNull DatabaseError error) {
-
-                                                            }
-                                                        });
-
-
-                                                        String orderId = orders.push().getKey();
-                                                        PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentSpinner.getSelectedItem().toString().toUpperCase().replace(" ", "_"));
-                                                        Status status = Status.plasata;
-                                                        Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, restaurantAddresses);
-
-                                                        Log.i("restaurant", String.valueOf(restaurantAddresses));
-                                                        orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                if (task.isSuccessful()) {
-                                                                    Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
-
-                                                                    Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
-                                                                    confirmationOrder.putExtra("orderId", orderId);
-                                                                    confirmationOrder.putExtra("origin", "currentAddress");
-                                                                    startActivity(confirmationOrder);
-                                                                    finish();
-                                                                } else {
-                                                                    Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                                                                }
-                                                            }
-                                                        });
-                                                    }
-
-                                                });
-                                            }
-
-                                            @Override
-                                            public void onError(Throwable e) {
-                                                tvCoordinates.setText(e.getMessage());
-                                                tvCurrentAddress.setText(e.getMessage());
-                                                tvCoordinates.setVisibility(View.VISIBLE);
-                                                tvCurrentAddress.setVisibility(View.VISIBLE);
-
-                                                tvAddressInfo.setText(e.getMessage());
-                                                tvAddressInfo.setVisibility(View.VISIBLE);
-                                                tvAddress.setVisibility(View.VISIBLE);
-                                            }
-                                        });
-
-
-                                    }
-                                });
-
-                        tvAddress.setVisibility(View.VISIBLE);
-                        if (tvAddress.getVisibility() == View.GONE) {
-                            btnPlaceOrder.setEnabled(false);
-                        }
-                        if (tvAddress.getVisibility() == View.VISIBLE) {
-                            btnPlaceOrder.setEnabled(true);
-                        }
-                        break;
-
-                    case R.id.radioBtnMapsLocation:
-
-                        if (getIntent() != null && getIntent().getExtras() != null) {
-                            String origin = getIntent().getExtras().getString("origin");
-                            if (origin != null && origin.equals("mapsActivity")) {
-                                mapsAddress = getIntent().getStringExtra("address");
-                                latitude = getIntent().getDoubleExtra("latitude", 0.0);
-                                longitude = getIntent().getDoubleExtra("longitude", 0.0);
-                                // rg.check(R.id.radioBtnMapsLocation);
-                            }
-                        }
-
-                        firstRow.setVisibility(View.GONE);
-                        secondRow.setVisibility(View.GONE);
-                        thirdRow.setVisibility(View.GONE);
-                        fourthRow.setVisibility(View.VISIBLE);
-                        tvAddressInfo.setVisibility(View.GONE);
-                        tvAddress.setVisibility(View.GONE);
-
-                        btnConfirmAddress.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                startActivity(new Intent(getApplicationContext(), MapsActivity.class));
-                                finish();
-                            }
-                        });
-
-
-                        if (mapsAddress != null && longitude != 0.0 && latitude != 0.0) {
-
-                            String coordinates = new StringBuilder()
-                                    .append(latitude)
-                                    .append("/")
-                                    .append(longitude).toString();
-
-                            Single<String> singleAddress = Single.just(getAddressFromLatLng(latitude,
-                                    longitude));
-
-                            Disposable disposable = singleAddress.subscribeWith(new DisposableSingleObserver<String>() {
-                                @Override
-                                public void onSuccess(String s) {
-//                                                tvCoordinates.setText(coordinates);
-//                                                tvCurrentAddress.setText(s);
-//                                                tvCoordinates.setVisibility(View.VISIBLE);
-//                                                tvCurrentAddress.setVisibility(View.VISIBLE);
-
-                                    tvAddressInfo.setText(s);
-                                    tvAddressInfo.setVisibility(View.VISIBLE);
-                                    tvAddress.setVisibility(View.VISIBLE);
-
-                                    btnPlaceOrder.setEnabled(true);
-
-                                    String addressId = addresses.push().getKey();
-
-                                    newAddress = new Address(addressId, s);
-
-//                            tvAddressInfo.setText(mapsAddress);
-//                            tvAddressInfo.setVisibility(View.VISIBLE);
-//                            tvAddress.setVisibility(View.VISIBLE);
-
-                                    btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-
-                                            same = 0;
-                                            addresses.addValueEventListener(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                                        Address address1 = dataSnapshot.getValue(Address.class);
-                                                        if(address1.getMapsAddress().equals(newAddress.getMapsAddress())) {
-                                                            same = 1;
-                                                        }
-                                                    }
-
-                                                    if(same != 1) {
-                                                        addresses.child(addressId).setValue(newAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                if (task.isSuccessful()) {
-                                                                    Toast.makeText(PlaceOrder.this, "Adresa adaugata", Toast.LENGTH_SHORT).show();
-                                                                } else {
-                                                                    Toast.makeText(PlaceOrder.this, "Eroare la adaugarea adresei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                                                                }
-                                                            }
-                                                        });
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                                }
-                                            });
-
-
-                                            String orderId = orders.push().getKey();
-                                            PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentSpinner.getSelectedItem().toString().toUpperCase().replace(" ", "_"));
-                                            Status status = Status.plasata;
-                                            Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, restaurantAddresses);
-
-                                            orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if (task.isSuccessful()) {
-                                                        Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
-
-
-                                                        Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
-                                                        confirmationOrder.putExtra("orderId", orderId);
-                                                        confirmationOrder.putExtra("origin", "mapsLocation");
-                                                        startActivity(confirmationOrder);
-                                                        finish();
-
-                                                    } else {
-                                                        Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                                                    }
-                                                }
-                                            });
-                                        }
-                                    });
-
-                                }
-
-                                @Override
-                                public void onError(Throwable e) {
-                                    tvCoordinates.setText(e.getMessage());
-                                    tvCurrentAddress.setText(e.getMessage());
-                                    tvCoordinates.setVisibility(View.VISIBLE);
-                                    tvCurrentAddress.setVisibility(View.VISIBLE);
-
-                                    tvAddressInfo.setText(e.getMessage());
-                                    tvAddressInfo.setVisibility(View.VISIBLE);
-                                    tvAddress.setVisibility(View.VISIBLE);
-                                }
-                            });
-
-
-                        } else {
-                            Toast.makeText(PlaceOrder.this, "Nu s-a selectat nici o adresa de pe harta", Toast.LENGTH_LONG).show();
-                        }
-
-                        //tvAddress.setVisibility(View.VISIBLE);
-                        if (tvAddress.getVisibility() == View.GONE) {
-                            btnPlaceOrder.setEnabled(false);
-                        }
-                        if (tvAddress.getVisibility() == View.VISIBLE) {
-                            btnPlaceOrder.setEnabled(true);
-                        }
-                        break;
-                }
-            }
-        });
-
-
-        if (tvAddress.getVisibility() == View.GONE) {
-            btnPlaceOrder.setEnabled(false);
-        }
-        if (tvAddress.getVisibility() == View.VISIBLE) {
-            btnPlaceOrder.setEnabled(true);
-        }
     }
 
+//        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//            @SuppressLint("MissingPermission")
+//            public void onCheckedChanged(RadioGroup group, int checkedId) {
+//
+//                switch (checkedId) {
+//                    case R.id.radioBtnAnotherLocation:
+//                        firstRow.setVisibility(View.VISIBLE);
+//                        secondRow.setVisibility(View.VISIBLE);
+//                        thirdRow.setVisibility(View.VISIBLE);
+//                        fourthRow.setVisibility(View.VISIBLE);
+////                        tvCoordinates.setVisibility(View.GONE);
+////                        tvCurrentAddress.setVisibility(View.GONE);
+//                        tvAddressInfo.setVisibility(View.GONE);
+//                        tvAddress.setVisibility(View.GONE);
+//
+//
+////                        btnCoordinates.setOnClickListener(new View.OnClickListener() {
+////                            @Override
+////                            public void onClick(View v) {
+////                                String street = etStreet.getText().toString();
+////                                String number = etNumber.getText().toString();
+////                                String city = etCity.getText().toString();
+////                                String region = etRegion.getText().toString();
+////
+////                                StringBuilder stringBuilder = new StringBuilder();
+////                                stringBuilder.append(street);
+////                                stringBuilder.append(number);
+////                                stringBuilder.append(city);
+////                                stringBuilder.append(region);
+////
+////                                String result = stringBuilder.toString();
+////                                coordinates.setText(getLocationFromAddress(result).toString());
+////
+////                                Single<LatLng> singleAddress = Single.just(getLocationFromAddress(result));
+//
+////                                Disposable disposable = singleAddress.subscribeWith(new DisposableSingleObserver<String>() {
+////                                    @Override
+////                                    public void onSuccess(String s) {
+////                                        //tvCoordinates.setText(singleAddress);
+////                                        tvCurrentAddress.setText(s);
+////                                        tvCoordinates.setVisibility(View.VISIBLE);
+////                                        tvCurrentAddress.setVisibility(View.VISIBLE);
+////                                    }
+////
+////                                    @Override
+////                                    public void onError(Throwable e) {
+////                                        tvCoordinates.setText(e.getMessage());
+////                                        tvCurrentAddress.setText(e.getMessage());
+////                                        tvCoordinates.setVisibility(View.VISIBLE);
+////                                        tvCurrentAddress.setVisibility(View.VISIBLE);
+////                                    }
+////                                });
+////                            }
+////                        });
+//
+//                        btnConfirmAddress.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                street = etStreet.getText().toString();
+//                                number = etNumber.getText().toString();
+//                                block = etBlock.getText().toString();
+//                                entrance = etEntrance.getText().toString();
+//                                floor = etFloor.getText().toString();
+//                                apartment = etApartment.getText().toString();
+//                                city = etCity.getText().toString();
+//                                region = etRegion.getText().toString();
+//
+//
+//                                if (TextUtils.isEmpty(street)) {
+//                                    etStreet.setError("Strada este necesara pentru plasarea comenzii");
+//                                    return;
+//                                }
+//
+//                                if (TextUtils.isEmpty(number)) {
+//                                    etNumber.setError("Numarul strazii este necesar pentru plasarea comenzii");
+//                                    return;
+//                                }
+//
+//
+//                                StringBuilder stringBuilder = new StringBuilder();
+//                                stringBuilder.append(street + " ");
+//                                stringBuilder.append(number + " ");
+//                                stringBuilder.append(block + " ");
+//                                stringBuilder.append(entrance + " ");
+//                                stringBuilder.append(floor + " ");
+//                                stringBuilder.append(apartment + " ");
+//                                stringBuilder.append(city + " ");
+//                                stringBuilder.append(region + " ");
+//
+//                                String result = stringBuilder.toString();
+//
+//
+////                                tvAddressInfo.setText(getLocationFromAddress(result).toString());
+//                                tvAddressInfo.setText(result);
+//                                tvAddressInfo.setVisibility(View.VISIBLE);
+//                                tvAddress.setVisibility(View.VISIBLE);
+//
+//                                tvAddress.setVisibility(View.VISIBLE);
+//                                if (tvAddress.getVisibility() == View.GONE) {
+//                                    btnPlaceOrder.setEnabled(false);
+//                                }
+//                                if (tvAddress.getVisibility() == View.VISIBLE) {
+//                                    btnPlaceOrder.setEnabled(true);
+//                                }
+//                            }
+//                        });
+//
+//                        btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//
+//                                if (TextUtils.isEmpty(street)) {
+//                                    etStreet.setError("Strada este necesara pentru plasarea comenzii");
+//                                    return;
+//                                }
+//
+//                                if (TextUtils.isEmpty(number)) {
+//                                    etNumber.setError("Numarul strazii este necesar pentru plasarea comenzii");
+//                                    return;
+//                                }
+//
+//                                String addressId = addresses.push().getKey();
+//
+//                                StringBuilder coordinates = new StringBuilder();
+//                                coordinates.append(street);
+//                                coordinates.append(number);
+//                                coordinates.append(city);
+//                                coordinates.append(region);
+//
+//                                String coordinatesString = coordinates.toString();
+//
+//                                LatLng coordinatesNewAddress = getLocationFromAddress(coordinatesString);
+//                                String address = getAddressFromLatLng(coordinatesNewAddress.latitude, coordinatesNewAddress.longitude);
+//
+//                                newAddress = new Address(addressId, street, number, block, entrance, floor, apartment, city, region, userId, address);
+//
+//                                same = 0;
+//                                addresses.addValueEventListener(new ValueEventListener() {
+//                                    @Override
+//                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//                                            Address address1 = dataSnapshot.getValue(Address.class);
+//                                            if(address1.getMapsAddress().equals(newAddress.getMapsAddress())) {
+//                                                same = 1;
+//                                            }
+//                                        }
+//
+//                                        if(same != 1) {
+//                                            addresses.child(addressId).setValue(newAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                                @Override
+//                                                public void onComplete(@NonNull Task<Void> task) {
+//                                                    if (task.isSuccessful()) {
+//                                                        Toast.makeText(PlaceOrder.this, "Adresa adaugata", Toast.LENGTH_SHORT).show();
+//                                                    } else {
+//                                                        Toast.makeText(PlaceOrder.this, "Eroare la adaugarea adresei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+//                                                    }
+//                                                }
+//                                            });
+//                                        }
+//                                    }
+//
+//                                    @Override
+//                                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                                    }
+//                                });
+//
+//
+//                                String orderId = orders.push().getKey();
+//                                PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentSpinner.getSelectedItem().toString().toUpperCase().replace(" ", "_"));
+//                                Status status = Status.plasata;
+//                                Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, restaurantAddresses);
+//
+//                                orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<Void> task) {
+//                                        if (task.isSuccessful()) {
+//                                            Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
+//
+//                                            cart.removeValue();
+//                                            Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
+//                                            confirmationOrder.putExtra("orderId", orderId);
+//                                            confirmationOrder.putExtra("origin", "addAnotherAddress");
+//                                            startActivity(confirmationOrder);
+//                                            finish();
+//
+//                                        } else {
+//                                            Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+//                                        }
+//                                    }
+//                                });
+//
+//                            }
+//
+//                        });
+//
+//                        break;
+//                    case R.id.radioBtnCurrentLocation:
+//                        firstRow.setVisibility(View.GONE);
+//                        secondRow.setVisibility(View.GONE);
+//                        thirdRow.setVisibility(View.GONE);
+//                        fourthRow.setVisibility(View.GONE);
+//                        tvAddress.setVisibility(View.VISIBLE);
+//
+//                        initializeLocation();
+//
+//                        fusedLocationProviderClient.getLastLocation()
+//                                .addOnFailureListener(new OnFailureListener() {
+//                                    @Override
+//                                    public void onFailure(@NonNull Exception e) {
+//                                        Toast.makeText(getApplicationContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                                        tvCoordinates.setVisibility(View.GONE);
+//                                    }
+//                                })
+//                                .addOnCompleteListener(new OnCompleteListener<Location>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<Location> task) {
+//                                        String coordinates = new StringBuilder()
+//                                                .append(task.getResult().getLatitude())
+//                                                .append("/")
+//                                                .append(task.getResult().getLongitude()).toString();
+//
+//                                        Single<String> singleAddress = Single.just(getAddressFromLatLng(task.getResult().getLatitude(),
+//                                                task.getResult().getLongitude()));
+//
+//                                        Disposable disposable = singleAddress.subscribeWith(new DisposableSingleObserver<String>() {
+//                                            @Override
+//                                            public void onSuccess(String s) {
+////                                                tvCoordinates.setText(coordinates);
+////                                                tvCurrentAddress.setText(s);
+////                                                tvCoordinates.setVisibility(View.VISIBLE);
+////                                                tvCurrentAddress.setVisibility(View.VISIBLE);
+//
+//                                                tvAddressInfo.setText(s);
+//                                                tvAddressInfo.setVisibility(View.VISIBLE);
+//                                                tvAddress.setVisibility(View.VISIBLE);
+//
+//                                                btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
+//                                                    @SuppressLint("MissingPermission")
+//                                                    @Override
+//                                                    public void onClick(View v) {
+//                                                        String addressId = addresses.push().getKey();
+//
+//                                                        newAddress = new Address(addressId, s);
+//
+//
+//                                                        same = 0;
+//                                                        addresses.addValueEventListener(new ValueEventListener() {
+//                                                            @Override
+//                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//                                                                    Address address1 = dataSnapshot.getValue(Address.class);
+//                                                                    if(address1.getMapsAddress().equals(newAddress.getMapsAddress())) {
+//                                                                        same = 1;
+//                                                                    }
+//                                                                }
+//
+//                                                                if(same != 1) {
+//                                                                    addresses.child(addressId).setValue(newAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                                                        @Override
+//                                                                        public void onComplete(@NonNull Task<Void> task) {
+//                                                                            if (task.isSuccessful()) {
+//                                                                                Toast.makeText(PlaceOrder.this, "Adresa adaugata", Toast.LENGTH_SHORT).show();
+//                                                                            } else {
+//                                                                                Toast.makeText(PlaceOrder.this, "Eroare la adaugarea adresei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+//                                                                            }
+//                                                                        }
+//                                                                    });
+//                                                                }
+//                                                            }
+//
+//                                                            @Override
+//                                                            public void onCancelled(@NonNull DatabaseError error) {
+//
+//                                                            }
+//                                                        });
+//
+//
+//                                                        String orderId = orders.push().getKey();
+//                                                        PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentSpinner.getSelectedItem().toString().toUpperCase().replace(" ", "_"));
+//                                                        Status status = Status.plasata;
+//                                                        Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, restaurantAddresses);
+//
+//                                                        Log.i("restaurant", String.valueOf(restaurantAddresses));
+//                                                        orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                                            @Override
+//                                                            public void onComplete(@NonNull Task<Void> task) {
+//                                                                if (task.isSuccessful()) {
+//                                                                    Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
+//
+//                                                                    Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
+//                                                                    confirmationOrder.putExtra("orderId", orderId);
+//                                                                    confirmationOrder.putExtra("origin", "currentAddress");
+//                                                                    startActivity(confirmationOrder);
+//                                                                    finish();
+//                                                                } else {
+//                                                                    Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+//                                                                }
+//                                                            }
+//                                                        });
+//                                                    }
+//
+//                                                });
+//                                            }
+//
+//                                            @Override
+//                                            public void onError(Throwable e) {
+//                                                tvCoordinates.setText(e.getMessage());
+//                                                tvCurrentAddress.setText(e.getMessage());
+//                                                tvCoordinates.setVisibility(View.VISIBLE);
+//                                                tvCurrentAddress.setVisibility(View.VISIBLE);
+//
+//                                                tvAddressInfo.setText(e.getMessage());
+//                                                tvAddressInfo.setVisibility(View.VISIBLE);
+//                                                tvAddress.setVisibility(View.VISIBLE);
+//                                            }
+//                                        });
+//
+//
+//                                    }
+//                                });
+//
+//                        tvAddress.setVisibility(View.VISIBLE);
+//                        if (tvAddress.getVisibility() == View.GONE) {
+//                            btnPlaceOrder.setEnabled(false);
+//                        }
+//                        if (tvAddress.getVisibility() == View.VISIBLE) {
+//                            btnPlaceOrder.setEnabled(true);
+//                        }
+//                        break;
+//
+//                    case R.id.radioBtnMapsLocation:
+//
+//                        if (getIntent() != null && getIntent().getExtras() != null) {
+//                            String origin = getIntent().getExtras().getString("origin");
+//                            if (origin != null && origin.equals("mapsActivity")) {
+//                                mapsAddress = getIntent().getStringExtra("address");
+//                                latitude = getIntent().getDoubleExtra("latitude", 0.0);
+//                                longitude = getIntent().getDoubleExtra("longitude", 0.0);
+//                                // rg.check(R.id.radioBtnMapsLocation);
+//                            }
+//                        }
+//
+//                        firstRow.setVisibility(View.GONE);
+//                        secondRow.setVisibility(View.GONE);
+//                        thirdRow.setVisibility(View.GONE);
+//                        fourthRow.setVisibility(View.VISIBLE);
+//                        tvAddressInfo.setVisibility(View.GONE);
+//                        tvAddress.setVisibility(View.GONE);
+//
+//                        btnConfirmAddress.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+//                                finish();
+//                            }
+//                        });
+//
+//
+//                        if (mapsAddress != null && longitude != 0.0 && latitude != 0.0) {
+//
+//                            String coordinates = new StringBuilder()
+//                                    .append(latitude)
+//                                    .append("/")
+//                                    .append(longitude).toString();
+//
+//                            Single<String> singleAddress = Single.just(getAddressFromLatLng(latitude,
+//                                    longitude));
+//
+//                            Disposable disposable = singleAddress.subscribeWith(new DisposableSingleObserver<String>() {
+//                                @Override
+//                                public void onSuccess(String s) {
+////                                                tvCoordinates.setText(coordinates);
+////                                                tvCurrentAddress.setText(s);
+////                                                tvCoordinates.setVisibility(View.VISIBLE);
+////                                                tvCurrentAddress.setVisibility(View.VISIBLE);
+//
+//                                    tvAddressInfo.setText(s);
+//                                    tvAddressInfo.setVisibility(View.VISIBLE);
+//                                    tvAddress.setVisibility(View.VISIBLE);
+//
+//                                    btnPlaceOrder.setEnabled(true);
+//
+//                                    String addressId = addresses.push().getKey();
+//
+//                                    newAddress = new Address(addressId, s);
+//
+////                            tvAddressInfo.setText(mapsAddress);
+////                            tvAddressInfo.setVisibility(View.VISIBLE);
+////                            tvAddress.setVisibility(View.VISIBLE);
+//
+//                                    btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
+//                                        @Override
+//                                        public void onClick(View v) {
+//
+//                                            same = 0;
+//                                            addresses.addValueEventListener(new ValueEventListener() {
+//                                                @Override
+//                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//                                                        Address address1 = dataSnapshot.getValue(Address.class);
+//                                                        if(address1.getMapsAddress().equals(newAddress.getMapsAddress())) {
+//                                                            same = 1;
+//                                                        }
+//                                                    }
+//
+//                                                    if(same != 1) {
+//                                                        addresses.child(addressId).setValue(newAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                                            @Override
+//                                                            public void onComplete(@NonNull Task<Void> task) {
+//                                                                if (task.isSuccessful()) {
+//                                                                    Toast.makeText(PlaceOrder.this, "Adresa adaugata", Toast.LENGTH_SHORT).show();
+//                                                                } else {
+//                                                                    Toast.makeText(PlaceOrder.this, "Eroare la adaugarea adresei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+//                                                                }
+//                                                            }
+//                                                        });
+//                                                    }
+//                                                }
+//
+//                                                @Override
+//                                                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                                                }
+//                                            });
+//
+//
+//                                            String orderId = orders.push().getKey();
+//                                            PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentSpinner.getSelectedItem().toString().toUpperCase().replace(" ", "_"));
+//                                            Status status = Status.plasata;
+//                                            Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, restaurantAddresses);
+//
+//                                            orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                                @Override
+//                                                public void onComplete(@NonNull Task<Void> task) {
+//                                                    if (task.isSuccessful()) {
+//                                                        Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
+//
+//
+//                                                        Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
+//                                                        confirmationOrder.putExtra("orderId", orderId);
+//                                                        confirmationOrder.putExtra("origin", "mapsLocation");
+//                                                        startActivity(confirmationOrder);
+//                                                        finish();
+//
+//                                                    } else {
+//                                                        Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+//                                                    }
+//                                                }
+//                                            });
+//                                        }
+//                                    });
+//
+//                                }
+//
+//                                @Override
+//                                public void onError(Throwable e) {
+//                                    tvCoordinates.setText(e.getMessage());
+//                                    tvCurrentAddress.setText(e.getMessage());
+//                                    tvCoordinates.setVisibility(View.VISIBLE);
+//                                    tvCurrentAddress.setVisibility(View.VISIBLE);
+//
+//                                    tvAddressInfo.setText(e.getMessage());
+//                                    tvAddressInfo.setVisibility(View.VISIBLE);
+//                                    tvAddress.setVisibility(View.VISIBLE);
+//                                }
+//                            });
+//
+//
+//                        } else {
+//                            Toast.makeText(PlaceOrder.this, "Nu s-a selectat nici o adresa de pe harta", Toast.LENGTH_LONG).show();
+//                        }
+//
+//                        //tvAddress.setVisibility(View.VISIBLE);
+//                        if (tvAddress.getVisibility() == View.GONE) {
+//                            btnPlaceOrder.setEnabled(false);
+//                        }
+//                        if (tvAddress.getVisibility() == View.VISIBLE) {
+//                            btnPlaceOrder.setEnabled(true);
+//                        }
+//                        break;
+//                }
+//            }
+//        });
+//
+//
+//        if (tvAddress.getVisibility() == View.GONE) {
+//            btnPlaceOrder.setEnabled(false);
+//        }
+//        if (tvAddress.getVisibility() == View.VISIBLE) {
+//            btnPlaceOrder.setEnabled(true);
+//        }
+//    }
+//
     private String getAddressFromLatLng(double latitude, double longitude) {
         Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
         String result = "";
@@ -849,65 +1154,65 @@ public class PlaceOrder extends AppCompatActivity {
 
         return coordinates;
     }
-
-    private void initializeLocation() {
-        buildLocationRequest();
-        buildLocationCallback();
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
-    }
-
-    private void buildLocationCallback() {
-        locationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(@NonNull LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-                currentLocation = locationResult.getLastLocation();
-            }
-        };
-    }
-
-    private void buildLocationRequest() {
-        locationRequest = new LocationRequest();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(5000);
-        locationRequest.setFastestInterval(3000);
-        locationRequest.setSmallestDisplacement(10f);
-    }
-
-    @Override
-    public void onStop() {
-        if (fusedLocationProviderClient != null) {
-            fusedLocationProviderClient.removeLocationUpdates(locationCallback);
-        }
-        super.onStop();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (fusedLocationProviderClient != null) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }
-            fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
-        }
-    }
+//
+//    private void initializeLocation() {
+//        buildLocationRequest();
+//        buildLocationCallback();
+//        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            // TODO: Consider calling
+//            //    ActivityCompat#requestPermissions
+//            // here to request the missing permissions, and then overriding
+//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//            //                                          int[] grantResults)
+//            // to handle the case where the user grants the permission. See the documentation
+//            // for ActivityCompat#requestPermissions for more details.
+//            return;
+//        }
+//        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+//    }
+//
+//    private void buildLocationCallback() {
+//        locationCallback = new LocationCallback() {
+//            @Override
+//            public void onLocationResult(@NonNull LocationResult locationResult) {
+//                super.onLocationResult(locationResult);
+//                currentLocation = locationResult.getLastLocation();
+//            }
+//        };
+//    }
+//
+//    private void buildLocationRequest() {
+//        locationRequest = new LocationRequest();
+//        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+//        locationRequest.setInterval(5000);
+//        locationRequest.setFastestInterval(3000);
+//        locationRequest.setSmallestDisplacement(10f);
+//    }
+//
+//    @Override
+//    public void onStop() {
+//        if (fusedLocationProviderClient != null) {
+//            fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+//        }
+//        super.onStop();
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        if (fusedLocationProviderClient != null) {
+//            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                // TODO: Consider calling
+//                //    ActivityCompat#requestPermissions
+//                // here to request the missing permissions, and then overriding
+//                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//                //                                          int[] grantResults)
+//                // to handle the case where the user grants the permission. See the documentation
+//                // for ActivityCompat#requestPermissions for more details.
+//                return;
+//            }
+//            fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+//        }
+//    }
 }

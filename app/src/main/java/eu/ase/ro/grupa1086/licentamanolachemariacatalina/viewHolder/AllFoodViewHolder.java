@@ -7,30 +7,29 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 
-public class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class AllFoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public TextView restaurantName;
+    public TextView foodName;
     public ImageView imageView;
-    public TextView deliveryTime;
+    public TextView restaurantName;
 
     private ItemClickListener itemClickListener;
 
-    public void setItemClickListener(ItemClickListener itemClickListener) {
-        this.itemClickListener = itemClickListener;
-    }
-
-
-    public RestaurantViewHolder(@NonNull View itemView) {
+    public AllFoodViewHolder(@NonNull View itemView) {
         super(itemView);
 
+        foodName = (TextView) itemView.findViewById(R.id.foodName);
+        imageView = (ImageView) itemView.findViewById(R.id.foodImage);
         restaurantName = (TextView) itemView.findViewById(R.id.restaurantName);
-        imageView = (ImageView) itemView.findViewById(R.id.restaurantImage);
-        deliveryTime = (TextView) itemView.findViewById(R.id.deliveryTime);
 
         itemView.setOnClickListener(this);
+    }
+
+    public void setItemClickListener(ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
     }
 
     @Override

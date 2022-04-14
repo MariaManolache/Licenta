@@ -64,15 +64,33 @@
                                 android:gravity="center_horizontal"
                                 android:text="@string/restaurant_name"
                                 android:textAlignment="center"
+                                android:fontFamily="@font/alata"
+                                android:textColor="@color/violet"
                                 android:textAllCaps="true"
                                 android:textStyle="bold"></TextView>
 
-                            <ImageView
-                                android:id="@+id/rightArrow"
+                            <RelativeLayout
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="right"
-                                android:src="@drawable/ic_baseline_arrow_forward_24"></ImageView>
+                                android:layout_height="wrap_content">
+
+                                <ImageView
+                                    android:id="@+id/downArrow"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:visibility="visible"
+                                    android:layout_gravity="right"
+                                    android:src="@drawable/ic_baseline_arrow_downward_24"></ImageView>
+
+                                <ImageView
+                                    android:id="@+id/upArrow"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:visibility="gone"
+                                    android:layout_gravity="right"
+                                    android:src="@drawable/ic_baseline_arrow_upward_24"></ImageView>
+
+                            </RelativeLayout>
+
 
                         </LinearLayout>
 
@@ -90,6 +108,7 @@
                                 android:layout_marginStart="10dp"
                                 android:fontFamily="@font/alata"
                                 android:gravity="center_vertical|start"
+                                android:textColor="@color/violet"
                                 android:text="STATUS"
                                 android:textAllCaps="true"
                                 android:textStyle="italic"></TextView>
@@ -101,6 +120,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="10dp"
                                 android:fontFamily="@font/alata"
+                                android:textColor="@color/violet"
                                 android:gravity="center_vertical|start"
                                 android:text="Adresa"
                                 android:textAllCaps="true"
@@ -112,6 +132,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="10dp"
                                 android:fontFamily="@font/alata"
+                                android:textColor="@color/violet"
                                 android:gravity="center_vertical|start"
                                 android:text="Total"
                                 android:textAllCaps="true"

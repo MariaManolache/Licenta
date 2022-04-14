@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -55,6 +56,8 @@ public class PrincipalMenu extends AppCompatActivity {
     FloatingActionButton shoppingCart;
     BottomNavigationView bottomNavigationView;
 
+    FrameLayout foodFrameLayout;
+
 //    Button btnMaps;
 
     @Override
@@ -67,6 +70,8 @@ public class PrincipalMenu extends AppCompatActivity {
         restaurants = database.getReference("restaurants");
         firebaseAuth = FirebaseAuth.getInstance();
         shoppingCart = findViewById(R.id.fab);
+
+        foodFrameLayout = findViewById(R.id.foodFrameLayout);
 
         firebaseUser = firebaseAuth.getCurrentUser();
         databaseReference = FirebaseDatabase.getInstance().getReference("users").child(firebaseUser.getUid());
@@ -100,6 +105,14 @@ public class PrincipalMenu extends AppCompatActivity {
 //            startActivity(maps);
 //        }
 //    });
+
+        foodFrameLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent completeFoodList = new Intent(PrincipalMenu.this, CompleteFoodList.class);
+                startActivity(completeFoodList);
+            }
+        });
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.restaurantsMenu);

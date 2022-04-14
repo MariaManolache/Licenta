@@ -20,8 +20,8 @@
         <ImageView
             android:id="@+id/imgAddress"
             android:src="@drawable/ic_baseline_home_24"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_width="40dp"
+            android:layout_height="40dp"/>
 
         <TextView
             android:id="@+id/addressName"
@@ -29,6 +29,8 @@
             android:textAllCaps="true"
             android:textStyle="bold"
             android:text="@string/address_name"
+            android:fontFamily="@font/alata"
+            android:textColor="@color/violet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"></TextView>
 
@@ -60,6 +62,8 @@
                         android:gravity="center_vertical|start"
                         android:layout_marginStart="10dp"
                         android:text="@string/address_example"
+                        android:fontFamily="@font/alata"
+                        android:textColor="@color/violet"
                         android:textAllCaps="true"
                         android:textStyle="bold"></TextView>
 
