@@ -4,6 +4,9 @@ import androidx.annotation.NonNull;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
+
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.Rating;
 
 public class Restaurant implements Serializable {
 
@@ -14,6 +17,7 @@ public class Restaurant implements Serializable {
     private String categoryIdName;
     private String address;
     private String deliveryTime;
+    private List<Rating> ratingsList;
 
     public Restaurant() {
     }
@@ -82,6 +86,14 @@ public class Restaurant implements Serializable {
 
     public void setDeliveryTime(String deliveryTime) {
         this.deliveryTime = deliveryTime;
+    }
+
+    public List<Rating> getRatingsList() {
+        return ratingsList;
+    }
+
+    public void setRatingsList(List<Rating> ratingsList) {
+        this.ratingsList = ratingsList;
     }
 
     @Override

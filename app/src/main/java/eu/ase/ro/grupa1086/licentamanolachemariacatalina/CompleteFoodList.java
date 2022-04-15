@@ -104,16 +104,16 @@ public class CompleteFoodList extends AppCompatActivity {
                         restaurantName = snapshot.getValue(String.class);
                         restaurantsName.add(restaurantName);
 
-                        if(restaurantsName.size() == 1) {
+                        if (restaurantsName.size() == 1) {
                             holder.restaurantName.setVisibility(View.VISIBLE);
                             holder.restaurantName.setText(restaurantName);
                         } else {
                             if (restaurantsName.get(restaurantsName.size() - 1).equals(restaurantsName.get(restaurantsName.size() - 2))) {
                                 holder.restaurantName.setVisibility(View.GONE);
-                                if(model.getName().equals("Chicken and corn")) {
-                                    holder.restaurantName.setVisibility(View.VISIBLE);
-                                    holder.restaurantName.setText(restaurantName);
-                                }
+//                                if(model.getName().equals("Chicken and corn")) {
+//                                    holder.restaurantName.setVisibility(View.VISIBLE);
+//                                    holder.restaurantName.setText(restaurantName);
+//                                }
                             } else {
                                 holder.restaurantName.setVisibility(View.VISIBLE);
                                 holder.restaurantName.setText(restaurantName);
@@ -121,6 +121,10 @@ public class CompleteFoodList extends AppCompatActivity {
                         }
 
                         Log.i("restaurantsName", restaurantsName.toString());
+                        if (restaurantsName.size() == 2) {
+                            restaurantsName.remove(restaurantsName.get(0));
+                        }
+
 
                     }
 

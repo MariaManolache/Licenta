@@ -253,7 +253,7 @@ public class FoodInfo extends AppCompatActivity {
 
                 collapsingToolbarLayout.setTitle(food.getName());
 
-                price.setText(String.valueOf(food.getPrice()));
+                price.setText(food.getPrice() + " lei");
                 name.setText(food.getName());
                 description.setText(food.getDescription());
                 food.setQuantity(Integer.parseInt(quantity.getText().toString()));

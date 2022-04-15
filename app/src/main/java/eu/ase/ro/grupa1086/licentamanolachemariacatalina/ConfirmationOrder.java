@@ -1,11 +1,13 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatRatingBar;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.loader.content.AsyncTaskLoader;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -16,8 +18,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +55,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.maps.DirectionsApi;
 import com.google.maps.DirectionsApiRequest;
@@ -70,12 +76,15 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Address;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Order;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
 //import eu.ase.ro.grupa1086.licentamanolachemariacatalina.databinding.ActivityConfirmationOrderBinding;
 
 public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCallback, RoutingListener {
@@ -87,6 +96,9 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
     FirebaseDatabase database;
     DatabaseReference orders;
     DatabaseReference cart;
+    DatabaseReference users;
+    DatabaseReference ratings;
+    String name;
 
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
@@ -135,8 +147,23 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
         userId = user.getUid();
         orders = database.getInstance().getReference("orders").child(userId);
         cart = database.getInstance().getReference("carts").child(userId).child("foodList");
+        ratings = database.getInstance().getReference("ratings");
 
         cart.removeValue();
+
+        users = database.getInstance().getReference("users").child(user.getUid()).child("name");
+
+        users.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                name = snapshot.getValue(String.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
 //        cart.addValueEventListener(new ValueEventListener() {
 //            @Override
@@ -167,7 +194,7 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
                     return;
                 }
 
-                    orders.child(orderId).child("address").addValueEventListener(new ValueEventListener() {
+                orders.child(orderId).child("address").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Address address = snapshot.getValue(Address.class);
@@ -300,7 +327,39 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
     }
 
     private void showRatingDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Rating restaurant");
+        builder.setMessage("Lasa un rating pentru acest restaurant");
 
+        View itemView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.rating, null);
+
+        RatingBar ratingBar = itemView.findViewById(R.id.ratingBar);
+        EditText etComment = itemView.findViewById(R.id.etComment);
+
+        builder.setView(itemView);
+
+        builder.setNegativeButton("CANCEL", ((dialog, which) -> {
+            dialog.dismiss();
+        }));
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Rating rating = new Rating();
+                rating.setName(name);
+                rating.setOrderId(orderId);
+                rating.setComment(etComment.getText().toString());
+                rating.setRateValue(ratingBar.getRating());
+                Map<String, Object> serverTimeStamp = new HashMap<>();
+                serverTimeStamp.put("timeStamp", ServerValue.TIMESTAMP);
+                rating.setCommentTimeStamp(serverTimeStamp);
+
+                ratings.child(orderId).setValue(rating);
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     /**
@@ -322,20 +381,20 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
         LatLng latLngUserAddress = new LatLng(getLocationFromAddress(mapsAddress).latitude, getLocationFromAddress(mapsAddress).longitude);
 
 
-        for (Restaurant address: restaurantAddresses) {
-            LatLng restaurantAddress = new LatLng(getLocationFromAddress(address.getAddress()).latitude,getLocationFromAddress(address.getAddress()).longitude);
+        for (Restaurant address : restaurantAddresses) {
+            LatLng restaurantAddress = new LatLng(getLocationFromAddress(address.getAddress()).latitude, getLocationFromAddress(address.getAddress()).longitude);
             latLngRestaurantAddresses.add(restaurantAddress);
             Log.i("mapsAddress", String.valueOf(restaurantAddress));
         }
 
         //mMap.addMarker(new MarkerOptions().position(latLngRestaurantAddresses.get(0)).title("Marker 2"));
-        for(LatLng latLngAddress: latLngRestaurantAddresses) {
+        for (LatLng latLngAddress : latLngRestaurantAddresses) {
             mMap.addMarker(new MarkerOptions().position(latLngAddress).title("Marker restaurant"));
             Log.i("mapsAddress", String.valueOf(latLngAddress));
         }
 
-        if(latLngRestaurantAddresses.size() > 1) {
-            for(int i = 0; i < latLngRestaurantAddresses.size() - 1; i++) {
+        if (latLngRestaurantAddresses.size() > 1) {
+            for (int i = 0; i < latLngRestaurantAddresses.size() - 1; i++) {
 //                String url = getRequestedUrl(latLngRestaurantAddresses.get(i), latLngRestaurantAddresses.get(i+1));
                 //getRoute(latLngRestaurantAddresses.get(i), latLngRestaurantAddresses.get(i+1));
             }
@@ -348,7 +407,6 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
 //            mMap.addMarker(new MarkerOptions().position(latLngRestaurantAddresses.get(i)).title("Marker " + i));
 //        }
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngUserAddress, 15));
-
 
 
 //        LatLng barcelona = new LatLng(41.385064,2.173403);
@@ -418,7 +476,6 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
 //
 //        mMap.getUiSettings().setZoomControlsEnabled(true);
 //        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(zaragoza, 6));
-
 
 
         //getRoute(latLngRestaurantAddresses.get(0), latLngUserAddress);
@@ -517,7 +574,7 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
     @Override
     public void onRoutingFailure(RouteException e) {
 
-        if(e != null) {
+        if (e != null) {
             Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(this, "Something went wrong. Try again", Toast.LENGTH_SHORT).show();
@@ -532,15 +589,15 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
     @Override
     public void onRoutingSuccess(ArrayList<Route> route, int shortestRouteIndex) {
 
-        if(polylines.size() > 0) {
-            for(Polyline polyline : polylines) {
+        if (polylines.size() > 0) {
+            for (Polyline polyline : polylines) {
                 polyline.remove();
             }
         }
 
         polylines = new ArrayList<>();
 
-        for(int i = 0; i < route.size(); i++) {
+        for (int i = 0; i < route.size(); i++) {
 
             int colorIndex = i % COLORS.length;
 
@@ -551,7 +608,7 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
             Polyline polyline = mMap.addPolyline(polylineOptions);
             polylines.add(polyline);
 
-            Toast.makeText(getApplicationContext(), "Route " + (i+1) + ": distance - " +
+            Toast.makeText(getApplicationContext(), "Route " + (i + 1) + ": distance - " +
                     route.get(i).getDistanceValue() + ": duration - " + route.get(i).getDurationValue(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -614,7 +671,7 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
                             tvTime.setText(duration);
 
                             //------------Displaying Distance and Time-----------------\\
- //                           showingDistanceTime(distance, duration); // Showing distance and time to the user in the UI \\
+                            //                           showingDistanceTime(distance, duration); // Showing distance and time to the user in the UI \\
 //                            String message = "Total Distance is " + distance + " and Estimated Time is " + duration;
 //                            StaticMethods.customSnackBar(consumerHomeActivity.parentLayout, message,
 //                                    getResources().getColor(R.color.colorPrimary),

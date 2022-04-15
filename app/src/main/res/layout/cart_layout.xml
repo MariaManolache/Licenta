@@ -125,8 +125,9 @@
                     android:id="@+id/tvQuantity"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:text="1"
-                    android:textSize="20sp"></TextView>
+                    android:textSize="30sp"></TextView>
 
                 <ImageButton
                     android:id="@+id/btnAdd"

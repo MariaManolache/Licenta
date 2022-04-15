@@ -1,20 +1,32 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
 
+import java.util.Map;
+
 public class Rating {
+    private String name;
     private String orderId;
-    private String restaurantId;
-    private String rateValue;
+    private float rateValue;
     private String comment;
+    private Map<String, Object> commentTimeStamp;
 
     public Rating() {
 
     }
 
-    public Rating(String orderId, String restaurantId, String rateValue, String comment) {
+    public Rating(String name, String orderId, float rateValue, String comment, Map<String, Object> commentTimeStamp) {
+        this.name = name;
         this.orderId = orderId;
-        this.restaurantId = restaurantId;
         this.rateValue = rateValue;
         this.comment = comment;
+        this.commentTimeStamp = commentTimeStamp;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getOrderId() {
@@ -25,19 +37,12 @@ public class Rating {
         this.orderId = orderId;
     }
 
-    public String getRestaurantId() {
-        return restaurantId;
-    }
 
-    public void setRestaurantId(String restaurantId) {
-        this.restaurantId = restaurantId;
-    }
-
-    public String getRateValue() {
+    public float getRateValue() {
         return rateValue;
     }
 
-    public void setRateValue(String rateValue) {
+    public void setRateValue(float rateValue) {
         this.rateValue = rateValue;
     }
 
@@ -49,13 +54,22 @@ public class Rating {
         this.comment = comment;
     }
 
+    public Map<String, Object> getCommentTimeStamp() {
+        return commentTimeStamp;
+    }
+
+    public void setCommentTimeStamp(Map<String, Object> commentTimeStamp) {
+        this.commentTimeStamp = commentTimeStamp;
+    }
+
     @Override
     public String toString() {
         return "Rating{" +
-                "orderId='" + orderId + '\'' +
-                ", restaurantId='" + restaurantId + '\'' +
-                ", rateValue='" + rateValue + '\'' +
+                "name='" + name + '\'' +
+                ", orderId='" + orderId + '\'' +
+                ", rateValue=" + rateValue +
                 ", comment='" + comment + '\'' +
+                ", commentTimeStamp=" + commentTimeStamp +
                 '}';
     }
 }

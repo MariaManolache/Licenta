@@ -252,7 +252,7 @@ public class ShoppingCart extends AppCompatActivity {
 
                 holder.tvCartPrice.setText(String.valueOf(model.getPrice()));
                 holder.tvCartQuantity.setText(String.valueOf(model.getQuantity()));
-                holder.tvCartValue.setText(String.valueOf(model.getPrice() * model.getQuantity()));
+                holder.tvCartValue.setText(model.getPrice() * model.getQuantity() + " lei");
                 holder.tvQuantityDisplay.setText(String.valueOf(model.getQuantity()));
 
                 restaurants = database.getInstance().getReference("restaurants").child(model.getRestaurantId());

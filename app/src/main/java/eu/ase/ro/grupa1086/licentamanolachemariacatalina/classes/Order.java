@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.Rating;
+
 public class Order implements Serializable {
     private String id;
     private float total;
@@ -13,6 +15,7 @@ public class Order implements Serializable {
     private List<Food> cart;
     private Status status;
     private List<Restaurant> restaurantAddress;
+    private List<Rating> ratingsList;
 
     public Order() {
 
@@ -92,6 +95,14 @@ public class Order implements Serializable {
 
     public void setRestaurantAddress(List<Restaurant> restaurantAddress) {
         this.restaurantAddress = restaurantAddress;
+    }
+
+    public List<Rating> getRatingsList() {
+        return ratingsList;
+    }
+
+    public void setRatingsList(List<Rating> ratingsList) {
+        this.ratingsList = ratingsList;
     }
 
     @Override
