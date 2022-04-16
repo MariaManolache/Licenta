@@ -1,20 +1,19 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder;
 
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 
-public class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public TextView restaurantName;
-    public ImageView imageView;
-    public TextView deliveryTime;
+public class CommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+    public TextView userName;
+    public TextView textComment;
 
     private ItemClickListener itemClickListener;
 
@@ -22,13 +21,11 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
         this.itemClickListener = itemClickListener;
     }
 
-
-    public RestaurantViewHolder(@NonNull View itemView) {
+    public CommentViewHolder(@NonNull View itemView) {
         super(itemView);
 
-        restaurantName = (TextView) itemView.findViewById(R.id.restaurantName);
-        imageView = (ImageView) itemView.findViewById(R.id.restaurantImage);
-        deliveryTime = (TextView) itemView.findViewById(R.id.deliveryTime);
+        userName = (TextView) itemView.findViewById(R.id.userName);
+        textComment = (TextView) itemView.findViewById(R.id.textComment);
 
         itemView.setOnClickListener(this);
     }

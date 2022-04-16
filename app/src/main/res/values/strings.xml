@@ -114,4 +114,8 @@
     <string name="welcome_account">Bine ai venit, </string>
     <string name="all_restaurants">Toate restaurantele</string>
     <string name="ten_minutes">10 min.</string>
+    <string name="quantity">Cantitate:</string>
+    <string name="user_name">Numele utilizatorului</string>
+    <string name="comment_example">Exemplu comentariu</string>
+    <string name="comments">Comentarii</string>
 </resources>

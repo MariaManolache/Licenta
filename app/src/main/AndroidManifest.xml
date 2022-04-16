@@ -16,9 +16,13 @@
         android:theme="@style/Theme.LicentaManolacheMariaCatalina"
         tools:replace="android:theme">
         <activity
+            android:name=".CommentsList"
+            android:exported="false"
+            android:label="@string/comments"/>
+        <activity
             android:name=".CompleteFoodList"
             android:exported="false"
-            android:label="@string/all_restaurants"/>
+            android:label="@string/all_restaurants" />
         <activity
             android:name=".AddressPicking"
             android:exported="false"

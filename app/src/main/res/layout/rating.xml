@@ -7,7 +7,7 @@
     android:padding="8dp">
 
     <RatingBar
-        android:id="@+id/ratingBar"
+        android:id="@+id/ratingBarPopUp"
         android:numStars="5"
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
@@ -16,7 +16,11 @@
 
         <EditText
             android:id="@+id/etComment"
-            android:hint="Lasa un review"
+            android:hint="Spune-ti parerea in legatura cu produsul comandat"
+            android:textSize="25sp"
+            android:fontFamily="@font/alata"
+            android:textColor="@color/violet"
+            android:textColorHint="@color/violet"
             android:maxLines="100"
             android:background="@color/teal_100"
             android:layout_width="match_parent"

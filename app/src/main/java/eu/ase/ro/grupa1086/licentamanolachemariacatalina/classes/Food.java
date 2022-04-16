@@ -3,6 +3,9 @@ package eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes;
 import androidx.annotation.NonNull;
 
 import java.io.Serializable;
+import java.util.List;
+
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.Rating;
 
 public class Food implements Serializable {
 
@@ -14,6 +17,7 @@ public class Food implements Serializable {
     private String image;
     private String restaurantId;
     private String restaurantIdName;
+    private Rating ratings;
 
     public Food() {
     }
@@ -98,6 +102,14 @@ public class Food implements Serializable {
         this.restaurantIdName = restaurantIdName;
     }
 
+    public Rating getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(Rating ratings) {
+        this.ratings = ratings;
+    }
+
     @Override
     public String toString() {
         return "Food{" +
@@ -108,6 +120,8 @@ public class Food implements Serializable {
                 ", quantity=" + quantity +
                 ", image='" + image + '\'' +
                 ", restaurantId='" + restaurantId + '\'' +
+                ", restaurantIdName='" + restaurantIdName + '\'' +
+                ", ratings=" + ratings +
                 '}';
     }
 }

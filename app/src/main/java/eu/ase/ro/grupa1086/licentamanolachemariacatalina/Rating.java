@@ -1,8 +1,9 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class Rating {
+public class Rating implements Serializable {
     private String name;
     private String orderId;
     private float rateValue;
