@@ -146,26 +146,6 @@ public class PlaceOrder extends AppCompatActivity {
                 R.layout.spinner_layout);
         paymentSpinner.setAdapter(adapter);
 
-//        firstRow = findViewById(R.id.firstRow);
-//        secondRow = findViewById(R.id.secondRow);
-//        thirdRow = findViewById(R.id.thirdRow);
-//        fourthRow = findViewById(R.id.fourthRow);
-////        mapRow = findViewById(R.id.mapRow);
-//
-//        btnConfirmAddress = findViewById(R.id.btnConfirmAddress);
-//        etStreet = findViewById(R.id.etStreet);
-//        etNumber = findViewById(R.id.etStreetNumber);
-//        etBlock = findViewById(R.id.etBlock);
-//        etEntrance = findViewById(R.id.etEntrance);
-//        etFloor = findViewById(R.id.etFloor);
-//        etApartment = findViewById(R.id.etApartment);
-//        tvCoordinates = findViewById(R.id.tvCoordinates);
-//        tvCurrentAddress = findViewById(R.id.tvCurrentAddress);
-//        radioGroup = findViewById(R.id.radioGroup);
-//
-//        etCity = findViewById(R.id.etCity);
-//        etRegion = findViewById(R.id.etRegion);
-
         tvTotal = findViewById(R.id.total);
         btnPlaceOrder = findViewById(R.id.btnPlaceOrder);
 
@@ -187,16 +167,10 @@ public class PlaceOrder extends AppCompatActivity {
 
         tvSavedAddresses = findViewById(R.id.tvSavedAddresses);
         tvNewAddress = findViewById(R.id.tvAddress);
-//        mapButton = findViewById(R.id.btnImageMap);
 
         secondFrameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (radioGroup.getVisibility() == View.GONE) {
-//                    radioGroup.setVisibility(View.VISIBLE);
-//                } else {
-//                    radioGroup.setVisibility(View.GONE);
-//                }
                 Intent addressPicking = new Intent(PlaceOrder.this, AddressPicking.class);
                 startActivity(addressPicking);
             }
@@ -210,8 +184,6 @@ public class PlaceOrder extends AppCompatActivity {
                 startActivity(savedAddresses);
             }
         });
-
-//        RadioGroup rg = (RadioGroup) findViewById(R.id.radioGroup);
 
 
         if (getIntent() != null && getIntent().getExtras() != null) {
@@ -246,6 +218,7 @@ public class PlaceOrder extends AppCompatActivity {
                         String addressId = addresses.push().getKey();
 
                         newAddress = new Address(addressId, s);
+                        newAddress.setChosenAddress(false);
 
 //                            tvAddressInfo.setText(mapsAddress);
 //                            tvAddressInfo.setVisibility(View.VISIBLE);
@@ -299,11 +272,19 @@ public class PlaceOrder extends AppCompatActivity {
                                             Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
 
 
-                                            Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
-                                            confirmationOrder.putExtra("orderId", orderId);
-                                            confirmationOrder.putExtra("origin", "mapsLocation");
-                                            startActivity(confirmationOrder);
-                                            finish();
+                                            if(paymentMethod.equals(PaymentMethod.CARD_ONLINE)) {
+                                                Intent cardPayment = new Intent(PlaceOrder.this, CardPayment.class);
+                                                cardPayment.putExtra("orderId", orderId);
+                                                cardPayment.putExtra("origin", "cardPayment");
+                                                startActivity(cardPayment);
+                                                finish();
+                                            } else {
+                                                Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
+                                                confirmationOrder.putExtra("orderId", orderId);
+                                                confirmationOrder.putExtra("origin", "mapsLocation");
+                                                startActivity(confirmationOrder);
+                                                finish();
+                                            }
 
                                         } else {
                                             Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
@@ -354,6 +335,7 @@ public class PlaceOrder extends AppCompatActivity {
                         String addressId = addresses.push().getKey();
 
                         newAddress = new Address(addressId, currentAddress);
+                        newAddress.setChosenAddress(false);
 
 
                         same = 0;
@@ -400,11 +382,20 @@ public class PlaceOrder extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
 
-                                    Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
-                                    confirmationOrder.putExtra("orderId", orderId);
-                                    confirmationOrder.putExtra("origin", "currentAddress");
-                                    startActivity(confirmationOrder);
-                                    finish();
+
+                                    if(paymentMethod.equals(PaymentMethod.CARD_ONLINE)) {
+                                        Intent cardPayment = new Intent(PlaceOrder.this, CardPayment.class);
+                                        cardPayment.putExtra("orderId", orderId);
+                                        cardPayment.putExtra("origin", "cardPayment");
+                                        startActivity(cardPayment);
+                                        finish();
+                                    } else {
+                                        Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
+                                        confirmationOrder.putExtra("orderId", orderId);
+                                        confirmationOrder.putExtra("origin", "currentAddress");
+                                        startActivity(confirmationOrder);
+                                        finish();
+                                    }
                                 } else {
                                     Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                 }
@@ -458,6 +449,7 @@ public class PlaceOrder extends AppCompatActivity {
 
                         newAddress = new Address(addressId, street, number, block, entrance, floor, apartment, city, region, userId, address);
 
+                        newAddress.setChosenAddress(false);
                         same = 0;
                         addresses.addValueEventListener(new ValueEventListener() {
                             @Override
@@ -502,11 +494,20 @@ public class PlaceOrder extends AppCompatActivity {
                                     Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
 
                                     cart.removeValue();
-                                    Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
-                                    confirmationOrder.putExtra("orderId", orderId);
-                                    confirmationOrder.putExtra("origin", "addAnotherAddress");
-                                    startActivity(confirmationOrder);
-                                    finish();
+
+                                    if(paymentMethod.equals(PaymentMethod.CARD_ONLINE)) {
+                                        Intent cardPayment = new Intent(PlaceOrder.this, CardPayment.class);
+                                        cardPayment.putExtra("orderId", orderId);
+                                        cardPayment.putExtra("origin", "cardPayment-anotherAddress");
+                                        startActivity(cardPayment);
+                                        finish();
+                                    } else {
+                                        Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
+                                        confirmationOrder.putExtra("orderId", orderId);
+                                        confirmationOrder.putExtra("origin", "addAnotherAddress");
+                                        startActivity(confirmationOrder);
+                                        finish();
+                                    }
 
                                 } else {
                                     Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
@@ -552,11 +553,20 @@ public class PlaceOrder extends AppCompatActivity {
                                         Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
 
                                         cart.removeValue();
-                                        Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
-                                        confirmationOrder.putExtra("orderId", orderId);
-                                        confirmationOrder.putExtra("origin", "savedAddress");
-                                        startActivity(confirmationOrder);
-                                        finish();
+
+                                        if(paymentMethod.equals(PaymentMethod.CARD_ONLINE)) {
+                                            Intent cardPayment = new Intent(PlaceOrder.this, CardPayment.class);
+                                            cardPayment.putExtra("orderId", orderId);
+                                            cardPayment.putExtra("origin", "cardPayment");
+                                            startActivity(cardPayment);
+                                            finish();
+                                        } else {
+                                            Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
+                                            confirmationOrder.putExtra("orderId", orderId);
+                                            confirmationOrder.putExtra("origin", "savedAddress");
+                                            startActivity(confirmationOrder);
+                                            finish();
+                                        }
 
                                     } else {
                                         Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();

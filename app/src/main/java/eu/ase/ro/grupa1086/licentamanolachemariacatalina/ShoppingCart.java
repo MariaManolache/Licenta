@@ -151,7 +151,9 @@ public class ShoppingCart extends AppCompatActivity {
 
         loadFood();
 
+
     }
+
 
 
     public List<Food> loadFood() {
@@ -173,11 +175,12 @@ public class ShoppingCart extends AppCompatActivity {
                     total += food.getPrice() * food.getQuantity();
                 }
 
-                if (cartList.size() == 0) {
+                if (cartList.size() == 0 || total == 0.0f) {
                     emptyCart.setVisibility(View.VISIBLE);
                     tvEmptyCart.setVisibility(View.VISIBLE);
                     btnStartShopping.setVisibility(View.VISIBLE);
                     cardView.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.GONE);
                     btnStartShopping.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -192,6 +195,7 @@ public class ShoppingCart extends AppCompatActivity {
                     tvEmptyCart.setVisibility(View.GONE);
                     btnStartShopping.setVisibility(View.GONE);
                     cardView.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.VISIBLE);
                     btnPlaceOrder.setEnabled(true);
                 }
 

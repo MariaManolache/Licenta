@@ -15,6 +15,7 @@ public class Address implements Serializable {
     private String region;
     private String idUser;
     private String mapsAddress;
+    private boolean chosenAddress;
 
     public Address() {
 
@@ -142,6 +143,14 @@ public class Address implements Serializable {
 
     public void setRegion(String region) {
         this.region = region;
+    }
+
+    public boolean isChosenAddress() {
+        return chosenAddress;
+    }
+
+    public void setChosenAddress(boolean chosenAddress) {
+        this.chosenAddress = chosenAddress;
     }
 
     @Override

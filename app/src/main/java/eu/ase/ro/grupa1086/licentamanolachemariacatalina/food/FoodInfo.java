@@ -143,6 +143,12 @@ public class FoodInfo extends FragmentActivity {
                     getFoodInfo(foodId);
                 }
             }
+            if(origin != null && origin.equals("banner")) {
+                foodId = getIntent().getStringExtra("foodId");
+                if (!foodId.isEmpty()) {
+                    getFoodInfo(foodId);
+                }
+            }
             if (origin != null && origin.equals("activityShoppingCart")) {
                 foodId = getIntent().getStringExtra("idCartItem");
                 Log.i("idCart", foodId);
@@ -450,7 +456,7 @@ public class FoodInfo extends FragmentActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Rating rating = new Rating();
-                rating.setName(food.getName());
+                rating.setName(userName);
                 rating.setOrderId(orderId);
                 rating.setComment(etComment.getText().toString());
                 rating.setRateValue(ratingBar.getRating());

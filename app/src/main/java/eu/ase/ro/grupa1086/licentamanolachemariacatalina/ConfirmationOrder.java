@@ -118,7 +118,6 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
     List<LatLng> latLngRestaurantAddresses = new ArrayList<LatLng>();
 
     Button btnReturnToMainMenu;
-    TextView tvRating;
 
     private List<Polyline> polylines;
     private static final int[] COLORS = new int[]{androidx.navigation.ui.R.color.design_default_color_primary_dark, com.google.android.material.R.color.design_default_color_primary_variant, androidx.navigation.ui.R.color.design_default_color_primary};
@@ -137,8 +136,6 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
 
         tvDistance = findViewById(R.id.tvDistance);
         tvTime = findViewById(R.id.tvTime);
-
-        tvRating = findViewById(R.id.tvRating);
 
         btnReturnToMainMenu = findViewById(R.id.btnReturnToMainMenu);
 
@@ -182,7 +179,7 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
 
         if (getIntent() != null && getIntent().getExtras() != null) {
             String origin = getIntent().getExtras().getString("origin");
-            if (origin != null && (origin.equals("currentAddress") || origin.equals("mapsLocation") || origin.equals("savedAddress"))) {
+            if (origin != null && (origin.equals("currentAddress") || origin.equals("mapsLocation") || origin.equals("savedAddress") || origin.equals("cardPayment"))) {
                 orderId = getIntent().getStringExtra("orderId");
 
                 if (ActivityCompat.checkSelfPermission(this,
@@ -243,15 +240,9 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
                     }
                 });
 
-                tvRating.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showRatingDialog();
-                    }
-                });
 
             }
-            if (origin != null && origin.equals("addAnotherAddress")) {
+            if (origin != null && (origin.equals("addAnotherAddress") || origin.equals("cardPayment-anotherAddress"))) {
                 orderId = getIntent().getStringExtra("orderId");
 
                 orders.child(orderId).child("address").addValueEventListener(new ValueEventListener() {
@@ -324,42 +315,6 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-    }
-
-    private void showRatingDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Rating restaurant");
-        builder.setMessage("Lasa un rating pentru acest restaurant");
-
-        View itemView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.rating, null);
-
-        RatingBar ratingBar = itemView.findViewById(R.id.ratingBar);
-        EditText etComment = itemView.findViewById(R.id.etComment);
-
-        builder.setView(itemView);
-
-        builder.setNegativeButton("CANCEL", ((dialog, which) -> {
-            dialog.dismiss();
-        }));
-
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Rating rating = new Rating();
-                rating.setName(name);
-                rating.setOrderId(orderId);
-                rating.setComment(etComment.getText().toString());
-                rating.setRateValue(ratingBar.getRating());
-                Map<String, Object> serverTimeStamp = new HashMap<>();
-                serverTimeStamp.put("timeStamp", ServerValue.TIMESTAMP);
-                rating.setCommentTimeStamp(serverTimeStamp);
-
-                ratings.child(orderId).setValue(rating);
-            }
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 
     /**

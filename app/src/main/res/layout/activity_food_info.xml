@@ -110,7 +110,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/alata"
                             android:textSize="20sp"
-                            android:text="Vezi parerile celorlalti utilizatori"
+                            android:text="@string/see_users_opinion"
                             android:textColor="@color/violet"></TextView>
 
                         <ImageView
@@ -177,7 +177,7 @@
                                 android:layout_marginLeft="8dp"
                                 android:layout_marginTop="8dp"
                                 android:backgroundTint="@color/violet"
-                                android:src="@drawable/ic_baseline_remove_circle_24"></ImageButton>
+                                android:src="@drawable/ic_baseline_remove_24"></ImageButton>
 
                             <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                                 android:id="@+id/tvQuantity"

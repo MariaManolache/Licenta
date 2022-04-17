@@ -7,14 +7,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.andremion.counterfab.CounterFab;
+import com.daimajia.slider.library.Animations.DescriptionAnimation;
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -22,15 +30,22 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.Account;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Category;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.food.FoodInfo;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.food.FoodList;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.MenuViewHolder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.RestaurantViewHolder;
@@ -43,6 +58,7 @@ public class PrincipalMenu extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
     private DatabaseReference databaseReference;
+    DatabaseReference cart;
 
     TextView name;
     RecyclerView recyclerMenu;
@@ -53,10 +69,13 @@ public class PrincipalMenu extends AppCompatActivity {
     RecyclerView.LayoutManager layoutManagerRestaurants;
     FirebaseRecyclerAdapter adapterRestaurants;
 
-    FloatingActionButton shoppingCart;
+    CounterFab shoppingCart;
+    int count = 0;
     BottomNavigationView bottomNavigationView;
 
     FrameLayout foodFrameLayout;
+    HashMap<String, String> imageList;
+    SliderLayout sliderLayout;
 
 //    Button btnMaps;
 
@@ -74,6 +93,24 @@ public class PrincipalMenu extends AppCompatActivity {
         foodFrameLayout = findViewById(R.id.foodFrameLayout);
 
         firebaseUser = firebaseAuth.getCurrentUser();
+        cart = FirebaseDatabase.getInstance().getReference("carts").child(firebaseUser.getUid()).child("foodList");
+        count = 0;
+        cart.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Food food = dataSnapshot.getValue(Food.class);
+                    count += food.getQuantity();
+                }
+                shoppingCart.setCount(count);
+                count = 0;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         databaseReference = FirebaseDatabase.getInstance().getReference("users").child(firebaseUser.getUid());
         shoppingCart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,14 +121,57 @@ public class PrincipalMenu extends AppCompatActivity {
         });
 
         recyclerMenu = (RecyclerView) findViewById(R.id.recyclerMenu);
-        recyclerMenu.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerMenu.setLayoutManager(layoutManager);
+        LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(recyclerMenu.getContext(),
+                R.anim.layout_fall_down);
+        recyclerMenu.setLayoutAnimation(controller);
 
         recyclerRestaurants = (RecyclerView) findViewById(R.id.recyclerRestaurants);
         recyclerRestaurants.setHasFixedSize(true);
         layoutManagerRestaurants = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerRestaurants.setLayoutManager(layoutManagerRestaurants);
+
+        Query query = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("categories")
+                .limitToLast(50);
+
+        FirebaseRecyclerOptions<Category> options =
+                new FirebaseRecyclerOptions.Builder<Category>()
+                        .setQuery(query, Category.class)
+                        .build();
+
+
+        adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull MenuViewHolder holder, int position, @NonNull Category model) {
+                holder.menuName.setText(model.getName());
+                Picasso.with(getBaseContext()).load(model.getImage())
+                        .into(holder.imageView);
+                Category clickItem = model;
+                holder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+                        //categoryId
+
+                        Intent restaurantsList = new Intent(PrincipalMenu.this, RestaurantsList.class);
+                        restaurantsList.putExtra("categoryId", adapter.getRef(position).getKey());
+                        startActivity(restaurantsList);
+                    }
+                });
+            }
+
+            @NonNull
+            @Override
+            public MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.menu_item, parent, false);
+                view.setMinimumWidth(parent.getMeasuredWidth());
+
+                return new MenuViewHolder(view);
+            }
+        };
 
         loadMenu();
         loadRestaurants();
@@ -113,6 +193,8 @@ public class PrincipalMenu extends AppCompatActivity {
                 startActivity(completeFoodList);
             }
         });
+
+
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.restaurantsMenu);
@@ -138,6 +220,68 @@ public class PrincipalMenu extends AppCompatActivity {
                 return false;
             }
         });
+
+        setupSlider();
+
+    }
+
+    private void setupSlider() {
+        sliderLayout = (SliderLayout) findViewById(R.id.sliderBanner);
+        imageList = new HashMap<>();
+
+        DatabaseReference banner = database.getReference("banner");
+        banner.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snapshot1 : snapshot.getChildren()) {
+                    Food food = snapshot1.getValue(Food.class);
+                    imageList.put(food.getName() + "_" + food.getId(), food.getImage());
+
+                }
+                for(String key : imageList.keySet()) {
+                    String[] keySplit = key.split("_");
+                    String nameOfFood = keySplit[0];
+                    String idOfFood = keySplit[1];
+
+                    TextSliderView textSliderView = new TextSliderView(getBaseContext());
+                    textSliderView.description(nameOfFood)
+                            .image(imageList.get(key))
+                            .setScaleType(BaseSliderView.ScaleType.FitCenterCrop)
+                            .setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
+                                @Override
+                                public void onSliderClick(BaseSliderView slider) {
+                                    Intent intent = new Intent(PrincipalMenu.this, FoodInfo.class);
+                                    intent.putExtra("origin", "banner");
+                                    intent.putExtra("foodId", idOfFood);
+                                    startActivity(intent);
+                                }
+                            });
+                    textSliderView.bundle(new Bundle());
+//                    textSliderView.getBundle().putString("foodId", idOfFood);
+                    sliderLayout.addSlider(textSliderView);
+
+                    banner.removeEventListener(this);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        sliderLayout.setPresetTransformer(SliderLayout.Transformer.Background2Foreground);
+        sliderLayout.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+        sliderLayout.setCustomAnimation(new DescriptionAnimation());
+        sliderLayout.setDuration(4000);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+//        adapter.stopListening();
+//        adapterRestaurants.stopListening();
+        sliderLayout.stopAutoCycle();
     }
 
     private void loadRestaurants() {
@@ -189,48 +333,10 @@ public class PrincipalMenu extends AppCompatActivity {
 
     private void loadMenu() {
 
-        Query query = FirebaseDatabase.getInstance()
-                .getReference()
-                .child("categories")
-                .limitToLast(50);
-
-        FirebaseRecyclerOptions<Category> options =
-                new FirebaseRecyclerOptions.Builder<Category>()
-                        .setQuery(query, Category.class)
-                        .build();
-
-
-        adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(options) {
-            @Override
-            protected void onBindViewHolder(@NonNull MenuViewHolder holder, int position, @NonNull Category model) {
-                holder.menuName.setText(model.getName());
-                Picasso.with(getBaseContext()).load(model.getImage())
-                        .into(holder.imageView);
-                Category clickItem = model;
-                holder.setItemClickListener(new ItemClickListener() {
-                    @Override
-                    public void onClick(View view, int position, boolean isLongClick) {
-                        //categoryId
-
-                        Intent restaurantsList = new Intent(PrincipalMenu.this, RestaurantsList.class);
-                        restaurantsList.putExtra("categoryId", adapter.getRef(position).getKey());
-                        startActivity(restaurantsList);
-                    }
-                });
-            }
-
-            @NonNull
-            @Override
-            public MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.menu_item, parent, false);
-                view.setMinimumWidth(parent.getMeasuredWidth());
-
-                return new MenuViewHolder(view);
-            }
-        };
-
+        adapter.startListening();
         recyclerMenu.setAdapter(adapter);
+        recyclerMenu.getAdapter().notifyDataSetChanged();
+        recyclerMenu.scheduleLayoutAnimation();
 
     }
 

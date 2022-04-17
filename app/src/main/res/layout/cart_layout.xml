@@ -17,6 +17,8 @@
             android:layout_marginLeft="125dp"
             android:textAllCaps="true"
             android:textStyle="bold"
+            android:textColor="@color/black"
+            android:fontFamily="@font/alata"
             android:text="@string/restaurant_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"></TextView>
@@ -54,62 +56,74 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical|start"
                 android:layout_marginStart="10dp"
+                android:fontFamily="@font/alata"
+                android:textColor="@color/black"
                 android:text="Food 01"
                 android:textAllCaps="true"
                 android:textStyle="bold"></TextView>
 
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
 
                 <TextView
                     android:id="@+id/cartItemPrice"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical|start"
                     android:text="100,00"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/alata"
                     android:layout_marginStart="10dp"
                     android:textAllCaps="true"
                     android:textStyle="italic"></TextView>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="5dp"
                     android:gravity="center_vertical|start"
                     android:text="x"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/alata"
                     android:textAllCaps="true"
                     android:textStyle="italic"></TextView>
 
                 <TextView
                     android:id="@+id/cartItemQuantity"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="5dp"
                     android:gravity="center_vertical|start"
                     android:text="1"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/alata"
                     android:textAllCaps="true"
                     android:textStyle="italic"></TextView>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="5dp"
                     android:gravity="center_vertical|start"
                     android:text="="
+                    android:fontFamily="@font/alata"
+                    android:textColor="@color/black"
                     android:textAllCaps="true"
                     android:textStyle="italic"></TextView>
 
                 <TextView
                     android:id="@+id/cartItemValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@color/black"
                     android:gravity="center_vertical|start"
                     android:text="100,00"
+                    android:fontFamily="@font/alata"
                     android:textAllCaps="true"
                     android:textStyle="italic"></TextView>
 
@@ -118,24 +132,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/white"
+                    android:layout_gravity="center"
                     android:outlineSpotShadowColor="@color/violet"
                     android:src="@drawable/ic_baseline_remove_circle_24"></ImageButton>
 
                 <TextView
                     android:id="@+id/tvQuantity"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:text="1"
-                    android:textSize="30sp"></TextView>
+                    android:text="3"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"></TextView>
 
                 <ImageButton
                     android:id="@+id/btnAdd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/white"
+                    android:layout_gravity="center"
                     android:outlineSpotShadowColor="@color/violet"
-                    android:src="@drawable/ic_baseline_add_24"></ImageButton>
+                    android:src="@drawable/ic_baseline_add_circle_24"></ImageButton>
 
             </LinearLayout>
 

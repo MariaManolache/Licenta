@@ -16,9 +16,13 @@
         android:theme="@style/Theme.LicentaManolacheMariaCatalina"
         tools:replace="android:theme">
         <activity
+            android:name=".CardPayment"
+            android:exported="false"
+            android:label="@string/process_payment"/>
+        <activity
             android:name=".CommentsList"
             android:exported="false"
-            android:label="@string/comments"/>
+            android:label="@string/comments" />
         <activity
             android:name=".CompleteFoodList"
             android:exported="false"

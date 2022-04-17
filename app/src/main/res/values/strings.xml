@@ -118,4 +118,8 @@
     <string name="user_name">Numele utilizatorului</string>
     <string name="comment_example">Exemplu comentariu</string>
     <string name="comments">Comentarii</string>
+    <string name="buy">Cumpara</string>
+    <string name="process_payment">Procesare plata</string>
+    <string name="see_users_opinion">Vezi parerile celorlalti utilizatori</string>
+    <string name="see_all_products">Vezi toate produsele</string>
 </resources>

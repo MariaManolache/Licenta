@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -20,6 +21,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Address;
@@ -38,6 +42,9 @@ public class CommentsList extends AppCompatActivity {
     FirebaseUser user;
     String foodId;
     String userName;
+    int count = 0;
+    List<Rating> ratingList = new ArrayList<>();
+    TextView noComments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +65,13 @@ public class CommentsList extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
+        noComments = findViewById(R.id.noComments);
+        if(ratingList.size() == 0) {
+            noComments.setVisibility(View.VISIBLE);
+        } else if(ratingList.size() != 0) {
+            noComments.setVisibility(View.GONE);
+        }
 
         loadComments();
     }
@@ -83,6 +97,9 @@ public class CommentsList extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull CommentViewHolder holder, int position, @NonNull Rating model) {
                 holder.userName.setText(model.getName());
                 holder.textComment.setText(model.getComment());
+                ratingList.add(model);
+                Log.i("rating", ratingList.toString());
+                count++;
 
                 final Rating local = model;
                 holder.setItemClickListener(new ItemClickListener() {
@@ -93,6 +110,12 @@ public class CommentsList extends AppCompatActivity {
 
                     }
                 });
+
+                if(ratingList.size() == 0) {
+                    noComments.setVisibility(View.VISIBLE);
+                } else if(ratingList.size() != 0) {
+                    noComments.setVisibility(View.GONE);
+                }
             }
 
             @NonNull

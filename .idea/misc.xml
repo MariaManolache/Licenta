@@ -26,6 +26,7 @@
         <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_add_food.xml" value="0.34010416666666665" />
         <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_address_picking.xml" value="0.22488242838820008" />
         <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_addresses_list.xml" value="0.1203125" />
+        <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_card_payment.xml" value="0.1" />
         <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_comments_list.xml" value="0.14730463852904305" />
         <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_complete_food_list.xml" value="0.22488242838820008" />
         <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_confirmation_order.xml" value="0.1796875" />
@@ -39,9 +40,10 @@
         <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_menu.xml" value="0.1" />
         <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_order_details.xml" value="0.1796875" />
         <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_orders_list.xml" value="0.1796875" />
+        <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_payment.xml" value="0.1" />
         <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_phone_number_validation.xml" value="0.1796875" />
         <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_place_order.xml" value="0.22" />
-        <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_principal_menu.xml" value="0.14666666666666667" />
+        <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_principal_menu.xml" value="0.12" />
         <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_reset_password.xml" value="0.1" />
         <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_restaurant_info.xml" value="0.1" />
         <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_restaurants_list.xml" value="0.1" />
