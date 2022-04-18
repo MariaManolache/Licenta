@@ -7,6 +7,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -24,12 +30,15 @@ import com.karumi.dexter.listener.single.PermissionListener;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.SignIn;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.SignUp;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
 
 public class MainActivity extends AppCompatActivity {
 
-   Button btnSignIn;
-   Button btnSignUp;
-   TextView slogan;
+    Button btnSignIn;
+    Button btnSignUp;
+    TextView slogan;
+    FirebaseDatabase database;
+    DatabaseReference users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         btnSignIn = findViewById(R.id.btnSignIn);
         btnSignUp = findViewById(R.id.btnSignUp);
+        database = FirebaseDatabase.getInstance();
 
         slogan = findViewById(R.id.tvSlogan);
 //        Typeface face = Typeface.createFromAsset(getAssets(), "fonts/RobotoSerif-Black.ttf");
@@ -68,15 +78,33 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
 
             Dexter.withActivity(this)
                     .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                     .withListener(new PermissionListener() {
                         @Override
                         public void onPermissionGranted(PermissionGrantedResponse response) {
-                            startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
-                            finish();
+                            users = database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            users.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    User user1 = snapshot.getValue(User.class);
+                                    if (user1.getIsDriver() == 1) {
+                                        startActivity(new Intent(getApplicationContext(), DriverMenu.class));
+                                    } else {
+                                        startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
+                                    }
+                                    Log.i("userFromDatabase", String.valueOf(user1.getIsDriver()));
+                                    finish();
+                                }
+
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                         }
 
                         @Override

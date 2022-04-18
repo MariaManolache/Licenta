@@ -122,4 +122,5 @@
     <string name="process_payment">Procesare plata</string>
     <string name="see_users_opinion">Vezi parerile celorlalti utilizatori</string>
     <string name="see_all_products">Vezi toate produsele</string>
+    <string name="my_location">Locatia mea</string>
 </resources>

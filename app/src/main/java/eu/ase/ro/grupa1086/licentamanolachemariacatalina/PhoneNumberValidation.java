@@ -31,7 +31,6 @@ import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.AddressList;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Cart;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.UserDB;
 
 public class PhoneNumberValidation extends AppCompatActivity {
 
@@ -84,6 +83,7 @@ public class PhoneNumberValidation extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
 
+                                int isDriver = 0;
                                 FirebaseUser user = firebaseAuth.getCurrentUser();
                                 String id = user.getUid();
                                 databaseReference = FirebaseDatabase.getInstance().getReference("users").child(id);
@@ -93,10 +93,8 @@ public class PhoneNumberValidation extends AppCompatActivity {
                                 hashMap.put("email", email);
                                 hashMap.put("phoneNumber", phoneNumber);
                                 hashMap.put("password", password);
+                                hashMap.put("isDriver", String.valueOf(isDriver));
 
-                                UserDB roomDatabase = UserDB.getInstance(getApplicationContext());
-                                User newUser = new User(id, name, email, phoneNumber, password);
-                                roomDatabase.getUserDao().insert(newUser);
 
                                 databaseReference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override

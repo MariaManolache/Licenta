@@ -16,9 +16,17 @@
         android:theme="@style/Theme.LicentaManolacheMariaCatalina"
         tools:replace="android:theme">
         <activity
+            android:name=".account.DriverAccount"
+            android:exported="false"
+            android:label="@string/account_details"/>
+        <activity
+            android:name=".DriverMenu"
+            android:exported="false"
+            android:label="@string/main_page" />
+        <activity
             android:name=".CardPayment"
             android:exported="false"
-            android:label="@string/process_payment"/>
+            android:label="@string/process_payment" />
         <activity
             android:name=".CommentsList"
             android:exported="false"

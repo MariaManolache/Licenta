@@ -1,34 +1,27 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes;
 
-import androidx.annotation.NonNull;
-import androidx.room.Entity;
-import androidx.room.Ignore;
-import androidx.room.PrimaryKey;
-
 import java.io.Serializable;
 
-@Entity(tableName = "users")
 public class User implements Serializable {
 
-    @NonNull
-    @PrimaryKey(autoGenerate = false)
     private String id;
 
     private String email;
     private String name;
     private String password;
     private String phoneNumber;
+    private int isDriver;
 
-    @Ignore
     public User() {
     }
 
-    public User(String id, String email, String name, String password, String phoneNumber) {
+    public User(String id, String email, String name, String password, String phoneNumber, int isDriver) {
         this.id = id;
         this.email = email;
         this.name = name;
         this.password = password;
         this.phoneNumber = phoneNumber;
+        this.isDriver = isDriver;
     }
 
     public String getId() {
@@ -71,6 +64,14 @@ public class User implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
+    public int getIsDriver() {
+        return isDriver;
+    }
+
+    public void setIsDriver(int isDriver) {
+        this.isDriver = isDriver;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -79,6 +80,7 @@ public class User implements Serializable {
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", isDriver=" + isDriver +
                 '}';
     }
 }

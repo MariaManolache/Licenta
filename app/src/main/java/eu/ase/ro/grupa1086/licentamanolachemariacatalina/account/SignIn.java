@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -25,10 +26,16 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.SignInMethodQueryResult;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.DriverMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.PrincipalMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
 
 public class SignIn extends AppCompatActivity {
 
@@ -40,14 +47,16 @@ public class SignIn extends AppCompatActivity {
     private ProgressBar progressBar;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser user;
+    FirebaseDatabase database;
+    DatabaseReference users;
 
     private TextView signUp;
     private TextView resetPassword;
 
     AlertDialog.Builder resetAlert;
-    private DatabaseReference databaseReference;
 
     LayoutInflater inflater;
+    User userFromDatabase;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,6 +87,8 @@ public class SignIn extends AppCompatActivity {
         resetPassword = findViewById(R.id.tvResetPassword);
 
         inflater = this.getLayoutInflater();
+
+        database = FirebaseDatabase.getInstance();
 
         resetAlert = new AlertDialog.Builder(this);
 
@@ -196,8 +207,31 @@ public class SignIn extends AppCompatActivity {
                         if(task.isSuccessful()) {
                             Toast.makeText(SignIn.this, "Autentificare realizata cu succes", Toast.LENGTH_LONG).show();
 //                            startActivity(new Intent(getApplicationContext(), MainMenu.class));
-                            startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
-                            finish();
+                            users = database.getReference("users");
+                            users.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                        User user1 = dataSnapshot.getValue(User.class);
+                                        if(user1.getEmail().equals(email)) {
+                                            userFromDatabase = user1;
+                                            if(userFromDatabase.getIsDriver() == 1) {
+                                                startActivity(new Intent(getApplicationContext(), DriverMenu.class));
+                                            } else {
+                                                startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
+                                            }
+                                            Log.i("userFromDatabase", String.valueOf(userFromDatabase.getIsDriver()));
+                                            finish();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
                         } else {
                             Toast.makeText(SignIn.this, "Eroare la autentificare" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
