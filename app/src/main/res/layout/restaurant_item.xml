@@ -25,25 +25,26 @@
             android:layout_alignParentBottom="true"
             android:background="#4f0e0d0e"
             android:gravity="center"
+            android:fontFamily="@font/alata"
             android:text="@string/restaurant_name"
             android:textColor="@color/white"
             android:textSize="20sp"></TextView>
 
-       <TextView
-           android:id="@+id/deliveryTime"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:background="@drawable/circle_background"
-           android:layout_alignRight="@id/restaurantName"
-           android:layout_alignParentTop="true"
-           android:text="@string/ten_minutes"
-           android:textSize="20sp"
-           android:fontFamily="@font/alata"
-           android:gravity="center"
-           android:layout_marginLeft="2dp"
-           android:layout_marginRight="2dp"
-           android:textColor="@color/white"
-           android:textAlignment="center"></TextView>
+        <TextView
+            android:id="@+id/deliveryTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/restaurantName"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:background="@drawable/circle_background"
+            android:fontFamily="@font/alata"
+            android:gravity="center"
+            android:text="@string/ten_minutes"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"></TextView>
 
     </RelativeLayout>
 

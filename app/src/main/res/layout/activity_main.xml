@@ -9,53 +9,78 @@
     tools:context=".MainActivity">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/foodAppName"
+            android:text="Deliver It Right!"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textSize="50sp"
+            android:fontFamily="@font/alata"
+            android:textColor="@color/teal_800"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></TextView>
 
     <ImageView
         android:layout_width="200dp"
         android:layout_height="200dp"
+        android:layout_gravity="center"
         android:src="@drawable/logo2" />
 
         <TextView
             android:gravity="center"
             android:id="@+id/tvSlogan"
-            android:text="@string/slogan"
-            android:textColor="@android:color/black"
+            android:layout_gravity="center"
+            android:text="@string/deliver_anywhere"
+            android:textColor="@color/teal_800"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/alata"
             android:layout_width="200dp"
             android:layout_height="wrap_content"/>
 
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:weightSum="2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        android:orientation="horizontal"
+        android:weightSum="2">
 
         <Button
             android:id="@+id/btnSignUp"
-            android:textColor="@android:color/white"
-            android:text="Sign up"
-            android:shadowColor="@android:color/black"
-            android:layout_weight="1"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:layout_height="wrap_content"></Button>
+            android:layout_weight="1"
+            android:textAllCaps="false"
+            android:textSize="20sp"
+            android:fontFamily="@font/alata"
+            android:background="@drawable/buttons"
+            android:shadowColor="@android:color/black"
+            android:text="@string/new_account"
+            android:textColor="@android:color/white"></Button>
 
         <Button
             android:id="@+id/btnSignIn"
-            android:textColor="@android:color/white"
-            android:text="Sign in"
-            android:shadowColor="@android:color/black"
-            android:layout_weight="1"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:layout_height="wrap_content"></Button>
+            android:layout_weight="1"
+            android:textAllCaps="false"
+            android:textSize="20sp"
+            android:fontFamily="@font/alata"
+            android:background="@drawable/buttons"
+            android:shadowColor="@android:color/black"
+            android:text="@string/connect"
+            android:textColor="@android:color/white"></Button>
 
     </LinearLayout>
 

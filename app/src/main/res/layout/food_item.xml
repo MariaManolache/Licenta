@@ -26,6 +26,7 @@
             android:layout_alignParentBottom="true"
             android:background="#4f0e0d0e"
             android:gravity="center"
+            android:fontFamily="@font/alata"
             android:text="@string/food_name"
             android:textColor="@color/white"
             android:textSize="20sp"></TextView>
