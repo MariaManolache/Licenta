@@ -38,6 +38,7 @@ import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Category;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.databinding.ActivityHomeBinding;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.order.ShoppingCart;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.MenuViewHolder;
 
 public class Home extends AppCompatActivity {

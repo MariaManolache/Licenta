@@ -1,4 +1,4 @@
-package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
+package eu.ase.ro.grupa1086.licentamanolachemariacatalina.account;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,11 +26,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.Home;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.PrincipalMenu;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Address;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.AddressList;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Cart;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
 
 public class PhoneNumberValidation extends AppCompatActivity {
 

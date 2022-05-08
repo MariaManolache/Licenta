@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,10 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.AccountDetails;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.DriverMenu;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.OrdersList;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.PrincipalMenu;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.DriverMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
 

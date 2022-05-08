@@ -33,10 +33,9 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.app.AppCompatActivity;
 
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.AccountDetails;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.AddressesList;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.OrdersList;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.PrincipalMenu;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.address.AddressesList;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.order.OrdersList;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.PrincipalMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
 

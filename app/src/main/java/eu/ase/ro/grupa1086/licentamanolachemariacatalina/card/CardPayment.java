@@ -1,31 +1,21 @@
-package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
+package eu.ase.ro.grupa1086.licentamanolachemariacatalina.card;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.braintreepayments.cardform.view.CardForm;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
-import com.google.maps.android.SphericalUtil;
 
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Address;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.order.ConfirmationOrder;
 
 public class CardPayment extends AppCompatActivity {
 

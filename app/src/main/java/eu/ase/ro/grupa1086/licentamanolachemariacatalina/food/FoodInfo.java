@@ -2,18 +2,15 @@ package eu.ase.ro.grupa1086.licentamanolachemariacatalina.food;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.service.controls.actions.CommandAction;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -36,15 +33,13 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.CommentsList;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.rating.CommentsList;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.Rating;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Cart;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.rating.Rating;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
 

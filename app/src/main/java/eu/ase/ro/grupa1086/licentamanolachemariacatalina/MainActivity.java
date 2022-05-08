@@ -5,11 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -31,6 +28,8 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.SignIn;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.SignUp;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.DriverMenu;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.PrincipalMenu;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -85,17 +84,16 @@ public class MainActivity extends AppCompatActivity {
                     .withListener(new PermissionListener() {
                         @Override
                         public void onPermissionGranted(PermissionGrantedResponse response) {
-                            users = database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            users = database.getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("isDriver");
                             users.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    User user1 = snapshot.getValue(User.class);
-                                    if (user1.getIsDriver() == 1) {
+                                    int isDriver = snapshot.getValue(Integer.class);
+                                    if (isDriver == 1) {
                                         startActivity(new Intent(getApplicationContext(), DriverMenu.class));
                                     } else {
                                         startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
                                     }
-                                    Log.i("userFromDatabase", String.valueOf(user1.getIsDriver()));
                                     finish();
                                 }
 

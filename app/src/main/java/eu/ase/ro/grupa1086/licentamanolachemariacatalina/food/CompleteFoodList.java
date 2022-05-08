@@ -1,4 +1,4 @@
-package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
+package eu.ase.ro.grupa1086.licentamanolachemariacatalina.food;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,13 +28,10 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.food.FoodInfo;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.food.FoodList;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.AllFoodViewHolder;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.FoodViewHolder;
 
 public class CompleteFoodList extends AppCompatActivity {
 

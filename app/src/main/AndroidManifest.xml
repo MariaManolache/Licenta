@@ -20,39 +20,39 @@
             android:exported="false"
             android:label="@string/account_details"/>
         <activity
-            android:name=".DriverMenu"
+            android:name=".principalmenus.DriverMenu"
             android:exported="false"
             android:label="@string/main_page" />
         <activity
-            android:name=".CardPayment"
+            android:name=".card.CardPayment"
             android:exported="false"
             android:label="@string/process_payment" />
         <activity
-            android:name=".CommentsList"
+            android:name=".rating.CommentsList"
             android:exported="false"
             android:label="@string/comments" />
         <activity
-            android:name=".CompleteFoodList"
+            android:name=".food.CompleteFoodList"
             android:exported="false"
             android:label="@string/all_restaurants" />
         <activity
-            android:name=".AddressPicking"
+            android:name=".address.AddressPicking"
             android:exported="false"
             android:label="@string/enter_new_address" />
         <activity
-            android:name=".AccountDetails"
+            android:name=".account.AccountDetails"
             android:exported="false"
             android:label="@string/account_details" />
         <activity
-            android:name=".AddressesList"
+            android:name=".address.AddressesList"
             android:exported="false"
             android:label="@string/my_addresses" />
         <activity
-            android:name=".OrderDetails"
+            android:name=".order.OrderDetails"
             android:exported="false"
             android:label="@string/order_details" />
         <activity
-            android:name=".OrdersList"
+            android:name=".order.OrdersList"
             android:exported="false"
             android:label="@string/order_history" />
         <!--
@@ -71,7 +71,7 @@
             android:value="AIzaSyCysjrCb9e2N5sNip39CegvBxQTgUCmphU" />
 
         <activity
-            android:name=".ConfirmationOrder"
+            android:name=".order.ConfirmationOrder"
             android:exported="false"
             android:label="@string/title_activity_confirmation_order" />
         <activity
@@ -79,11 +79,11 @@
             android:exported="false"
             android:label="@string/title_activity_maps" />
         <activity
-            android:name=".PhoneNumberValidation"
+            android:name=".account.PhoneNumberValidation"
             android:exported="false"
             android:label="@string/check_phone_number" />
         <activity
-            android:name=".PlaceOrder"
+            android:name=".order.PlaceOrder"
             android:exported="false"
             android:label="@string/place_order" />
         <activity
@@ -91,7 +91,7 @@
             android:exported="false"
             android:label="@string/account" />
         <activity
-            android:name=".ShoppingCart"
+            android:name=".order.ShoppingCart"
             android:exported="false"
             android:label="@string/cart" />
         <activity
@@ -118,7 +118,7 @@
             android:exported="false"
             android:label="@string/reset_password" />
         <activity
-            android:name=".PrincipalMenu"
+            android:name=".principalmenus.PrincipalMenu"
             android:exported="false"
             android:label="@string/main_page" />
         <activity

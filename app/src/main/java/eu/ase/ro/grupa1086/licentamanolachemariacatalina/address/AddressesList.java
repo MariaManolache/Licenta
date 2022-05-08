@@ -1,4 +1,4 @@
-package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
+package eu.ase.ro.grupa1086.licentamanolachemariacatalina.address;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,14 +19,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.squareup.picasso.Picasso;
 
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.order.PlaceOrder;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Address;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.food.FoodList;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.AddressViewHolder;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.RestaurantViewHolder;
 
 public class AddressesList extends AppCompatActivity {
 

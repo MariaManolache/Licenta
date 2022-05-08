@@ -32,8 +32,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.DriverMenu;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.PrincipalMenu;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.DriverMenu;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.PrincipalMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
 
@@ -46,7 +46,6 @@ public class SignIn extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private FirebaseAuth firebaseAuth;
-    private FirebaseUser user;
     FirebaseDatabase database;
     DatabaseReference users;
 
@@ -63,13 +62,13 @@ public class SignIn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        initializareComponente();
+        initialiseComponents();
 //        firebaseService = FirebaseService.getInstance();
 //        firebaseService.addUserListener(dataChangeCallback());
 
     }
 
-    private void initializareComponente() {
+    private void initialiseComponents() {
 
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
@@ -79,8 +78,6 @@ public class SignIn extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBarSignIn);
 
         firebaseAuth = FirebaseAuth.getInstance();
-
-        user = FirebaseAuth.getInstance().getCurrentUser();
 
         signUp = findViewById(R.id.tvSignUp);
 
@@ -103,7 +100,7 @@ public class SignIn extends AppCompatActivity {
 
                                 //validarea adresei de email
                                 EditText email = view.findViewById(R.id.etResetEmailPasswordPopUp);
-                                if(email.getText().toString().isEmpty()) {
+                                if (email.getText().toString().isEmpty()) {
                                     email.setError("Camp necesar pentru resetarea parolei");
                                     return;
                                 }
@@ -149,10 +146,9 @@ public class SignIn extends AppCompatActivity {
                                 firebaseAuth.fetchSignInMethodsForEmail(email.getText().toString()).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
-                                        if(task.getResult().getSignInMethods().isEmpty()) {
+                                        if (task.getResult().getSignInMethods().isEmpty()) {
                                             Toast.makeText(SignIn.this, "Acestui email nu ii este asociat un cont", Toast.LENGTH_LONG).show();
-                                        } else
-                                        {
+                                        } else {
                                             //trimiterea linkului de resetare
                                             firebaseAuth.sendPasswordResetEmail(email.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
@@ -183,17 +179,17 @@ public class SignIn extends AppCompatActivity {
                 String email = etEmail.getText().toString();
                 String password = etPassword.getText().toString();
 
-                if(TextUtils.isEmpty(email)) {
+                if (TextUtils.isEmpty(email)) {
                     etEmail.setError("Email-ul utilizatorului este necesar pentru crearea contului");
                     return;
                 }
 
-                if(TextUtils.isEmpty(password)) {
+                if (TextUtils.isEmpty(password)) {
                     etPassword.setError("O parola este necesara pentru crearea contului");
                     return;
                 }
 
-                if(password.length() < 6) {
+                if (password.length() < 6) {
                     etPassword.setError("Parola trebuie sa aiba cel putin 4 caractere");
                     return;
                 }
@@ -204,33 +200,11 @@ public class SignIn extends AppCompatActivity {
                 firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()) {
+                        if (task.isSuccessful()) {
+                            onAuthSuccess(task.getResult().getUser());
                             Toast.makeText(SignIn.this, "Autentificare realizata cu succes", Toast.LENGTH_LONG).show();
 //                            startActivity(new Intent(getApplicationContext(), MainMenu.class));
-                            users = database.getReference("users");
-                            users.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                        User user1 = dataSnapshot.getValue(User.class);
-                                        if(user1.getEmail().equals(email)) {
-                                            userFromDatabase = user1;
-                                            if(userFromDatabase.getIsDriver() == 1) {
-                                                startActivity(new Intent(getApplicationContext(), DriverMenu.class));
-                                            } else {
-                                                startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
-                                            }
-                                            Log.i("userFromDatabase", String.valueOf(userFromDatabase.getIsDriver()));
-                                            finish();
-                                        }
-                                    }
-                                }
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
 
                         } else {
                             Toast.makeText(SignIn.this, "Eroare la autentificare" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
@@ -248,6 +222,29 @@ public class SignIn extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void onAuthSuccess(FirebaseUser user) {
+        if (user != null) {
+            users = database.getReference("users").child(user.getUid()).child("isDriver");
+            users.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    int isDriver = snapshot.getValue(Integer.class);
+                    if (isDriver == 1) {
+                        startActivity(new Intent(getApplicationContext(), DriverMenu.class));
+                    } else {
+                        startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
+                    }
+                    finish();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
     }
 
 //    private Callback<List<User>> dataChangeCallback() {

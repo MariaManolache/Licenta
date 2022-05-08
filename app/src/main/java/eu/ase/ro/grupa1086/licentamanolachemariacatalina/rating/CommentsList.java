@@ -1,11 +1,10 @@
-package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
+package eu.ase.ro.grupa1086.licentamanolachemariacatalina.rating;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,9 +24,8 @@ import com.google.firebase.database.Query;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Address;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.AddressViewHolder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.CommentViewHolder;
 
 public class CommentsList extends AppCompatActivity {

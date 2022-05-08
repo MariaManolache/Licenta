@@ -1,11 +1,8 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes;
 
-import androidx.annotation.NonNull;
-
 import java.io.Serializable;
-import java.util.List;
 
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.Rating;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.rating.Rating;
 
 public class Food implements Serializable {
 

@@ -1,4 +1,4 @@
-package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
+package eu.ase.ro.grupa1086.licentamanolachemariacatalina.address;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,18 +31,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.MapsActivity;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.order.PlaceOrder;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Address;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Order;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.PaymentMethod;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Status;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.observers.DisposableSingleObserver;

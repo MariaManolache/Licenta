@@ -1,7 +1,6 @@
-package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
+package eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -16,15 +15,12 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,8 +32,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,7 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.Account;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.DriverAccount;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
@@ -67,7 +61,6 @@ import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.food.FoodInfo;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.DriverOrderViewHolder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.OrderDetailsViewHolder;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.OrderViewHolder;
 
 public class DriverMenu extends AppCompatActivity {
 
@@ -236,6 +229,8 @@ public class DriverMenu extends AppCompatActivity {
             fusedLocationProviderClient.removeLocationUpdates(locationCallback);
         }
         super.onStop();
+        adapter.stopListening();
+
     }
 
     @Override
@@ -323,171 +318,191 @@ public class DriverMenu extends AppCompatActivity {
                 orderList.add(model);
                 orderId = model.getId();
 
-                orders.child(id).child(model.getId()).child("restaurantAddress").addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
-                            if (restaurantName == null) {
-                                restaurantName = restaurant.getName();
-                                restaurantImage = restaurant.getImage();
-                            } else {
-                                restaurantName += ", " + restaurant.getName();
+                if(!model.getStatus().equals(Status.finalizata)) {
+                    orders.child(id).child(model.getId()).child("restaurantAddress").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+                                if (restaurantName == null) {
+                                    restaurantName = restaurant.getName();
+                                    restaurantImage = restaurant.getImage();
+                                } else {
+                                    restaurantName += ", " + restaurant.getName();
+                                }
                             }
-                        }
 
-                        holder.restaurantsName.setText(restaurantName);
-                        holder.orderStatus.setText(String.valueOf(model.getStatus()));
-                        holder.orderAddress.setText(String.valueOf(model.getAddress().getMapsAddress()));
-                        holder.orderPriceTotal.setText("Total: " + model.getTotal() + " lei");
-                        Picasso.with(getBaseContext()).load(restaurantImage)
-                                .into(holder.restaurantImage);
+                            holder.restaurantsName.setText(restaurantName);
+                            holder.orderStatus.setText(String.valueOf(model.getStatus()));
+                            holder.orderAddress.setText(String.valueOf(model.getAddress().getMapsAddress()));
+                            holder.orderPriceTotal.setText("Total: " + model.getTotal() + " lei");
+                            Picasso.with(getBaseContext()).load(restaurantImage)
+                                    .into(holder.restaurantImage);
 
-                        float results[] = new float[10];
-                        LatLng latLngRestaurant = getLocationFromAddress(model.getRestaurantAddress().get(0).getAddress());
-                        Double distance = SphericalUtil.computeDistanceBetween(latLngLocation, latLngRestaurant);
-                        Location.distanceBetween(latLngLocation.latitude, latLngLocation.longitude, latLngRestaurant.latitude, latLngRestaurant.longitude, results);
+                            float results[] = new float[10];
+                            if (latLngLocation != null) {
+                                LatLng latLngRestaurant = getLocationFromAddress(model.getRestaurantAddress().get(0).getAddress());
+                                Double distance = SphericalUtil.computeDistanceBetween(latLngLocation, latLngRestaurant);
+                                Location.distanceBetween(latLngLocation.latitude, latLngLocation.longitude, latLngRestaurant.latitude, latLngRestaurant.longitude, results);
 
-                        holder.distance.setText("Distanta " + String.format("%.2f", distance / 1000) + " km");
-                        String restaurantName2 = restaurantName;
-                        String restaurantImage2 = restaurantImage;
-                        restaurantName = null;
-                        restaurantImage = null;
+                                holder.distance.setText("Distanta " + String.format("%.2f", distance / 1000) + " km");
+                            }
+                            String restaurantName2 = restaurantName;
+                            String restaurantImage2 = restaurantImage;
+                            restaurantName = null;
+                            restaurantImage = null;
 
-                        final Order local = model;
-                        holder.setItemClickListener(new ItemClickListener() {
-                            @Override
-                            public void onClick(View view, int position, boolean isLongClick) {
+                            final Order local = model;
+                            holder.setItemClickListener(new ItemClickListener() {
+                                @Override
+                                public void onClick(View view, int position, boolean isLongClick) {
 
-                                if (!isLongClick) {
-                                    //Toast.makeText(OrdersList.this, model.getCart().toString(), Toast.LENGTH_LONG).show();
+                                    if (!isLongClick) {
+                                        //Toast.makeText(OrdersList.this, model.getCart().toString(), Toast.LENGTH_LONG).show();
 //                                    loadOrderDetails(model.getId());
 
-                                    if (holder.downArrow.getVisibility() == View.VISIBLE) {
-                                        holder.downArrow.setVisibility(View.GONE);
-                                    } else {
-                                        holder.downArrow.setVisibility(View.VISIBLE);
-                                    }
+                                        if (holder.downArrow.getVisibility() == View.VISIBLE) {
+                                            holder.downArrow.setVisibility(View.GONE);
+                                        } else {
+                                            holder.downArrow.setVisibility(View.VISIBLE);
+                                        }
 
-                                    if (holder.upArrow.getVisibility() == View.VISIBLE) {
-                                        holder.upArrow.setVisibility(View.GONE);
-                                    } else {
-                                        holder.upArrow.setVisibility(View.VISIBLE);
-                                    }
+                                        if (holder.upArrow.getVisibility() == View.VISIBLE) {
+                                            holder.upArrow.setVisibility(View.GONE);
+                                        } else {
+                                            holder.upArrow.setVisibility(View.VISIBLE);
+                                        }
 
-                                    cart = database.getReference().child("orders").child(id).child(model.getId()).child("cart");
-                                    restaurantAddresses = database.getReference("orders").child(id).child(model.getId()).child("restaurantAddress");
+                                        cart = database.getReference().child("orders").child(id).child(model.getId()).child("cart");
+                                        restaurantAddresses = database.getReference("orders").child(id).child(model.getId()).child("restaurantAddress");
 
-                                    Query query = cart
-                                            .orderByChild("id")
-                                            .limitToLast(50);
+                                        Query query = cart
+                                                .orderByChild("id")
+                                                .limitToLast(50);
 
-                                    FirebaseRecyclerOptions<Food> options =
-                                            new FirebaseRecyclerOptions.Builder<Food>()
-                                                    .setQuery(query, Food.class)
-                                                    .build();
+                                        FirebaseRecyclerOptions<Food> options =
+                                                new FirebaseRecyclerOptions.Builder<Food>()
+                                                        .setQuery(query, Food.class)
+                                                        .build();
 
-                                    secondAdapter = new FirebaseRecyclerAdapter<Food, OrderDetailsViewHolder>(options) {
-                                        @Override
-                                        protected void onBindViewHolder(@NonNull OrderDetailsViewHolder holder2, int position, @NonNull Food model) {
+                                        secondAdapter = new FirebaseRecyclerAdapter<Food, OrderDetailsViewHolder>(options) {
+                                            @Override
+                                            protected void onBindViewHolder(@NonNull OrderDetailsViewHolder holder2, int position, @NonNull Food model) {
 
-                                            holder2.foodName.setText(model.getName());
+                                                holder2.foodName.setText(model.getName());
 
-                                            restaurantAddresses.addValueEventListener(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                                        Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
-                                                        if (model.getRestaurantId().equals(restaurant.getId())) {
-                                                            holder2.restaurantName.setText(restaurant.getName() + " : ");
+                                                restaurantAddresses.addValueEventListener(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                                            Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+                                                            if (model.getRestaurantId().equals(restaurant.getId())) {
+                                                                holder2.restaurantName.setText(restaurant.getName() + " : ");
+                                                            }
                                                         }
-                                                    }
 
-                                                    holder2.foodPrice.setText(String.valueOf(model.getPrice()));
-                                                    holder2.foodQuantity.setText(String.valueOf(model.getQuantity()));
-                                                    holder2.foodTotal.setText(model.getPrice() * model.getQuantity() + " lei");
-                                                    Picasso.with(getBaseContext()).load(model.getImage())
-                                                            .into(holder2.foodImage);
+                                                        holder2.foodPrice.setText(String.valueOf(model.getPrice()));
+                                                        holder2.foodQuantity.setText(String.valueOf(model.getQuantity()));
+                                                        holder2.foodTotal.setText(model.getPrice() * model.getQuantity() + " lei");
+                                                        Picasso.with(getBaseContext()).load(model.getImage())
+                                                                .into(holder2.foodImage);
 
-                                                    final Food local2 = model;
-                                                    holder2.setItemClickListener(new ItemClickListener() {
-                                                        @Override
-                                                        public void onClick(View view, int position, boolean isLongClick) {
+                                                        final Food local2 = model;
+                                                        holder2.setItemClickListener(new ItemClickListener() {
+                                                            @Override
+                                                            public void onClick(View view, int position, boolean isLongClick) {
 
-                                                            Toast.makeText(DriverMenu.this, model.getName(), Toast.LENGTH_LONG).show();
+                                                                Toast.makeText(DriverMenu.this, model.getName(), Toast.LENGTH_LONG).show();
 //                                                            showRatingDialog(model.getId());
 
-                                                            Intent foodInfo = new Intent(DriverMenu.this, FoodInfo.class);
-                                                            foodInfo.putExtra("origin", "ordersList");
-                                                            foodInfo.putExtra("orderId", local.getId());
-                                                            foodInfo.putExtra("quantity", local2.getQuantity());
-                                                            foodInfo.putExtra("foodId", model.getId());
-                                                            startActivity(foodInfo);
+                                                                Intent foodInfo = new Intent(DriverMenu.this, FoodInfo.class);
+                                                                foodInfo.putExtra("origin", "ordersList");
+                                                                foodInfo.putExtra("orderId", local.getId());
+                                                                foodInfo.putExtra("quantity", local2.getQuantity());
+                                                                foodInfo.putExtra("foodId", model.getId());
+                                                                startActivity(foodInfo);
+
+                                                            }
+                                                        });
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                    }
+                                                });
+
+
+                                            }
+
+
+                                            @NonNull
+                                            @Override
+                                            public OrderDetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                                                View view = LayoutInflater.from(parent.getContext())
+                                                        .inflate(R.layout.order_detail_layout, parent, false);
+                                                view.setMinimumWidth(parent.getMeasuredWidth());
+
+                                                return new OrderDetailsViewHolder(view);
+                                            }
+                                        };
+
+
+                                        if (holder.secondRecyclerView.getVisibility() == View.GONE) {
+                                            holder.secondRecyclerView.setVisibility(View.VISIBLE);
+                                        } else {
+                                            holder.secondRecyclerView.setVisibility(View.GONE);
+                                        }
+                                        secondLayoutManager = new LinearLayoutManager(getApplicationContext());
+                                        //holder.secondRecyclerView.setHasFixedSize(true);
+                                        holder.secondRecyclerView.setLayoutManager(secondLayoutManager);
+                                        holder.secondRecyclerView.setAdapter(secondAdapter);
+                                        secondAdapter.startListening();
+
+                                    } else if (isLongClick) {
+                                        if (model.getStatus().equals(Status.plasata)) {
+//                                    View viewPopUp = inflater.inflate(R.layout.reset_name_pop_up, null);
+                                            acceptOrder.setTitle("Doresti sa livrezi comanda selectata?")
+                                                    .setPositiveButton("Confirmare", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+
+                                                            model.setStatus(Status.in_curs_de_livrare);
+                                                            orders.child(id).child(model.getId()).child("status").setValue(Status.in_curs_de_livrare);
+
 
                                                         }
-                                                    });
-                                                }
+                                                    }).setNegativeButton("Anuleaza", null)
+                                                    .create().show();
 
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError error) {
+                                        } else if (model.getStatus().equals(Status.in_curs_de_livrare)) {
+                                            acceptOrder.setTitle("Ai terminat de livrat aceasta comanda?")
+                                                    .setPositiveButton("Confirmare", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
 
-                                                }
-                                            });
+                                                            model.setStatus(Status.finalizata);
+                                                            orders.child(id).child(model.getId()).child("status").setValue(Status.finalizata);
 
 
+                                                        }
+                                                    }).setNegativeButton("Anuleaza", null)
+                                                    .create().show();
                                         }
-
-
-                                        @NonNull
-                                        @Override
-                                        public OrderDetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                                            View view = LayoutInflater.from(parent.getContext())
-                                                    .inflate(R.layout.order_detail_layout, parent, false);
-                                            view.setMinimumWidth(parent.getMeasuredWidth());
-
-                                            return new OrderDetailsViewHolder(view);
-                                        }
-                                    };
-
-
-                                    if (holder.secondRecyclerView.getVisibility() == View.GONE) {
-                                        holder.secondRecyclerView.setVisibility(View.VISIBLE);
-                                    } else {
-                                        holder.secondRecyclerView.setVisibility(View.GONE);
                                     }
-                                    secondLayoutManager = new LinearLayoutManager(getApplicationContext());
-                                    //holder.secondRecyclerView.setHasFixedSize(true);
-                                    holder.secondRecyclerView.setLayoutManager(secondLayoutManager);
-                                    holder.secondRecyclerView.setAdapter(secondAdapter);
-                                    secondAdapter.startListening();
-
-                                } else if(isLongClick) {
-//                                    View viewPopUp = inflater.inflate(R.layout.reset_name_pop_up, null);
-                                    acceptOrder.setTitle("Doresti sa livrezi comanda selectata?")
-                                            .setPositiveButton("Confirmare", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-
-                                                    model.setStatus(Status.in_curs_de_livrare);
-                                                    orders.child(id).child(model.getId()).child("status").setValue(Status.in_curs_de_livrare);
-
-                                                }
-                                            }).setNegativeButton("Anuleaza", null)
-                                            .create().show();
 
                                 }
-
-                            }
-                        });
+                            });
 
 
-                    }
+                        }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+                        }
+                    });
+                }
 
             }
 
@@ -512,6 +527,8 @@ public class DriverMenu extends AppCompatActivity {
         super.onStart();
         //adapter.startListening();
     }
+
+
 }
 
 class ParentViewHolderDriver

@@ -1,10 +1,9 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.List;
 
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.Rating;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.rating.Rating;
 
 public class Order implements Serializable {
     private String id;

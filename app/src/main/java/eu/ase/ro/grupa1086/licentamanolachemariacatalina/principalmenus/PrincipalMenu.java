@@ -1,4 +1,4 @@
-package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
+package eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,14 +7,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -26,7 +24,6 @@ import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,13 +37,18 @@ import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.RestaurantsList;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.order.ShoppingCart;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.Account;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Category;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.food.CompleteFoodList;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.food.FoodInfo;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.food.FoodList;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.order.OrdersList;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.MenuViewHolder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.RestaurantViewHolder;
 
