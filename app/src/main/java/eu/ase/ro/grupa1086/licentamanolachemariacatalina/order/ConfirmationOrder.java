@@ -66,6 +66,7 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
     DatabaseReference cart;
     DatabaseReference users;
     DatabaseReference ratings;
+    DatabaseReference driverOrders;
     String name;
 
     FirebaseAuth firebaseAuth;
@@ -113,6 +114,7 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
         orders = database.getInstance().getReference("orders").child(userId);
         cart = database.getInstance().getReference("carts").child(userId).child("foodList");
         ratings = database.getInstance().getReference("ratings");
+        driverOrders = database.getInstance().getReference("driverOrders");
 
         cart.removeValue();
 

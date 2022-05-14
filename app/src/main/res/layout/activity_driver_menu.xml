@@ -4,14 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/teal_100"
     tools:context=".principalmenus.DriverMenu">
 
     <TextView
         android:id="@+id/currentLocation"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/my_location"
-        android:textSize="25sp"
+        android:textSize="20sp"
+        android:background="@drawable/address_background"
         android:textAlignment="center"
         android:fontFamily="@font/alata"
         android:textColor="@color/violet"
@@ -28,7 +30,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/currentLocation"
-        android:layout_height="700dp">
+        android:layout_height="550dp">
 
     </androidx.recyclerview.widget.RecyclerView>
 

@@ -61,12 +61,13 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_weight="0.3"
+                                android:textSize="20sp"
                                 android:gravity="center_horizontal"
                                 android:text="@string/restaurant_name"
                                 android:textAlignment="center"
                                 android:fontFamily="@font/alata"
                                 android:textColor="@color/violet"
-                                android:textAllCaps="true"
+                                android:textAllCaps="false"
                                 android:textStyle="bold"></TextView>
 
                             <RelativeLayout
@@ -109,8 +110,9 @@
                                 android:fontFamily="@font/alata"
                                 android:gravity="center_vertical|start"
                                 android:textColor="@color/violet"
-                                android:text="STATUS"
-                                android:textAllCaps="true"
+                                android:textSize="15sp"
+                                android:text="@string/status"
+                                android:textAllCaps="false"
                                 android:textStyle="italic"></TextView>
 
 
@@ -120,10 +122,11 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="10dp"
                                 android:fontFamily="@font/alata"
-                                android:textColor="@color/violet"
                                 android:gravity="center_vertical|start"
                                 android:text="Adresa"
-                                android:textAllCaps="true"
+                                android:textAllCaps="false"
+                                android:textColor="@color/violet"
+                                android:textSize="15sp"
                                 android:textStyle="italic"></TextView>
 
                             <TextView
@@ -135,7 +138,8 @@
                                 android:textColor="@color/violet"
                                 android:gravity="center_vertical|start"
                                 android:text="Total"
-                                android:textAllCaps="true"
+                                android:textSize="15sp"
+                                android:textAllCaps="false"
                                 android:textStyle="italic"></TextView>
 
                         </LinearLayout>

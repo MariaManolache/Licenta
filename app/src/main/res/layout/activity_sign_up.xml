@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/mintgreenbackground"
+    android:background="@color/teal_100"
     tools:context=".account.SignUp">
 
     <LinearLayout
@@ -42,6 +42,7 @@
                 android:backgroundTint="@color/white"
                 android:fontFamily="@font/alata"
                 android:hint="@string/name"
+                android:textColor="@color/violet"
                 android:inputType="text"
                 android:textColorHint="@color/violet"
                 android:textSize="25dp"
@@ -65,6 +66,7 @@
                 android:backgroundTint="@color/white"
                 android:fontFamily="@font/alata"
                 android:hint="@string/email"
+                android:textColor="@color/violet"
                 android:inputType="textEmailAddress"
                 android:textColorHint="@color/violet"
                 android:textSize="25dp"
@@ -87,6 +89,7 @@
                 android:backgroundTint="@color/white"
                 android:fontFamily="@font/alata"
                 android:hint="@string/phone"
+                android:textColor="@color/violet"
                 android:inputType="phone"
                 android:textColorHint="@color/violet"
                 android:textSize="25dp"
@@ -119,6 +122,7 @@
                 android:backgroundTint="@color/white"
                 android:fontFamily="@font/alata"
                 android:hint="@string/password"
+                android:textColor="@color/violet"
                 android:inputType="textPassword"
                 android:textColorHint="@color/violet"
                 android:textSize="25dp"

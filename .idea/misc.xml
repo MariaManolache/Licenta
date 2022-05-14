@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/drawable/address_background.xml" value="0.1785" />
         <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/drawable/border.xml" value="0.1285" />
         <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/drawable/border_account.xml" value="0.1275" />
         <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/drawable/border_address.xml" value="0.225" />
@@ -50,6 +51,7 @@
         <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_principal_menu.xml" value="0.12" />
         <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_reset_password.xml" value="0.1" />
         <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_restaurant_info.xml" value="0.1" />
+        <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_restaurant_menu.xml" value="0.14749893116716545" />
         <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_restaurants_list.xml" value="0.1" />
         <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_shopping_cart.xml" value="0.1" />
         <entry key="..\:/an3sem1/Android/LicentaManolacheMariaCatalina/app/src/main/res/layout/activity_sign_in.xml" value="0.1" />

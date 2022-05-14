@@ -125,4 +125,7 @@
     <string name="my_location">Locatia mea</string>
     <string name="deliver_anywhere">Livrăm oriunde, oricând!</string>
     <string name="new_account">Cont nou</string>
+    <string name="status">Status</string>
+    <string name="distance">Distanta</string>
+    <string name="join_our_team">Fa parte din echipa noastra!</string>
 </resources>

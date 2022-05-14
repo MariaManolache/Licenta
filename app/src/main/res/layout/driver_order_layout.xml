@@ -109,8 +109,8 @@
                                 android:fontFamily="@font/alata"
                                 android:gravity="center_vertical|start"
                                 android:textColor="@color/violet"
-                                android:text="STATUS"
-                                android:textAllCaps="true"
+                                android:text="@string/status"
+                                android:textAllCaps="false"
                                 android:textStyle="italic"></TextView>
 
 
@@ -122,8 +122,8 @@
                                 android:fontFamily="@font/alata"
                                 android:textColor="@color/violet"
                                 android:gravity="center_vertical|start"
-                                android:text="Adresa"
-                                android:textAllCaps="true"
+                                android:text="@string/address_example"
+                                android:textAllCaps="false"
                                 android:textStyle="italic"></TextView>
 
                             <TextView
@@ -134,8 +134,8 @@
                                 android:fontFamily="@font/alata"
                                 android:textColor="@color/violet"
                                 android:gravity="center_vertical|start"
-                                android:text="Total"
-                                android:textAllCaps="true"
+                                android:text="@string/total"
+                                android:textAllCaps="false"
                                 android:textStyle="italic"></TextView>
 
                             <TextView
@@ -146,8 +146,8 @@
                                 android:fontFamily="@font/alata"
                                 android:textColor="@color/violet"
                                 android:gravity="center_vertical|start"
-                                android:text="Distanta"
-                                android:textAllCaps="true"
+                                android:text="@string/distance"
+                                android:textAllCaps="false"
                                 android:textStyle="italic"></TextView>
 
                         </LinearLayout>

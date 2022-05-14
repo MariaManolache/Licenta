@@ -78,6 +78,7 @@ public class PlaceOrder extends AppCompatActivity {
     DatabaseReference addresses;
     DatabaseReference orders;
     DatabaseReference restaurants;
+    DatabaseReference driverOrders;
 
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
@@ -143,6 +144,7 @@ public class PlaceOrder extends AppCompatActivity {
         addresses = database.getInstance().getReference("addresses").child(userId).child("addresses");
         orders = database.getInstance().getReference("orders").child(userId);
         restaurants = database.getInstance().getReference("restaurants");
+        driverOrders = database.getInstance().getReference("driverOrders");
 
         tvAddress = findViewById(R.id.tvPickedAddress);
         tvAddressInfo = findViewById(R.id.tvPickedAddressInfo);
@@ -250,6 +252,7 @@ public class PlaceOrder extends AppCompatActivity {
                                 Status status = Status.plasata;
                                 Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, restaurantAddresses);
 
+                                driverOrders.child(orderId).setValue(order);
                                 orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
@@ -276,6 +279,7 @@ public class PlaceOrder extends AppCompatActivity {
                                         }
                                     }
                                 });
+
                             }
                         });
 
@@ -361,6 +365,7 @@ public class PlaceOrder extends AppCompatActivity {
                         Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, restaurantAddresses);
 
                         Log.i("restaurant", String.valueOf(restaurantAddresses));
+                        driverOrders.child(orderId).setValue(order);
                         orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
@@ -472,13 +477,14 @@ public class PlaceOrder extends AppCompatActivity {
                         Status status = Status.plasata;
                         Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, restaurantAddresses);
 
+                        driverOrders.child(orderId).setValue(order);
                         orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
                                     Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
 
-                                    cart.removeValue();
+                                    //cart.removeValue();
 
                                     if(paymentMethod.equals(PaymentMethod.CARD_ONLINE)) {
                                         Intent cardPayment = new Intent(PlaceOrder.this, CardPayment.class);
@@ -531,13 +537,14 @@ public class PlaceOrder extends AppCompatActivity {
                             Status status = Status.plasata;
                             Order order = new Order(orderId, total, userId, paymentMethod, address, cartList, status, restaurantAddresses);
 
+                            driverOrders.child(orderId).setValue(order);
                             orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
                                         Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
 
-                                        cart.removeValue();
+//                                        cart.removeValue();
 
                                         if(paymentMethod.equals(PaymentMethod.CARD_ONLINE)) {
                                             Intent cardPayment = new Intent(PlaceOrder.this, CardPayment.class);
@@ -558,6 +565,8 @@ public class PlaceOrder extends AppCompatActivity {
                                     }
                                 }
                             });
+
+
                         }
                     });
 

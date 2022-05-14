@@ -311,52 +311,56 @@ public class FoodInfo extends FragmentActivity {
         cart.child(foodId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                food = snapshot.getValue(Food.class);
+                if (food != null) {
 
-                //image
-                Picasso.with(getBaseContext()).load(food.getImage())
-                        .into(image);
 
-                collapsingToolbarLayout.setTitle(food.getName());
+                    food = snapshot.getValue(Food.class);
 
-                price.setText(food.getPrice() + " lei");
-                name.setText(food.getName());
-                description.setText(food.getDescription());
-                quantity.setText(quantityFromCart);
-                food.setQuantity(Integer.parseInt(String.valueOf(quantity.getText())));
+                    //image
+                    Picasso.with(getBaseContext()).load(food.getImage())
+                            .into(image);
 
-                ratingValue = 0.0f;
-                nbOfRatings = 0;
-                foodList.child(foodId).child("ratings").addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            Rating rating = dataSnapshot.getValue(Rating.class);
-                            ratingValue += rating.getRateValue();
-                            nbOfRatings++;
-                        }
+                    collapsingToolbarLayout.setTitle(food.getName());
 
-                        if (nbOfRatings >= 1) {
-                            ratingValue /= nbOfRatings;
-                        }
+                    price.setText(food.getPrice() + " lei");
+                    name.setText(food.getName());
+                    description.setText(food.getDescription());
+                    quantity.setText(quantityFromCart);
+                    food.setQuantity(Integer.parseInt(String.valueOf(quantity.getText())));
 
-                        ratingBar.setRating(ratingValue);
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-                if (btnRating.getVisibility() == View.VISIBLE) {
-                    btnRating.setOnClickListener(new View.OnClickListener() {
+                    ratingValue = 0.0f;
+                    nbOfRatings = 0;
+                    foodList.child(foodId).child("ratings").addValueEventListener(new ValueEventListener() {
                         @Override
-                        public void onClick(View v) {
-                            showRatingDialog();
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                Rating rating = dataSnapshot.getValue(Rating.class);
+                                ratingValue += rating.getRateValue();
+                                nbOfRatings++;
+                            }
+
+                            if (nbOfRatings >= 1) {
+                                ratingValue /= nbOfRatings;
+                            }
+
+                            ratingBar.setRating(ratingValue);
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
                         }
                     });
+
+                    if (btnRating.getVisibility() == View.VISIBLE) {
+                        btnRating.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                showRatingDialog();
+                            }
+                        });
+                    }
                 }
 
             }
@@ -366,6 +370,8 @@ public class FoodInfo extends FragmentActivity {
                 food.setQuantity(1);
                 // quantity.setText(food.getQuantity());
             }
+
+
         });
     }
 

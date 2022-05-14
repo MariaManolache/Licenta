@@ -5,8 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/mintgreenbackground"
+    android:background="@color/teal_100"
     tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/btnRestaurantRegister"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/buttons"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:text="@string/join_our_team"
+        android:drawableLeft="@drawable/restaurant"></Button>
 
     <LinearLayout
         android:layout_width="match_parent"

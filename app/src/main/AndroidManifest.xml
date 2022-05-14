@@ -16,9 +16,12 @@
         android:theme="@style/Theme.LicentaManolacheMariaCatalina"
         tools:replace="android:theme">
         <activity
+            android:name=".principalmenus.RestaurantMenu"
+            android:exported="false" />
+        <activity
             android:name=".account.DriverAccount"
             android:exported="false"
-            android:label="@string/account_details"/>
+            android:label="@string/account_details" />
         <activity
             android:name=".principalmenus.DriverMenu"
             android:exported="false"

@@ -32,6 +32,8 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,8 +49,15 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Stream;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.DriverAccount;
@@ -75,6 +84,7 @@ public class DriverMenu extends AppCompatActivity {
 
     FirebaseDatabase database;
     DatabaseReference orders;
+    DatabaseReference driverOrders;
     DatabaseReference restaurants;
     DatabaseReference restaurantAddresses;
     DatabaseReference cart;
@@ -114,6 +124,7 @@ public class DriverMenu extends AppCompatActivity {
         restaurantAddresses = database.getReference("orders");
         cart = database.getReference().child("orders");
         food = database.getReference().child("food");
+        driverOrders = database.getReference().child("driverOrders");
 
         users = database.getReference().child("users");
 
@@ -127,22 +138,23 @@ public class DriverMenu extends AppCompatActivity {
         inflater = this.getLayoutInflater();
         acceptOrder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
 
-        users.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    User user1 = dataSnapshot.getValue(User.class);
-                    if (user1.getId().equals("0wavpTf9CkeQDvkPO26YPW7g1EI2")) {
-                        loadOrders(user1.getId());
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        loadOrders();
+//        users.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//                    User user1 = dataSnapshot.getValue(User.class);
+//                    if (user1.getId().equals("0wavpTf9CkeQDvkPO26YPW7g1EI2")) {
+//                        loadOrders(user1.getId());
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
 
         tvCurrentLocation.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -295,12 +307,11 @@ public class DriverMenu extends AppCompatActivity {
         return coordinates;
     }
 
-    private void loadOrders(String id) {
+    private void loadOrders() {
 
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
-                .child("orders")
-                .child(id)
+                .child("driverOrders")
                 .orderByChild("id")
                 .limitToLast(50);
 
@@ -318,8 +329,8 @@ public class DriverMenu extends AppCompatActivity {
                 orderList.add(model);
                 orderId = model.getId();
 
-                if(!model.getStatus().equals(Status.finalizata)) {
-                    orders.child(id).child(model.getId()).child("restaurantAddress").addValueEventListener(new ValueEventListener() {
+                if (!model.getStatus().equals(Status.finalizata)) {
+                    driverOrders.child(model.getId()).child("restaurantAddress").addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -333,7 +344,7 @@ public class DriverMenu extends AppCompatActivity {
                             }
 
                             holder.restaurantsName.setText(restaurantName);
-                            holder.orderStatus.setText(String.valueOf(model.getStatus()));
+                            holder.orderStatus.setText(String.valueOf(model.getStatus()).toUpperCase(Locale.ROOT).replace("_", " "));
                             holder.orderAddress.setText(String.valueOf(model.getAddress().getMapsAddress()));
                             holder.orderPriceTotal.setText("Total: " + model.getTotal() + " lei");
                             Picasso.with(getBaseContext()).load(restaurantImage)
@@ -341,11 +352,37 @@ public class DriverMenu extends AppCompatActivity {
 
                             float results[] = new float[10];
                             if (latLngLocation != null) {
-                                LatLng latLngRestaurant = getLocationFromAddress(model.getRestaurantAddress().get(0).getAddress());
-                                Double distance = SphericalUtil.computeDistanceBetween(latLngLocation, latLngRestaurant);
-                                Location.distanceBetween(latLngLocation.latitude, latLngLocation.longitude, latLngRestaurant.latitude, latLngRestaurant.longitude, results);
+                                Map<LatLng, Double> distances = new LinkedHashMap<>();
+                                for(int i = 0; i < model.getRestaurantAddress().size(); i++) {
+                                    LatLng latLngRestaurant = getLocationFromAddress(model.getRestaurantAddress().get(i).getAddress());
+                                    Double distance = SphericalUtil.computeDistanceBetween(latLngLocation, latLngRestaurant);
+                                    distances.put(latLngRestaurant, distance);
+                                    Location.distanceBetween(latLngLocation.latitude, latLngLocation.longitude, latLngRestaurant.latitude, latLngRestaurant.longitude, results);
+                                }
 
-                                holder.distance.setText("Distanta " + String.format("%.2f", distance / 1000) + " km");
+                                UserComparator comparator = new UserComparator(distances);
+                                Map<LatLng, Double> sortedDistances = new TreeMap<>(comparator);
+                                sortedDistances.putAll(distances);
+
+
+                                Map.Entry<LatLng, Double> entry = sortedDistances.entrySet().iterator().next();
+                                LatLng key = entry.getKey();
+                                Double minimumDistance = entry.getValue();
+                                Double totalDistance = minimumDistance;
+
+                                List<LatLng> sortedLocations = new ArrayList<>();
+                                for (Map.Entry<LatLng, Double> entry2 : sortedDistances.entrySet()) {
+                                    sortedLocations.add(entry2.getKey());
+                                }
+
+                                if(sortedLocations.size() > 1) {
+                                    for(int i = 0; i < sortedLocations.size() - 1; i++) {
+                                        totalDistance += SphericalUtil.computeDistanceBetween(sortedLocations.get(i), sortedLocations.get(i+1));
+                                    }
+                                }
+
+
+                                holder.distance.setText("Distanta: " + String.format("%.2f", totalDistance / 1000) + " km");
                             }
                             String restaurantName2 = restaurantName;
                             String restaurantImage2 = restaurantImage;
@@ -373,8 +410,8 @@ public class DriverMenu extends AppCompatActivity {
                                             holder.upArrow.setVisibility(View.VISIBLE);
                                         }
 
-                                        cart = database.getReference().child("orders").child(id).child(model.getId()).child("cart");
-                                        restaurantAddresses = database.getReference("orders").child(id).child(model.getId()).child("restaurantAddress");
+                                        cart = database.getReference().child("driverOrders").child(model.getId()).child("cart");
+                                        restaurantAddresses = database.getReference("driverOrders").child(model.getId()).child("restaurantAddress");
 
                                         Query query = cart
                                                 .orderByChild("id")
@@ -415,12 +452,12 @@ public class DriverMenu extends AppCompatActivity {
                                                                 Toast.makeText(DriverMenu.this, model.getName(), Toast.LENGTH_LONG).show();
 //                                                            showRatingDialog(model.getId());
 
-                                                                Intent foodInfo = new Intent(DriverMenu.this, FoodInfo.class);
-                                                                foodInfo.putExtra("origin", "ordersList");
-                                                                foodInfo.putExtra("orderId", local.getId());
-                                                                foodInfo.putExtra("quantity", local2.getQuantity());
-                                                                foodInfo.putExtra("foodId", model.getId());
-                                                                startActivity(foodInfo);
+//                                                                Intent foodInfo = new Intent(DriverMenu.this, FoodInfo.class);
+//                                                                foodInfo.putExtra("origin", "ordersList");
+//                                                                foodInfo.putExtra("orderId", local.getId());
+//                                                                foodInfo.putExtra("quantity", local2.getQuantity());
+//                                                                foodInfo.putExtra("foodId", model.getId());
+//                                                                startActivity(foodInfo);
 
                                                             }
                                                         });
@@ -468,7 +505,24 @@ public class DriverMenu extends AppCompatActivity {
                                                         public void onClick(DialogInterface dialog, int which) {
 
                                                             model.setStatus(Status.in_curs_de_livrare);
-                                                            orders.child(id).child(model.getId()).child("status").setValue(Status.in_curs_de_livrare);
+                                                            driverOrders.child(model.getId()).child("status").setValue(Status.in_curs_de_livrare);
+
+                                                            driverOrders.child(model.getId()).child("userId").addValueEventListener(new ValueEventListener() {
+                                                                @Override
+                                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                    String userId = snapshot.getValue(String.class);
+                                                                    if (userId != null)
+                                                                        orders.child(userId).child(model.getId()).child("status").setValue(Status.in_curs_de_livrare);
+                                                                }
+
+                                                                @Override
+                                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                }
+                                                            });
+
+
+//                                                            orders.child(id).child(model.getId()).child("status").setValue(Status.in_curs_de_livrare);
 
 
                                                         }
@@ -482,8 +536,28 @@ public class DriverMenu extends AppCompatActivity {
                                                         public void onClick(DialogInterface dialog, int which) {
 
                                                             model.setStatus(Status.finalizata);
-                                                            orders.child(id).child(model.getId()).child("status").setValue(Status.finalizata);
 
+                                                            driverOrders.child(model.getId()).child("status").setValue(Status.finalizata);
+
+
+                                                            driverOrders.child(model.getId()).child("userId").addValueEventListener(new ValueEventListener() {
+                                                                @Override
+                                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                    String userId = snapshot.getValue(String.class);
+                                                                    if (userId != null)
+                                                                        orders.child(userId).child(model.getId()).child("status").setValue(Status.finalizata).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                            @Override
+                                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                                driverOrders.child(model.getId()).removeValue();
+                                                                            }
+                                                                        });
+                                                                }
+
+                                                                @Override
+                                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                }
+                                                            });
 
                                                         }
                                                     }).setNegativeButton("Anuleaza", null)
@@ -548,5 +622,20 @@ class ParentViewHolderDriver
                 = itemView
                 .findViewById(
                         R.id.orderDetails);
+    }
+
+}
+
+class UserComparator implements Comparator<Object> {
+    Map<LatLng, Double> map;
+    public UserComparator(Map<LatLng, Double> map) {
+        this.map = map;
+    }
+    public int compare(Object o1, Object o2) {
+        if (map.get(o2) == map.get(o1))
+            return 1;
+        else
+            return ((Double) map.get(o1)).compareTo((Double)
+                    map.get(o2));
     }
 }

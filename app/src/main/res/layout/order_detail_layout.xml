@@ -57,7 +57,7 @@
                             android:textColor="@color/violet"
                             android:gravity="center_horizontal"
                             android:text="@string/restaurant_name"
-                            android:textAllCaps="true"
+                            android:textAllCaps="false"
                             android:textStyle="bold"></TextView>
 
 
