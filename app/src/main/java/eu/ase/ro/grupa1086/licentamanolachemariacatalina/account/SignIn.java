@@ -180,12 +180,12 @@ public class SignIn extends AppCompatActivity {
                 String password = etPassword.getText().toString();
 
                 if (TextUtils.isEmpty(email)) {
-                    etEmail.setError("Email-ul utilizatorului este necesar pentru crearea contului");
+                    etEmail.setError("Email-ul utilizatorului este necesar pentru autentificare");
                     return;
                 }
 
                 if (TextUtils.isEmpty(password)) {
-                    etPassword.setError("O parola este necesara pentru crearea contului");
+                    etPassword.setError("O parola este necesara pentru autentificare");
                     return;
                 }
 

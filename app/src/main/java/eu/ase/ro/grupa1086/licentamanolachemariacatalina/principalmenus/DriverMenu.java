@@ -344,7 +344,7 @@ public class DriverMenu extends AppCompatActivity {
                             }
 
                             holder.restaurantsName.setText(restaurantName);
-                            holder.orderStatus.setText(String.valueOf(model.getStatus()).toUpperCase(Locale.ROOT).replace("_", " "));
+                            holder.orderStatus.setText(String.valueOf(model.getStatus()).replace("_", " "));
                             holder.orderAddress.setText(String.valueOf(model.getAddress().getMapsAddress()));
                             holder.orderPriceTotal.setText("Total: " + model.getTotal() + " lei");
                             Picasso.with(getBaseContext()).load(restaurantImage)

@@ -30,6 +30,7 @@ import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.SignUp;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.DriverMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.PrincipalMenu;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.RestaurantMenu;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
     TextView slogan;
     FirebaseDatabase database;
     DatabaseReference users;
+    DatabaseReference restaurantAccounts;
+
+    Button btnRestaurantRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +76,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        btnRestaurantRegister = findViewById(R.id.btnRestaurantRegister);
+        btnRestaurantRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent restaurantLogin = new Intent(getApplicationContext(), RestaurantLogin.class);
+                startActivity(restaurantLogin);
+            }
+        });
     }
 
     @Override
@@ -88,13 +101,29 @@ public class MainActivity extends AppCompatActivity {
                             users.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    int isDriver = snapshot.getValue(Integer.class);
-                                    if (isDriver == 1) {
-                                        startActivity(new Intent(getApplicationContext(), DriverMenu.class));
+                                    if(snapshot.exists()) {
+                                        int isDriver = snapshot.getValue(Integer.class);
+                                        if (isDriver == 1) {
+                                            startActivity(new Intent(getApplicationContext(), DriverMenu.class));
+                                        } else {
+                                            startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
+                                        }
+                                        finish();
                                     } else {
-                                        startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
+                                        restaurantAccounts = database.getReference("restaurantAccounts").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                        restaurantAccounts.addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                startActivity(new Intent(getApplicationContext(), RestaurantMenu.class));
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
                                     }
-                                    finish();
+
                                 }
 
 

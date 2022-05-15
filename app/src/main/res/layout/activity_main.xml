@@ -12,13 +12,13 @@
         android:id="@+id/btnRestaurantRegister"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/buttons"
         android:layout_alignParentRight="true"
         android:layout_marginTop="10dp"
+        android:background="@drawable/buttons"
+        android:drawableLeft="@drawable/menu"
+        android:text="@string/click_here_for_restaurants"
         android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:text="@string/join_our_team"
-        android:drawableLeft="@drawable/restaurant"></Button>
+        android:textColor="@color/white"></Button>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -42,7 +42,8 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_gravity="center"
-        android:src="@drawable/logo2" />
+        android:layout_margin="20dp"
+        android:src="@drawable/food" />
 
         <TextView
             android:gravity="center"
@@ -51,6 +52,7 @@
             android:text="@string/deliver_anywhere"
             android:textColor="@color/teal_800"
             android:textSize="25sp"
+            android:layout_margin="20dp"
             android:textStyle="bold"
             android:fontFamily="@font/alata"
             android:layout_width="200dp"

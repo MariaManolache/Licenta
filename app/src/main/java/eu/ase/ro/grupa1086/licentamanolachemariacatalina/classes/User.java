@@ -11,6 +11,7 @@ public class User implements Serializable {
     private String password;
     private String phoneNumber;
     private int isDriver;
+    private int isRestaurant;
 
     public User() {
     }
@@ -70,6 +71,14 @@ public class User implements Serializable {
 
     public void setIsDriver(int isDriver) {
         this.isDriver = isDriver;
+    }
+
+    public int getIsRestaurant() {
+        return isRestaurant;
+    }
+
+    public void setIsRestaurant(int isRestaurant) {
+        this.isRestaurant = isRestaurant;
     }
 
     @Override

@@ -128,4 +128,8 @@
     <string name="status">Status</string>
     <string name="distance">Distanta</string>
     <string name="join_our_team">Fa parte din echipa noastra!</string>
+    <string name="enter_given_credentials">Introdu mai sus datele primite de la administrator</string>
+    <string name="authenticate">Autentificare</string>
+    <string name="click_here_for_restaurants">Esti furnizor? Da click aici!</string>
+    <string name="products">Produse</string>
 </resources>

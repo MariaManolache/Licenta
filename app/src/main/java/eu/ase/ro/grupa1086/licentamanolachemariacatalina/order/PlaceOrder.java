@@ -41,6 +41,7 @@ import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Order;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.PaymentMethod;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.RestaurantOrder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Status;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.Disposable;
@@ -79,6 +80,7 @@ public class PlaceOrder extends AppCompatActivity {
     DatabaseReference orders;
     DatabaseReference restaurants;
     DatabaseReference driverOrders;
+    DatabaseReference restaurantOrders;
 
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
@@ -145,6 +147,7 @@ public class PlaceOrder extends AppCompatActivity {
         orders = database.getInstance().getReference("orders").child(userId);
         restaurants = database.getInstance().getReference("restaurants");
         driverOrders = database.getInstance().getReference("driverOrders");
+        restaurantOrders = database.getInstance().getReference("restaurantOrders");
 
         tvAddress = findViewById(R.id.tvPickedAddress);
         tvAddressInfo = findViewById(R.id.tvPickedAddressInfo);
@@ -251,6 +254,25 @@ public class PlaceOrder extends AppCompatActivity {
                                 PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentSpinner.getSelectedItem().toString().toUpperCase().replace(" ", "_"));
                                 Status status = Status.plasata;
                                 Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, restaurantAddresses);
+
+                                List<String> restaurantsId = new ArrayList<>();
+                                restaurantsId.add(cartList.get(0).getRestaurantId());
+
+                                for(int i = 0; i < cartList.size() - 1; i++) {
+                                    if(!cartList.get(i).getRestaurantId().equals(cartList.get(i+1).getRestaurantId())) {
+                                        restaurantsId.add(cartList.get(i+1).getRestaurantId());
+                                    }
+                                }
+                                List<Food> restaurantFood = new ArrayList<>();
+                                for(int i = 0; i < restaurantsId.size(); i++) {
+                                    for(int j = 0; j < cartList.size(); j++) {
+                                        if(restaurantsId.get(i).equals(cartList.get(j).getRestaurantId())) {
+                                            restaurantFood.add(cartList.get(j));
+                                        }
+                                    }
+                                    RestaurantOrder restaurantOrder = new RestaurantOrder(restaurantsId.get(i), restaurantFood, orderId, status);
+                                    restaurantOrders.child(restaurantsId.get(i)).child(orderId).setValue(restaurantOrder);
+                                }
 
                                 driverOrders.child(orderId).setValue(order);
                                 orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -363,6 +385,25 @@ public class PlaceOrder extends AppCompatActivity {
                         PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentSpinner.getSelectedItem().toString().toUpperCase().replace(" ", "_"));
                         Status status = Status.plasata;
                         Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, restaurantAddresses);
+
+                        List<String> restaurantsId = new ArrayList<>();
+                        restaurantsId.add(cartList.get(0).getRestaurantId());
+
+                        for(int i = 0; i < cartList.size() - 1; i++) {
+                            if(!cartList.get(i).getRestaurantId().equals(cartList.get(i+1).getRestaurantId())) {
+                                restaurantsId.add(cartList.get(i+1).getRestaurantId());
+                            }
+                        }
+                        List<Food> restaurantFood = new ArrayList<>();
+                        for(int i = 0; i < restaurantsId.size(); i++) {
+                            for(int j = 0; j < cartList.size(); j++) {
+                                if(restaurantsId.get(i).equals(cartList.get(j).getRestaurantId())) {
+                                    restaurantFood.add(cartList.get(j));
+                                }
+                            }
+                            RestaurantOrder restaurantOrder = new RestaurantOrder(restaurantsId.get(i), restaurantFood, orderId, status);
+                            restaurantOrders.child(restaurantsId.get(i)).child(orderId).setValue(restaurantOrder);
+                        }
 
                         Log.i("restaurant", String.valueOf(restaurantAddresses));
                         driverOrders.child(orderId).setValue(order);
@@ -477,6 +518,25 @@ public class PlaceOrder extends AppCompatActivity {
                         Status status = Status.plasata;
                         Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, restaurantAddresses);
 
+                        List<String> restaurantsId = new ArrayList<>();
+                        restaurantsId.add(cartList.get(0).getRestaurantId());
+
+                        for(int i = 0; i < cartList.size() - 1; i++) {
+                            if(!cartList.get(i).getRestaurantId().equals(cartList.get(i+1).getRestaurantId())) {
+                                restaurantsId.add(cartList.get(i+1).getRestaurantId());
+                            }
+                        }
+                        List<Food> restaurantFood = new ArrayList<>();
+                        for(int i = 0; i < restaurantsId.size(); i++) {
+                            for(int j = 0; j < cartList.size(); j++) {
+                                if(restaurantsId.get(i).equals(cartList.get(j).getRestaurantId())) {
+                                    restaurantFood.add(cartList.get(j));
+                                }
+                            }
+                            RestaurantOrder restaurantOrder = new RestaurantOrder(restaurantsId.get(i), restaurantFood, orderId, status);
+                            restaurantOrders.child(restaurantsId.get(i)).child(orderId).setValue(restaurantOrder);
+                        }
+
                         driverOrders.child(orderId).setValue(order);
                         orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -537,6 +597,26 @@ public class PlaceOrder extends AppCompatActivity {
                             Status status = Status.plasata;
                             Order order = new Order(orderId, total, userId, paymentMethod, address, cartList, status, restaurantAddresses);
 
+                            List<String> restaurantsId = new ArrayList<>();
+                            restaurantsId.add(cartList.get(0).getRestaurantId());
+
+                            for(int i = 0; i < cartList.size() - 1; i++) {
+                                if(!cartList.get(i).getRestaurantId().equals(cartList.get(i+1).getRestaurantId())) {
+                                    restaurantsId.add(cartList.get(i+1).getRestaurantId());
+                                }
+                            }
+                            List<Food> restaurantFood = new ArrayList<>();
+                            for(int i = 0; i < restaurantsId.size(); i++) {
+                                for(int j = 0; j < cartList.size(); j++) {
+                                    if(restaurantsId.get(i).equals(cartList.get(j).getRestaurantId())) {
+                                        restaurantFood.add(cartList.get(j));
+                                    }
+                                }
+                                RestaurantOrder restaurantOrder = new RestaurantOrder(restaurantsId.get(i), restaurantFood, orderId, status);
+                                restaurantOrders.child(restaurantsId.get(i)).child(orderId).setValue(restaurantOrder);
+                            }
+
+
                             driverOrders.child(orderId).setValue(order);
                             orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -587,9 +667,11 @@ public class PlaceOrder extends AppCompatActivity {
                     Food food = dataSnapshot.getValue(Food.class);
                     cartList.add(food);
                     total += food.getPrice() * food.getQuantity();
+                    sameAddress = 0;
                     restaurants.child(food.getRestaurantId()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            sameAddress = 0;
                             Restaurant restaurant = snapshot.getValue(Restaurant.class);
                             for (Restaurant alreadySavedRestaurant : restaurantAddresses) {
                                 if (restaurant.getId().equals(alreadySavedRestaurant.getId())) {

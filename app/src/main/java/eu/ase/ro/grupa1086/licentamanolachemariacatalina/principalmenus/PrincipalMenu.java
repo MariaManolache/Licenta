@@ -312,7 +312,7 @@ public class PrincipalMenu extends AppCompatActivity {
 
                         //restaurantId
                         Intent foodList = new Intent(PrincipalMenu.this, FoodList.class);
-                        foodList.putExtra("restaurantId", adapter.getRef(position).getKey());
+                        foodList.putExtra("restaurantId", model.getId());
                         startActivity(foodList);
 
                     }
