@@ -258,20 +258,31 @@ public class PlaceOrder extends AppCompatActivity {
                                 List<String> restaurantsId = new ArrayList<>();
                                 restaurantsId.add(cartList.get(0).getRestaurantId());
 
+
                                 for(int i = 0; i < cartList.size() - 1; i++) {
                                     if(!cartList.get(i).getRestaurantId().equals(cartList.get(i+1).getRestaurantId())) {
                                         restaurantsId.add(cartList.get(i+1).getRestaurantId());
                                     }
                                 }
                                 List<Food> restaurantFood = new ArrayList<>();
+
+                                Restaurant currentRestaurant = new Restaurant();
+
                                 for(int i = 0; i < restaurantsId.size(); i++) {
                                     for(int j = 0; j < cartList.size(); j++) {
                                         if(restaurantsId.get(i).equals(cartList.get(j).getRestaurantId())) {
                                             restaurantFood.add(cartList.get(j));
                                         }
                                     }
-                                    RestaurantOrder restaurantOrder = new RestaurantOrder(restaurantsId.get(i), restaurantFood, orderId, status);
-                                    restaurantOrders.child(restaurantsId.get(i)).child(orderId).setValue(restaurantOrder);
+
+                                    for(int z = 0; z < restaurantAddresses.size(); z++) {
+                                        if(restaurantAddresses.get(z).getId().equals(restaurantsId.get(i))) {
+                                            currentRestaurant = restaurantAddresses.get(z);
+                                        }
+                                    }
+                                    RestaurantOrder restaurantOrder = new RestaurantOrder(restaurantsId.get(i), restaurantFood, orderId, status, total, paymentMethod, userId, currentRestaurant, newAddress);
+                                    restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).setValue(restaurantOrder);
+                                    restaurantOrders.child(restaurantsId.get(i)).child("id").setValue(restaurantsId.get(i));
                                 }
 
                                 driverOrders.child(orderId).setValue(order);
@@ -395,14 +406,23 @@ public class PlaceOrder extends AppCompatActivity {
                             }
                         }
                         List<Food> restaurantFood = new ArrayList<>();
+                        Restaurant currentRestaurant = new Restaurant();
+
                         for(int i = 0; i < restaurantsId.size(); i++) {
                             for(int j = 0; j < cartList.size(); j++) {
                                 if(restaurantsId.get(i).equals(cartList.get(j).getRestaurantId())) {
                                     restaurantFood.add(cartList.get(j));
                                 }
                             }
-                            RestaurantOrder restaurantOrder = new RestaurantOrder(restaurantsId.get(i), restaurantFood, orderId, status);
-                            restaurantOrders.child(restaurantsId.get(i)).child(orderId).setValue(restaurantOrder);
+
+                            for(int z = 0; z < restaurantAddresses.size(); z++) {
+                                if(restaurantAddresses.get(z).getId().equals(restaurantsId.get(i))) {
+                                    currentRestaurant = restaurantAddresses.get(z);
+                                }
+                            }
+                            RestaurantOrder restaurantOrder = new RestaurantOrder(restaurantsId.get(i), restaurantFood, orderId, status, total, paymentMethod, userId, currentRestaurant, newAddress);
+                            restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).setValue(restaurantOrder);
+                            restaurantOrders.child(restaurantsId.get(i)).child("id").setValue(restaurantsId.get(i));
                         }
 
                         Log.i("restaurant", String.valueOf(restaurantAddresses));
@@ -527,14 +547,23 @@ public class PlaceOrder extends AppCompatActivity {
                             }
                         }
                         List<Food> restaurantFood = new ArrayList<>();
+                        Restaurant currentRestaurant = new Restaurant();
+
                         for(int i = 0; i < restaurantsId.size(); i++) {
                             for(int j = 0; j < cartList.size(); j++) {
                                 if(restaurantsId.get(i).equals(cartList.get(j).getRestaurantId())) {
                                     restaurantFood.add(cartList.get(j));
                                 }
                             }
-                            RestaurantOrder restaurantOrder = new RestaurantOrder(restaurantsId.get(i), restaurantFood, orderId, status);
-                            restaurantOrders.child(restaurantsId.get(i)).child(orderId).setValue(restaurantOrder);
+
+                            for(int z = 0; z < restaurantAddresses.size(); z++) {
+                                if(restaurantAddresses.get(z).getId().equals(restaurantsId.get(i))) {
+                                    currentRestaurant = restaurantAddresses.get(z);
+                                }
+                            }
+                            RestaurantOrder restaurantOrder = new RestaurantOrder(restaurantsId.get(i), restaurantFood, orderId, status, total, paymentMethod, userId, currentRestaurant, newAddress);
+                            restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).setValue(restaurantOrder);
+                            restaurantOrders.child(restaurantsId.get(i)).child("id").setValue(restaurantsId.get(i));
                         }
 
                         driverOrders.child(orderId).setValue(order);
@@ -606,14 +635,23 @@ public class PlaceOrder extends AppCompatActivity {
                                 }
                             }
                             List<Food> restaurantFood = new ArrayList<>();
+                            Restaurant currentRestaurant = new Restaurant();
+
                             for(int i = 0; i < restaurantsId.size(); i++) {
                                 for(int j = 0; j < cartList.size(); j++) {
                                     if(restaurantsId.get(i).equals(cartList.get(j).getRestaurantId())) {
                                         restaurantFood.add(cartList.get(j));
                                     }
                                 }
-                                RestaurantOrder restaurantOrder = new RestaurantOrder(restaurantsId.get(i), restaurantFood, orderId, status);
-                                restaurantOrders.child(restaurantsId.get(i)).child(orderId).setValue(restaurantOrder);
+
+                                for(int z = 0; z < restaurantAddresses.size(); z++) {
+                                    if(restaurantAddresses.get(z).getId().equals(restaurantsId.get(i))) {
+                                        currentRestaurant = restaurantAddresses.get(z);
+                                    }
+                                }
+                                RestaurantOrder restaurantOrder = new RestaurantOrder(restaurantsId.get(i), restaurantFood, orderId, status, total, paymentMethod, userId, currentRestaurant, address);
+                                restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).setValue(restaurantOrder);
+                                restaurantOrders.child(restaurantsId.get(i)).child("id").setValue(restaurantsId.get(i));
                             }
 
 

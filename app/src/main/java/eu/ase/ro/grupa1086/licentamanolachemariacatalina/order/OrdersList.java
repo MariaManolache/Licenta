@@ -32,6 +32,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.PrincipalMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
@@ -176,7 +177,7 @@ public class OrdersList extends AppCompatActivity {
                         }
 
                         holder.restaurantsName.setText(restaurantName);
-                        holder.orderStatus.setText(String.valueOf(model.getStatus()));
+                        holder.orderStatus.setText(String.valueOf(model.getStatus()).substring(0, 1).toUpperCase(Locale.ROOT) + String.valueOf(model.getStatus()).replace("_", " ").substring(1));
                         holder.orderAddress.setText(String.valueOf(model.getAddress().getMapsAddress()));
                         holder.orderPriceTotal.setText("Total: " + model.getTotal() + " lei");
                         Picasso.with(getBaseContext()).load(restaurantImage)

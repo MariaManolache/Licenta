@@ -8,7 +8,7 @@
     tools:context=".order.RestaurantOrders">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/ordersList"
+        android:id="@+id/restaurantOrdersList"
         android:background="@color/teal_100"
         android:layout_width="match_parent"
         app:layout_constraintEnd_toEndOf="parent"
