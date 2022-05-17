@@ -91,6 +91,7 @@ public class DriverMenu extends AppCompatActivity {
     DatabaseReference ratings;
     DatabaseReference food;
     DatabaseReference users;
+    DatabaseReference restaurantOrders;
     FirebaseUser user;
 
     String restaurantName;
@@ -125,6 +126,7 @@ public class DriverMenu extends AppCompatActivity {
         cart = database.getReference().child("orders");
         food = database.getReference().child("food");
         driverOrders = database.getReference().child("driverOrders");
+        restaurantOrders = database.getReference().child("restaurantOrders");
 
         users = database.getReference().child("users");
 
@@ -497,7 +499,7 @@ public class DriverMenu extends AppCompatActivity {
                                         secondAdapter.startListening();
 
                                     } else if (isLongClick) {
-                                        if (model.getStatus().equals(Status.plasata)) {
+                                        if (model.getStatus().equals(Status.confirmata)) {
 //                                    View viewPopUp = inflater.inflate(R.layout.reset_name_pop_up, null);
                                             acceptOrder.setTitle("Doresti sa livrezi comanda selectata?")
                                                     .setPositiveButton("Confirmare", new DialogInterface.OnClickListener() {
@@ -506,20 +508,25 @@ public class DriverMenu extends AppCompatActivity {
 
                                                             model.setStatus(Status.in_curs_de_livrare);
                                                             driverOrders.child(model.getId()).child("status").setValue(Status.in_curs_de_livrare);
+                                                            orders.child(model.getUserId()).child(model.getId()).child("status").setValue(Status.in_curs_de_livrare);
 
-                                                            driverOrders.child(model.getId()).child("userId").addValueEventListener(new ValueEventListener() {
-                                                                @Override
-                                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                    String userId = snapshot.getValue(String.class);
-                                                                    if (userId != null)
-                                                                        orders.child(userId).child(model.getId()).child("status").setValue(Status.in_curs_de_livrare);
-                                                                }
+                                                            for(int i = 0; i < model.getRestaurantAddress().size(); i++) {
+                                                                restaurantOrders.child(model.getRestaurantAddress().get(i).getId()).child("orders").child(model.getId()).child("status").setValue(Status.in_curs_de_livrare);
+                                                            }
 
-                                                                @Override
-                                                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                                                }
-                                                            });
+//                                                            driverOrders.child(model.getId()).child("userId").addValueEventListener(new ValueEventListener() {
+//                                                                @Override
+//                                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                                                    String userId = snapshot.getValue(String.class);
+//                                                                    if (userId != null)
+//                                                                        orders.child(userId).child(model.getId()).child("status").setValue(Status.in_curs_de_livrare);
+//                                                                }
+//
+//                                                                @Override
+//                                                                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                                                                }
+//                                                            });
 
 
 //                                                            orders.child(id).child(model.getId()).child("status").setValue(Status.in_curs_de_livrare);
@@ -539,25 +546,32 @@ public class DriverMenu extends AppCompatActivity {
 
                                                             driverOrders.child(model.getId()).child("status").setValue(Status.finalizata);
 
+                                                            orders.child(model.getUserId()).child(model.getId()).child("status").setValue(Status.finalizata);
+                                                            driverOrders.child(model.getId()).removeValue();
 
-                                                            driverOrders.child(model.getId()).child("userId").addValueEventListener(new ValueEventListener() {
-                                                                @Override
-                                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                    String userId = snapshot.getValue(String.class);
-                                                                    if (userId != null)
-                                                                        orders.child(userId).child(model.getId()).child("status").setValue(Status.finalizata).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                            @Override
-                                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                                driverOrders.child(model.getId()).removeValue();
-                                                                            }
-                                                                        });
-                                                                }
+                                                            for(int i = 0; i < model.getRestaurantAddress().size(); i++) {
+                                                                restaurantOrders.child(model.getRestaurantAddress().get(i).getId()).child("orders").child(model.getId()).child("status").setValue(Status.finalizata);
+                                                                restaurantOrders.child(model.getRestaurantAddress().get(i).getId()).child("orders").child(model.getId()).removeValue();
+                                                            }
 
-                                                                @Override
-                                                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                                                }
-                                                            });
+//                                                            driverOrders.child(model.getId()).child("userId").addValueEventListener(new ValueEventListener() {
+//                                                                @Override
+//                                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                                                    String userId = snapshot.getValue(String.class);
+//                                                                    if (userId != null)
+//                                                                        orders.child(userId).child(model.getId()).child("status").setValue(Status.finalizata).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                                                            @Override
+//                                                                            public void onComplete(@NonNull Task<Void> task) {
+//                                                                                driverOrders.child(model.getId()).removeValue();
+//                                                                            }
+//                                                                        });
+//                                                                }
+//
+//                                                                @Override
+//                                                                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                                                                }
+//                                                            });
 
                                                         }
                                                     }).setNegativeButton("Anuleaza", null)

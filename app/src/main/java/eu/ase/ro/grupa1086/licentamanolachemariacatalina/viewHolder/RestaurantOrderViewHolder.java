@@ -10,13 +10,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 
-public class RestaurantOrderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class RestaurantOrderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
-    public TextView restaurantsName;
+    public TextView orderName;
     public TextView orderStatus;
     public TextView orderAddress;
     public TextView orderPriceTotal;
-    public ImageView restaurantImage;
     public ImageView downArrow;
     public ImageView upArrow;
 
@@ -27,17 +26,17 @@ public class RestaurantOrderViewHolder extends RecyclerView.ViewHolder implement
     public RestaurantOrderViewHolder(@NonNull View itemView) {
         super(itemView);
 
-        restaurantsName = itemView.findViewById(R.id.restaurants);
+        orderName = itemView.findViewById(R.id.orderName);
         orderStatus = itemView.findViewById(R.id.orderStatus);
         orderAddress = itemView.findViewById(R.id.orderAddress);
         orderPriceTotal = itemView.findViewById(R.id.orderPriceTotal);
-        restaurantImage = itemView.findViewById(R.id.restaurantImage);
         downArrow = itemView.findViewById(R.id.downArrow);
         upArrow = itemView.findViewById(R.id.upArrow);
 
         secondRecyclerView = itemView.findViewById(R.id.orderDetails);
 
         itemView.setOnClickListener(this);
+        itemView.setOnLongClickListener(this);
     }
 
     public void setItemClickListener(ItemClickListener itemClickListener) {
@@ -49,4 +48,9 @@ public class RestaurantOrderViewHolder extends RecyclerView.ViewHolder implement
         itemClickListener.onClick(v, getAbsoluteAdapterPosition(), false);
     }
 
+    @Override
+    public boolean onLongClick(View v) {
+        itemClickListener.onClick(v, getAbsoluteAdapterPosition(), true);
+        return true;
+    }
 }

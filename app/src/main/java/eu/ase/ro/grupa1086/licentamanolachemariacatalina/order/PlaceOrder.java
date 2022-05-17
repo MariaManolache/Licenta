@@ -250,10 +250,16 @@ public class PlaceOrder extends AppCompatActivity {
                                 });
 
 
+                                for(int i = 0; i < restaurantAddresses.size(); i++) {
+                                    restaurantAddresses.get(i).setConfirmed(false);
+                                }
+
+
                                 String orderId = orders.push().getKey();
                                 PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentSpinner.getSelectedItem().toString().toUpperCase().replace(" ", "_"));
                                 Status status = Status.plasata;
-                                Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, restaurantAddresses);
+                                Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status);
+                                order.setRestaurantAddress(restaurantAddresses);
 
                                 List<String> restaurantsId = new ArrayList<>();
                                 restaurantsId.add(cartList.get(0).getRestaurantId());
@@ -268,29 +274,35 @@ public class PlaceOrder extends AppCompatActivity {
 
                                 Restaurant currentRestaurant = new Restaurant();
 
-                                for(int i = 0; i < restaurantsId.size(); i++) {
+                                for(int i = 0; i < restaurantAddresses.size(); i++) {
                                     for(int j = 0; j < cartList.size(); j++) {
-                                        if(restaurantsId.get(i).equals(cartList.get(j).getRestaurantId())) {
+                                        if(restaurantAddresses.get(i).getId().equals(cartList.get(j).getRestaurantId())) {
                                             restaurantFood.add(cartList.get(j));
                                         }
                                     }
 
-                                    for(int z = 0; z < restaurantAddresses.size(); z++) {
-                                        if(restaurantAddresses.get(z).getId().equals(restaurantsId.get(i))) {
-                                            currentRestaurant = restaurantAddresses.get(z);
-                                        }
-                                    }
+                                    currentRestaurant = restaurantAddresses.get(i);
+
+//                                for(int z = 0; z < restaurantAddresses.size(); z++) {
+//                                    if(restaurantAddresses.get(z).getId().equals(restaurantsId.get(i))) {
+//                                        currentRestaurant = restaurantAddresses.get(z);
+//                                    }
+//                                }
                                     RestaurantOrder restaurantOrder = new RestaurantOrder(restaurantsId.get(i), restaurantFood, orderId, status, total, paymentMethod, userId, currentRestaurant, newAddress);
                                     restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).setValue(restaurantOrder);
                                     restaurantOrders.child(restaurantsId.get(i)).child("id").setValue(restaurantsId.get(i));
                                 }
 
-                                driverOrders.child(orderId).setValue(order);
+//                                driverOrders.child(orderId).setValue(order);
                                 orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
                                             Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
+
+                                            for(int i = 0 ; i < restaurantAddresses.size(); i++) {
+                                                orders.child(orderId).child("restaurants").child(restaurantAddresses.get(i).getId()).setValue(restaurantAddresses.get(i));
+                                            }
 
 
                                             if(paymentMethod.equals(PaymentMethod.CARD_ONLINE)) {
@@ -392,10 +404,16 @@ public class PlaceOrder extends AppCompatActivity {
                         });
 
 
+                        for(int i = 0; i < restaurantAddresses.size(); i++) {
+                            restaurantAddresses.get(i).setConfirmed(false);
+                        }
+
+
                         String orderId = orders.push().getKey();
                         PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentSpinner.getSelectedItem().toString().toUpperCase().replace(" ", "_"));
                         Status status = Status.plasata;
-                        Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, restaurantAddresses);
+                        Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status);
+                        order.setRestaurantAddress(restaurantAddresses);
 
                         List<String> restaurantsId = new ArrayList<>();
                         restaurantsId.add(cartList.get(0).getRestaurantId());
@@ -408,31 +426,37 @@ public class PlaceOrder extends AppCompatActivity {
                         List<Food> restaurantFood = new ArrayList<>();
                         Restaurant currentRestaurant = new Restaurant();
 
-                        for(int i = 0; i < restaurantsId.size(); i++) {
+                        for(int i = 0; i < restaurantAddresses.size(); i++) {
                             for(int j = 0; j < cartList.size(); j++) {
-                                if(restaurantsId.get(i).equals(cartList.get(j).getRestaurantId())) {
+                                if(restaurantAddresses.get(i).getId().equals(cartList.get(j).getRestaurantId())) {
                                     restaurantFood.add(cartList.get(j));
                                 }
                             }
 
-                            for(int z = 0; z < restaurantAddresses.size(); z++) {
-                                if(restaurantAddresses.get(z).getId().equals(restaurantsId.get(i))) {
-                                    currentRestaurant = restaurantAddresses.get(z);
-                                }
-                            }
+                            currentRestaurant = restaurantAddresses.get(i);
+
+//                                for(int z = 0; z < restaurantAddresses.size(); z++) {
+//                                    if(restaurantAddresses.get(z).getId().equals(restaurantsId.get(i))) {
+//                                        currentRestaurant = restaurantAddresses.get(z);
+//                                    }
+//                                }
                             RestaurantOrder restaurantOrder = new RestaurantOrder(restaurantsId.get(i), restaurantFood, orderId, status, total, paymentMethod, userId, currentRestaurant, newAddress);
                             restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).setValue(restaurantOrder);
                             restaurantOrders.child(restaurantsId.get(i)).child("id").setValue(restaurantsId.get(i));
                         }
 
                         Log.i("restaurant", String.valueOf(restaurantAddresses));
-                        driverOrders.child(orderId).setValue(order);
+                        //driverOrders.child(orderId).setValue(order);
                         orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
                                     Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
 
+
+                                    for(int i = 0 ; i < restaurantAddresses.size(); i++) {
+                                        orders.child(orderId).child("restaurants").child(restaurantAddresses.get(i).getId()).setValue(restaurantAddresses.get(i));
+                                    }
 
                                     if(paymentMethod.equals(PaymentMethod.CARD_ONLINE)) {
                                         Intent cardPayment = new Intent(PlaceOrder.this, CardPayment.class);
@@ -532,11 +556,16 @@ public class PlaceOrder extends AppCompatActivity {
                             }
                         });
 
+                        for(int i = 0; i < restaurantAddresses.size(); i++) {
+                            restaurantAddresses.get(i).setConfirmed(false);
+                        }
+
 
                         String orderId = orders.push().getKey();
                         PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentSpinner.getSelectedItem().toString().toUpperCase().replace(" ", "_"));
                         Status status = Status.plasata;
-                        Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, restaurantAddresses);
+                        Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status);
+                        order.setRestaurantAddress(restaurantAddresses);
 
                         List<String> restaurantsId = new ArrayList<>();
                         restaurantsId.add(cartList.get(0).getRestaurantId());
@@ -549,30 +578,36 @@ public class PlaceOrder extends AppCompatActivity {
                         List<Food> restaurantFood = new ArrayList<>();
                         Restaurant currentRestaurant = new Restaurant();
 
-                        for(int i = 0; i < restaurantsId.size(); i++) {
+                        for(int i = 0; i < restaurantAddresses.size(); i++) {
                             for(int j = 0; j < cartList.size(); j++) {
-                                if(restaurantsId.get(i).equals(cartList.get(j).getRestaurantId())) {
+                                if(restaurantAddresses.get(i).getId().equals(cartList.get(j).getRestaurantId())) {
                                     restaurantFood.add(cartList.get(j));
                                 }
                             }
 
-                            for(int z = 0; z < restaurantAddresses.size(); z++) {
-                                if(restaurantAddresses.get(z).getId().equals(restaurantsId.get(i))) {
-                                    currentRestaurant = restaurantAddresses.get(z);
-                                }
-                            }
+                            currentRestaurant = restaurantAddresses.get(i);
+
+//                                for(int z = 0; z < restaurantAddresses.size(); z++) {
+//                                    if(restaurantAddresses.get(z).getId().equals(restaurantsId.get(i))) {
+//                                        currentRestaurant = restaurantAddresses.get(z);
+//                                    }
+//                                }
                             RestaurantOrder restaurantOrder = new RestaurantOrder(restaurantsId.get(i), restaurantFood, orderId, status, total, paymentMethod, userId, currentRestaurant, newAddress);
                             restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).setValue(restaurantOrder);
                             restaurantOrders.child(restaurantsId.get(i)).child("id").setValue(restaurantsId.get(i));
                         }
 
-                        driverOrders.child(orderId).setValue(order);
+                        //driverOrders.child(orderId).setValue(order);
                         orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
                                     Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
 
+
+                                    for(int i = 0 ; i < restaurantAddresses.size(); i++) {
+                                        orders.child(orderId).child("restaurants").child(restaurantAddresses.get(i).getId()).setValue(restaurantAddresses.get(i));
+                                    }
                                     //cart.removeValue();
 
                                     if(paymentMethod.equals(PaymentMethod.CARD_ONLINE)) {
@@ -621,10 +656,16 @@ public class PlaceOrder extends AppCompatActivity {
                     btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+
+                            for(int i = 0; i < restaurantAddresses.size(); i++) {
+                                restaurantAddresses.get(i).setConfirmed(false);
+                            }
+
                             String orderId = orders.push().getKey();
                             PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentSpinner.getSelectedItem().toString().toUpperCase().replace(" ", "_"));
                             Status status = Status.plasata;
-                            Order order = new Order(orderId, total, userId, paymentMethod, address, cartList, status, restaurantAddresses);
+                            Order order = new Order(orderId, total, userId, paymentMethod, address, cartList, status);
+                            order.setRestaurantAddress(restaurantAddresses);
 
                             List<String> restaurantsId = new ArrayList<>();
                             restaurantsId.add(cartList.get(0).getRestaurantId());
@@ -637,25 +678,27 @@ public class PlaceOrder extends AppCompatActivity {
                             List<Food> restaurantFood = new ArrayList<>();
                             Restaurant currentRestaurant = new Restaurant();
 
-                            for(int i = 0; i < restaurantsId.size(); i++) {
+                            for(int i = 0; i < restaurantAddresses.size(); i++) {
                                 for(int j = 0; j < cartList.size(); j++) {
-                                    if(restaurantsId.get(i).equals(cartList.get(j).getRestaurantId())) {
+                                    if(restaurantAddresses.get(i).getId().equals(cartList.get(j).getRestaurantId())) {
                                         restaurantFood.add(cartList.get(j));
                                     }
                                 }
 
-                                for(int z = 0; z < restaurantAddresses.size(); z++) {
-                                    if(restaurantAddresses.get(z).getId().equals(restaurantsId.get(i))) {
-                                        currentRestaurant = restaurantAddresses.get(z);
-                                    }
-                                }
+                                currentRestaurant = restaurantAddresses.get(i);
+
+//                                for(int z = 0; z < restaurantAddresses.size(); z++) {
+//                                    if(restaurantAddresses.get(z).getId().equals(restaurantsId.get(i))) {
+//                                        currentRestaurant = restaurantAddresses.get(z);
+//                                    }
+//                                }
                                 RestaurantOrder restaurantOrder = new RestaurantOrder(restaurantsId.get(i), restaurantFood, orderId, status, total, paymentMethod, userId, currentRestaurant, address);
                                 restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).setValue(restaurantOrder);
                                 restaurantOrders.child(restaurantsId.get(i)).child("id").setValue(restaurantsId.get(i));
                             }
 
 
-                            driverOrders.child(orderId).setValue(order);
+                            //driverOrders.child(orderId).setValue(order);
                             orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -663,6 +706,10 @@ public class PlaceOrder extends AppCompatActivity {
                                         Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
 
 //                                        cart.removeValue();
+
+                                        for(int i = 0 ; i < restaurantAddresses.size(); i++) {
+                                            orders.child(orderId).child("restaurants").child(restaurantAddresses.get(i).getId()).setValue(restaurantAddresses.get(i));
+                                        }
 
                                         if(paymentMethod.equals(PaymentMethod.CARD_ONLINE)) {
                                             Intent cardPayment = new Intent(PlaceOrder.this, CardPayment.class);

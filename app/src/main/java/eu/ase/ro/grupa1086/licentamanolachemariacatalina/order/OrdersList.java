@@ -177,9 +177,9 @@ public class OrdersList extends AppCompatActivity {
                         }
 
                         holder.restaurantsName.setText(restaurantName);
-                        holder.orderStatus.setText(String.valueOf(model.getStatus()).substring(0, 1).toUpperCase(Locale.ROOT) + String.valueOf(model.getStatus()).replace("_", " ").substring(1));
-                        holder.orderAddress.setText(String.valueOf(model.getAddress().getMapsAddress()));
-                        holder.orderPriceTotal.setText("Total: " + model.getTotal() + " lei");
+                        holder.orderStatus.setText(getString(R.string.order_status) + " " + String.valueOf(model.getStatus()).substring(0, 1).toUpperCase(Locale.ROOT) + String.valueOf(model.getStatus()).replace("_", " ").substring(1));
+                        holder.orderAddress.setText(getString(R.string.address) + " " + model.getAddress().getMapsAddress());
+                        holder.orderPriceTotal.setText(getString(R.string.total) + " " + model.getTotal() + " " + getString(R.string.lei));
                         Picasso.with(getBaseContext()).load(restaurantImage)
                                 .into(holder.restaurantImage);
 

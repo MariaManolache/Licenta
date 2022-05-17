@@ -31,6 +31,16 @@ public class Order implements Serializable {
         this.restaurantAddress = restaurantAddress;
     }
 
+    public Order(String id, float total, String userId, PaymentMethod paymentMethod, Address address,List<Food> cart, Status status) {
+        this.id = id;
+        this.total = total;
+        this.userId = userId;
+        this.paymentMethod = paymentMethod;
+        this.address = address;
+        this.cart = cart;
+        this.status = status;
+    }
+
     public String getId() {
         return id;
     }

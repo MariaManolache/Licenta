@@ -1,6 +1,7 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina.order;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,6 +11,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -71,7 +73,11 @@ public class RestaurantOrders extends AppCompatActivity {
     DatabaseReference cart;
     DatabaseReference restaurantAddresses;
     DatabaseReference restaurants;
+    DatabaseReference driverOrders;
+    DatabaseReference restaurantOrders;
     FirebaseUser user;
+
+    AlertDialog.Builder acceptOrder;
 
     List<RestaurantOrder> orderList = new ArrayList<RestaurantOrder>();
 
@@ -80,6 +86,7 @@ public class RestaurantOrders extends AppCompatActivity {
     String orderId;
 
     BottomNavigationView bottomNavigationView;
+    boolean allRestaurantsConfirmed;
 
 
     @Override
@@ -91,11 +98,17 @@ public class RestaurantOrders extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         Log.i("restaurantOrder", user.getUid());
         restaurants = database.getReference("restaurants");
+        driverOrders = database.getReference().child("driverOrders");
+        restaurantOrders = database.getReference().child("restaurantOrders");
+        orders = database.getReference().child("orders");
+
 
         recyclerView = (RecyclerView) findViewById(R.id.restaurantOrdersList);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
+        acceptOrder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
 
         loadOrders();
 
@@ -140,7 +153,7 @@ public class RestaurantOrders extends AppCompatActivity {
             @Override
             public RestaurantOrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.order_layout, parent, false);
+                        .inflate(R.layout.restaurant_order_layout, parent, false);
                 view.setMinimumWidth(parent.getMeasuredWidth());
 
                 return new RestaurantOrderViewHolder(view);
@@ -150,17 +163,21 @@ public class RestaurantOrders extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull RestaurantOrderViewHolder holder, int position, @NonNull RestaurantOrder model) {
 
                 orderList.add(model);
+                int orderNumber = 0;
+                for (int i = 0; i < orderList.size(); i++) {
+                    if (orderList.get(i).equals(model)) {
+                        orderNumber = i + 1;
+                    }
+                }
                 orderId = model.getOrderId();
                 Log.i("restaurantOrder", orderId);
 
                 if (!model.getStatus().equals(Status.finalizata)) {
 
-                    holder.restaurantsName.setText(model.getRestaurant().getName());
-                    holder.orderStatus.setText(String.valueOf(model.getStatus()).substring(0, 1).toUpperCase(Locale.ROOT) + String.valueOf(model.getStatus()).replace("_", " ").substring(1));
-                    holder.orderAddress.setText(String.valueOf(model.getAddress().getMapsAddress()));
-                    holder.orderPriceTotal.setText("Total: " + model.getTotal() + " lei");
-                    Picasso.with(getBaseContext()).load(model.getRestaurant().getImage())
-                            .into(holder.restaurantImage);
+                    holder.orderName.setText("Comanda #" + orderNumber);
+                    holder.orderStatus.setText("Status: " + String.valueOf(model.getStatus()).substring(0, 1).toUpperCase(Locale.ROOT) + String.valueOf(model.getStatus()).replace("_", " ").substring(1));
+                    holder.orderAddress.setText("Adresa: " + model.getAddress().getMapsAddress());
+                    holder.orderPriceTotal.setText("Total: " + Math.round(model.getTotal() * 100.0) / 100.0 + " lei");
 
 
                     final RestaurantOrder local = model;
@@ -244,7 +261,88 @@ public class RestaurantOrders extends AppCompatActivity {
                                 holder.secondRecyclerView.setAdapter(secondAdapter);
                                 secondAdapter.startListening();
 
+                            } else if (isLongClick) {
+                                if (model.getStatus().equals(Status.plasata)) {
+//                                    View viewPopUp = inflater.inflate(R.layout.reset_name_pop_up, null);
+                                    acceptOrder.setTitle("Acceptati aceasta comanda?")
+                                            .setPositiveButton("Confirmare", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                    model.setStatus(Status.confirmata);
+                                                    //driverOrders.child(model.getOrderId()).setValue(model);
+                                                    restaurantOrders.child(model.getRestaurantId()).child("orders").child(model.getOrderId()).child("status").setValue(Status.confirmata);
+                                                    restaurantOrders.child(model.getRestaurantId()).child("orders").child(model.getOrderId()).child("confirmed").setValue(true);
+
+                                                    // orders.child(model.getUserId()).child(model.getOrderId()).child("status").setValue(Status.confirmata);
+                                                    orders.child(model.getUserId()).child(model.getOrderId()).child("restaurants").addValueEventListener(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                                                Restaurant confirmedRestaurant = dataSnapshot.getValue(Restaurant.class);
+                                                                if (confirmedRestaurant.getId().equals(model.getRestaurantId())) {
+                                                                    confirmedRestaurant.setConfirmed(true);
+                                                                    allRestaurantsConfirmed = true;
+                                                                    orders.child(model.getUserId()).child(model.getOrderId()).child("restaurants").child(confirmedRestaurant.getId()).child("confirmed").setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                            orders.child(model.getUserId()).child(model.getOrderId()).child("restaurants").addValueEventListener(new ValueEventListener() {
+                                                                                @Override
+                                                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                                                                        Restaurant confirmedRestaurant2 = dataSnapshot.getValue(Restaurant.class);
+                                                                                        if (!confirmedRestaurant2.isConfirmed()) {
+                                                                                            allRestaurantsConfirmed = false;
+                                                                                        }
+                                                                                    }
+
+                                                                                    if (allRestaurantsConfirmed = true) {
+                                                                                        orders.child(model.getUserId()).child(model.getOrderId()).child("status").setValue(Status.confirmata).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                            @Override
+                                                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                                                orders.child(model.getUserId()).child(model.getOrderId()).addValueEventListener(new ValueEventListener() {
+                                                                                                    @Override
+                                                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                                                        Order orderToBeAdded = snapshot.getValue(Order.class);
+                                                                                                        driverOrders.child(model.getOrderId()).setValue(orderToBeAdded);
+                                                                                                    }
+
+                                                                                                    @Override
+                                                                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                                                    }
+                                                                                                });
+                                                                                            }
+                                                                                        });
+
+                                                                                    }
+                                                                                }
+
+                                                                                @Override
+                                                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                    });
+                                                                }
+
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                                        }
+                                                    });
+
+                                                }
+                                            }).setNegativeButton("Anuleaza", null)
+                                            .create().show();
+
+                                }
                             }
+
                         }
 
                     });
