@@ -163,7 +163,7 @@ public class OrdersList extends AppCompatActivity {
                 orderList.add(model);
                 orderId = model.getId();
 
-                orders.child(model.getId()).child("restaurantAddress").addValueEventListener(new ValueEventListener() {
+                orders.child(model.getId()).child("restaurants").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -210,7 +210,7 @@ public class OrdersList extends AppCompatActivity {
                                     }
 
                                     cart = database.getReference().child("orders").child(user.getUid()).child(model.getId()).child("cart");
-                                    restaurantAddresses = database.getReference("orders").child(user.getUid()).child(model.getId()).child("restaurantAddress");
+                                    restaurantAddresses = database.getReference("orders").child(user.getUid()).child(model.getId()).child("restaurants");
 
                                     Query query = cart
                                             .orderByChild("id")

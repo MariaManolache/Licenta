@@ -340,10 +340,10 @@ public class ShoppingCart extends AppCompatActivity {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
 
-                        Toast.makeText(getApplicationContext(), local.getName(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), model.getName(), Toast.LENGTH_LONG).show();
                         Intent foodInfo = new Intent(ShoppingCart.this, FoodInfo.class);
-                        foodInfo.putExtra("idCartItem", local.getId());
-                        foodInfo.putExtra("quantity", String.valueOf(local.getQuantity()));
+                        foodInfo.putExtra("idCartItem", model.getId());
+                        foodInfo.putExtra("quantity", String.valueOf(model.getQuantity()));
                         foodInfo.putExtra("origin", "activityShoppingCart");
                         startActivity(foodInfo);
 

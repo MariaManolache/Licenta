@@ -79,6 +79,8 @@ public class FoodInfo extends FragmentActivity {
     TextView comments;
     LinearLayout linearLayoutComments;
 
+    String origin = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,14 +133,14 @@ public class FoodInfo extends FragmentActivity {
 
         //foodId from Intent
         if (getIntent() != null && getIntent().getExtras() != null) {
-            String origin = getIntent().getExtras().getString("origin");
+            origin = getIntent().getExtras().getString("origin");
             if (origin != null && origin.equals("activityFoodList")) {
                 foodId = getIntent().getStringExtra("id");
                 if (!foodId.isEmpty()) {
                     getFoodInfo(foodId);
                 }
             }
-            if(origin != null && origin.equals("banner")) {
+            if (origin != null && origin.equals("banner")) {
                 foodId = getIntent().getStringExtra("foodId");
                 if (!foodId.isEmpty()) {
                     getFoodInfo(foodId);
@@ -230,6 +232,10 @@ public class FoodInfo extends FragmentActivity {
                 food.setQuantity(newQuantity);
                 quantity.setText(String.valueOf(food.getQuantity()));
                 quantityFromCart = String.valueOf(newQuantity);
+                if(origin != null && origin.equals("activityShoppingCart")) {
+                    cart.child(food.getId()).child("quantity").setValue(newQuantity);
+                }
+
             }
         });
 
@@ -241,6 +247,9 @@ public class FoodInfo extends FragmentActivity {
                     food.setQuantity(newQuantity);
                     quantity.setText(String.valueOf(food.getQuantity()));
                     quantityFromCart = String.valueOf(newQuantity);
+                    if(origin != null && origin.equals("activityShoppingCart")) {
+                        cart.child(food.getId()).child("quantity").setValue(newQuantity);
+                    }
                 }
             }
         });
@@ -308,25 +317,30 @@ public class FoodInfo extends FragmentActivity {
     }
 
     private void getFoodInfoFromCart(String foodId) {
+        cart = database.getReference("carts").child(user.getUid()).child("foodList");
         cart.child(foodId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (food != null) {
+                //if (food != null) {
+                Food selectedFood = snapshot.getValue(Food.class);
+                //food = snapshot.getValue(Food.class);
+
+                //image
+                if (selectedFood != null) {
 
 
-                    food = snapshot.getValue(Food.class);
-
-                    //image
-                    Picasso.with(getBaseContext()).load(food.getImage())
+                    Picasso.with(getBaseContext()).load(selectedFood.getImage())
                             .into(image);
 
-                    collapsingToolbarLayout.setTitle(food.getName());
+                    collapsingToolbarLayout.setTitle(selectedFood.getName());
 
-                    price.setText(food.getPrice() + " lei");
-                    name.setText(food.getName());
-                    description.setText(food.getDescription());
+                    price.setText(selectedFood.getPrice() + " lei");
+                    name.setText(selectedFood.getName());
+                    description.setText(selectedFood.getDescription());
                     quantity.setText(quantityFromCart);
-                    food.setQuantity(Integer.parseInt(String.valueOf(quantity.getText())));
+                    selectedFood.setQuantity(Integer.parseInt(String.valueOf(quantity.getText())));
+
+                    food = selectedFood;
 
                     ratingValue = 0.0f;
                     nbOfRatings = 0;
@@ -362,8 +376,9 @@ public class FoodInfo extends FragmentActivity {
                         });
                     }
                 }
-
             }
+
+            //}
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

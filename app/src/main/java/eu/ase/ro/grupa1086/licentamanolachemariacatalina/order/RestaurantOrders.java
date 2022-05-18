@@ -296,7 +296,7 @@ public class RestaurantOrders extends AppCompatActivity {
                                                                                         }
                                                                                     }
 
-                                                                                    if (allRestaurantsConfirmed = true) {
+                                                                                    if (allRestaurantsConfirmed == true) {
                                                                                         orders.child(model.getUserId()).child(model.getOrderId()).child("status").setValue(Status.confirmata).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                                             @Override
                                                                                             public void onComplete(@NonNull Task<Void> task) {
