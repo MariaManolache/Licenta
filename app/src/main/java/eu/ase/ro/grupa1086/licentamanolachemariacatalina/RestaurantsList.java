@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
@@ -88,6 +89,9 @@ public class RestaurantsList extends AppCompatActivity {
                 @Override
                 protected void onBindViewHolder(@NonNull RestaurantViewHolder holder, int position, @NonNull Restaurant model) {
                     holder.restaurantName.setText(model.getName());
+                    //holder.setIcon(model.getImage());
+//                    Glide.with(getBaseContext()).load(model.getImage()).into(holder.imageView);
+                    Log.i("picasso", model.getImage());
                     Picasso.with(getBaseContext()).load(model.getImage())
                             .into(holder.imageView);
                     holder.deliveryTime.setText(model.getDeliveryTime());

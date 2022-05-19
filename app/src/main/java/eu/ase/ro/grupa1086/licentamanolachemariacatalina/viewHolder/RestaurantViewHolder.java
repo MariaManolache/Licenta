@@ -7,6 +7,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.GlideBuilder;
+import com.bumptech.glide.GlideContext;
+import com.bumptech.glide.load.model.GlideUrl;
+
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 
@@ -22,6 +27,9 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
         this.itemClickListener = itemClickListener;
     }
 
+//    public void setIcon(String url) {
+//        Glide.with(this.itemView).load(url).into(imageView);
+//    }
 
     public RestaurantViewHolder(@NonNull View itemView) {
         super(itemView);

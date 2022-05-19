@@ -2,6 +2,7 @@ package eu.ase.ro.grupa1086.licentamanolachemariacatalina.account;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.GnssAntennaInfo;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -58,6 +59,7 @@ public class Account extends AppCompatActivity {
 
     FrameLayout firstFrameLayout;
     FrameLayout secondFrameLayout;
+    ValueEventListener listener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,24 +71,7 @@ public class Account extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
 
 
-        firebaseUser = firebaseAuth.getCurrentUser();
-        databaseReference = FirebaseDatabase.getInstance().getReference("users").child(firebaseUser.getUid());
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                User user = snapshot.getValue(User.class);
-//                assert user != null;
-
-                if(user != null)
-                    name.setText(getString(R.string.welcome_account) + " " + user.getName() + getString(R.string.exclamation_mark));
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(Account.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         verifyMessage = findViewById(R.id.tvVerifyEmail);
         btnVerifyEmail = findViewById(R.id.btnVerify);
@@ -98,6 +83,28 @@ public class Account extends AppCompatActivity {
         inflater = this.getLayoutInflater();
 
         deleteAlert = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
+
+        //if(firebaseUser != null) {
+            databaseReference = FirebaseDatabase.getInstance().getReference("users").child(firebaseUser.getUid());
+            listener = databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    User user = snapshot.getValue(User.class);
+//                assert user != null;
+
+                    if(user != null)
+                        name.setText(getString(R.string.welcome_account) + " " + user.getName() + getString(R.string.exclamation_mark));
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(Account.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        //}
+
+
 
         if(!firebaseAuth.getCurrentUser().isEmailVerified()) {
             btnVerifyEmail.setVisibility(View.VISIBLE);
@@ -124,6 +131,7 @@ public class Account extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
+                databaseReference.removeEventListener(listener);
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 finish();
             }
