@@ -65,7 +65,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerMenu"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="100dp"
                 android:scrollbars="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

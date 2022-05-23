@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="150dp"
-    android:layout_height="150dp"
+    android:layout_width="165dp"
+    android:layout_height="100dp"
     app:cardElevation="4dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ImageView
             android:id="@+id/menuImage"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/background2"></de.hdodenhof.circleimageview.CircleImageView>
+            android:layout_width="165dp"
+            android:layout_height="75dp"
+            android:layout_margin="5dp"
+            android:layout_centerHorizontal="true"
+            android:foregroundGravity="center"
+            android:background="@drawable/menu_item_background"
+            android:backgroundTint="@color/teal_200"
+            android:scaleType="centerInside"
+            android:src="@drawable/background2"></ImageView>
 
         <TextView
             android:id="@+id/menuName"

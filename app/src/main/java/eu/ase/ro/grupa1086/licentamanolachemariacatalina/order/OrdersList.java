@@ -140,14 +140,42 @@ public class OrdersList extends AppCompatActivity {
                 .child(user.getUid())
                 .orderByChild("id")
                 .limitToLast(50);
+        Log.i("ceva", query.getRef().toString());
 
-        if(query == null) {
-            imgNoOrderFound.setVisibility(View.VISIBLE);
-            tvNoOrderFound.setVisibility(View.VISIBLE);
-        } else {
-            imgNoOrderFound.setVisibility(View.GONE);
-            tvNoOrderFound.setVisibility(View.GONE);
-        }
+
+//        orders.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                if(snapshot.getValue() == null) {
+//                    imgNoOrderFound.setVisibility(View.VISIBLE);
+//                    tvNoOrderFound.setVisibility(View.VISIBLE);
+//
+//                    tvNoOrderFound.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            Intent principalMenu = new Intent(getApplicationContext(), PrincipalMenu.class);
+//                            startActivity(principalMenu);
+//                            finish();
+//                        }
+//                    });
+//                } else {
+//                    imgNoOrderFound.setVisibility(View.GONE);
+//                    tvNoOrderFound.setVisibility(View.GONE);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//        if(query == null) {
+//            imgNoOrderFound.setVisibility(View.VISIBLE);
+//            tvNoOrderFound.setVisibility(View.VISIBLE);
+//        } else {
+//            imgNoOrderFound.setVisibility(View.GONE);
+//            tvNoOrderFound.setVisibility(View.GONE);
+//        }
 
         FirebaseRecyclerOptions<Order> options =
                 new FirebaseRecyclerOptions.Builder<Order>()
@@ -158,15 +186,18 @@ public class OrdersList extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull OrderViewHolder holder, int position, @NonNull Order model) {
 
+                Log.i("ceva", model.toString());
                 restaurantName = null;
                 restaurantImage = null;
                 orderList.add(model);
+                Log.i("ceva", orderList.toString());
                 orderId = model.getId();
 
                 orders.child(model.getId()).child("restaurants").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            Log.i("ceva", dataSnapshot.toString());
                             Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
                             if(restaurantName == null) {
                                 restaurantName = restaurant.getName();

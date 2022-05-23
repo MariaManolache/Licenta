@@ -134,46 +134,8 @@ public class PrincipalMenu extends AppCompatActivity {
         layoutManagerRestaurants = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerRestaurants.setLayoutManager(layoutManagerRestaurants);
 
-        Query query = FirebaseDatabase.getInstance()
-                .getReference()
-                .child("categories")
-                .limitToLast(50);
+        loadCategories();
 
-        FirebaseRecyclerOptions<Category> options =
-                new FirebaseRecyclerOptions.Builder<Category>()
-                        .setQuery(query, Category.class)
-                        .build();
-
-
-        adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(options) {
-            @Override
-            protected void onBindViewHolder(@NonNull MenuViewHolder holder, int position, @NonNull Category model) {
-                holder.menuName.setText(model.getName());
-                Picasso.with(getBaseContext()).load(model.getImage())
-                        .into(holder.imageView);
-                Category clickItem = model;
-                holder.setItemClickListener(new ItemClickListener() {
-                    @Override
-                    public void onClick(View view, int position, boolean isLongClick) {
-                        //categoryId
-
-                        Intent restaurantsList = new Intent(PrincipalMenu.this, RestaurantsList.class);
-                        restaurantsList.putExtra("categoryId", adapter.getRef(position).getKey());
-                        startActivity(restaurantsList);
-                    }
-                });
-            }
-
-            @NonNull
-            @Override
-            public MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.menu_item, parent, false);
-                view.setMinimumWidth(parent.getMeasuredWidth());
-
-                return new MenuViewHolder(view);
-            }
-        };
 
         loadMenu();
         loadRestaurants();
@@ -225,6 +187,49 @@ public class PrincipalMenu extends AppCompatActivity {
 
         setupSlider();
 
+    }
+
+    private void loadCategories() {
+        Query query = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("categories")
+                .limitToLast(50);
+
+        FirebaseRecyclerOptions<Category> options =
+                new FirebaseRecyclerOptions.Builder<Category>()
+                        .setQuery(query, Category.class)
+                        .build();
+
+
+        adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull MenuViewHolder holder, int position, @NonNull Category model) {
+                holder.menuName.setText(model.getName());
+                Picasso.with(getBaseContext()).load(model.getImage())
+                        .into(holder.imageView);
+                Category clickItem = model;
+                holder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+                        //categoryId
+
+                        Intent restaurantsList = new Intent(PrincipalMenu.this, RestaurantsList.class);
+                        restaurantsList.putExtra("categoryId", adapter.getRef(position).getKey());
+                        startActivity(restaurantsList);
+                    }
+                });
+            }
+
+            @NonNull
+            @Override
+            public MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.menu_item, parent, false);
+                view.setMinimumWidth(parent.getMeasuredWidth());
+
+                return new MenuViewHolder(view);
+            }
+        };
     }
 
     private void setupSlider() {

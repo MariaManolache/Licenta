@@ -358,6 +358,7 @@ public class DriverMenu extends AppCompatActivity {
                                 for(int i = 0; i < model.getRestaurantAddress().size(); i++) {
                                     LatLng latLngRestaurant = getLocationFromAddress(model.getRestaurantAddress().get(i).getAddress());
                                     Double distance = SphericalUtil.computeDistanceBetween(latLngLocation, latLngRestaurant);
+                                    Log.i("distancesCheck", distance.toString());
                                     distances.put(latLngRestaurant, distance);
                                     Location.distanceBetween(latLngLocation.latitude, latLngLocation.longitude, latLngRestaurant.latitude, latLngRestaurant.longitude, results);
                                 }
@@ -371,6 +372,7 @@ public class DriverMenu extends AppCompatActivity {
                                 LatLng key = entry.getKey();
                                 Double minimumDistance = entry.getValue();
                                 Double totalDistance = minimumDistance;
+                                Log.i("distancesCheck", totalDistance.toString() + "...");
 
                                 List<LatLng> sortedLocations = new ArrayList<>();
                                 for (Map.Entry<LatLng, Double> entry2 : sortedDistances.entrySet()) {
@@ -380,6 +382,7 @@ public class DriverMenu extends AppCompatActivity {
                                 if(sortedLocations.size() > 1) {
                                     for(int i = 0; i < sortedLocations.size() - 1; i++) {
                                         totalDistance += SphericalUtil.computeDistanceBetween(sortedLocations.get(i), sortedLocations.get(i+1));
+                                        Log.i("distancesCheck", totalDistance.toString() + "...");
                                     }
                                 }
 

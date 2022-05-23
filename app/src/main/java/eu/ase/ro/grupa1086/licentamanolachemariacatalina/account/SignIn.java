@@ -233,8 +233,10 @@ public class SignIn extends AppCompatActivity {
                     int isDriver = snapshot.getValue(Integer.class);
                     if (isDriver == 1) {
                         startActivity(new Intent(getApplicationContext(), DriverMenu.class));
+                        finish();
                     } else {
                         startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
+                        finish();
                     }
                     finish();
                 }

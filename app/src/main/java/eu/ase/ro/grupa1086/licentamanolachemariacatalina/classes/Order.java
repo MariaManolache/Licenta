@@ -15,6 +15,7 @@ public class Order implements Serializable {
     private Status status;
     private List<Restaurant> restaurantAddress;
     private List<Rating> ratingsList;
+    private List<Restaurant> restaurants;
 
     public Order() {
 
@@ -113,6 +114,8 @@ public class Order implements Serializable {
     public void setRatingsList(List<Rating> ratingsList) {
         this.ratingsList = ratingsList;
     }
+
+
 
     @Override
     public String toString() {
