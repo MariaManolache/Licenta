@@ -5,7 +5,6 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -43,7 +42,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
@@ -53,17 +51,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.MainActivity;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.SignIn;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.RestaurantProducts;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Category;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Order;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.order.RestaurantOrders;
 
-public class RestaurantMenu extends AppCompatActivity {
+public class RestaurantAccount extends AppCompatActivity {
     Button logout;
     BottomNavigationView bottomNavigationView;
     private static final int PICK_IMAGE_REQUEST = 1;
@@ -87,16 +84,22 @@ public class RestaurantMenu extends AppCompatActivity {
 
     private Spinner categorySpinner;
 
+    private Boolean alreadyDisplayed;
+
     AlertDialog.Builder resetName;
     AlertDialog.Builder resetPhoneNumber;
     AlertDialog.Builder resetEmail;
     AlertDialog.Builder changeCategory;
     LayoutInflater inflater;
 
+    ArrayAdapter<String> departsAdapter;
+    Map<String, String> mapCategoryId = new HashMap<>();
+    List<String> listCategoryId = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_restaurant_menu);
+        setContentView(R.layout.activity_restaurant_account);
 
         editRestaurantImage = findViewById(R.id.editRestaurantImage);
         restaurantImage = findViewById(R.id.restaurantImage);
@@ -126,22 +129,48 @@ public class RestaurantMenu extends AppCompatActivity {
 //                R.layout.spinner_layout);
 //        categorySpinner.setAdapter(adapter);
 
-
         categories.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                final Map<String, String> mapCategoryId = new HashMap<>();
-                final List<String> listCategoryId = new ArrayList<>();
+                mapCategoryId = new HashMap<>();
+                listCategoryId = new ArrayList<>();
                 for (DataSnapshot snap : dataSnapshot.getChildren()) {
                     Category category = snap.getValue(Category.class);
+                    Log.i("categoryName", category.toString());
                     mapCategoryId.put(category.getId(), category.getName());
                     listCategoryId.add(category.getName());
 
                 }
 
-                ArrayAdapter<String> departsAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, listCategoryId);
-                departsAdapter.setDropDownViewResource(R.layout.spinner_layout);
+                departsAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_layout, listCategoryId);
+//                departsAdapter.setDropDownViewResource(R.layout.spinner_layout);
                 categorySpinner.setAdapter(departsAdapter);
+
+                restaurants.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Restaurant restaurant = snapshot.getValue(Restaurant.class);
+                        restaurantName.setText(restaurant.getName());
+                        restaurantAddress.setText(restaurant.getAddress());
+                        Picasso.with(getBaseContext()).load(restaurant.getImage()).into(restaurantImage);
+
+                        String categoryName = "";
+                        for (Map.Entry<String, String> entry : mapCategoryId.entrySet()) {
+                            if (restaurant.getCategoryId().equals(entry.getKey())) {
+                                categoryName = entry.getValue();
+                                Log.i("categoryName", categoryName);
+                                int spinnerPosition = departsAdapter.getPosition(categoryName);
+                                categorySpinner.setSelection(spinnerPosition);
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
 
             @Override
@@ -149,49 +178,54 @@ public class RestaurantMenu extends AppCompatActivity {
             }
         });
 
-//        categorySpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                changeCategory.setTitle("Modificarea categoriei restaurantului")
-//                        .setMessage("Sunteti sigur ca doriti sa realizati aceasta modificare?")
-//                        .setPositiveButton("Confirmare", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//
-//                               restaurants.child(user.getUid()).addValueEventListener(new ValueEventListener() {
-//                                   @Override
-//                                   public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                       Restaurant restaurant = snapshot.getValue(Restaurant.class);
-//
-//                                   }
-//
-//                                   @Override
-//                                   public void onCancelled(@NonNull DatabaseError error) {
-//
-//                                   }
-//                               });
-//
-//                            }
-//                        }).setNegativeButton("Anuleaza", null)
-//                        .setView(view)
-//                        .create().show();
-//            }
-//        });
-
-        restaurants.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+        alreadyDisplayed = false;
+        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Restaurant restaurant = snapshot.getValue(Restaurant.class);
-                restaurantName.setText(restaurant.getName());
-                restaurantAddress.setText(restaurant.getAddress());
-                Picasso.with(getBaseContext()).load(restaurant.getImage()).into(restaurantImage);
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (!alreadyDisplayed) {
+                    alreadyDisplayed = true;
+                } else {
+                    changeCategory.setTitle("Modificarea categoriei restaurantului")
+                            .setMessage("Sunteti sigur ca doriti sa realizati aceasta modificare?")
+                            .setPositiveButton("Confirmare", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    restaurants.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            Restaurant restaurant = snapshot.getValue(Restaurant.class);
+                                            String categoryName = (String) categorySpinner.getSelectedItem();
+                                            for (Map.Entry<String, String> entry : mapCategoryId.entrySet()) {
+                                                if(categoryName.equals(entry.getValue())) {
+                                                    String categoryId = entry.getKey();
+                                                    restaurant.setCategoryId(categoryId);
+                                                    restaurants.child(user.getUid()).setValue(restaurant);
+                                                }
+                                            }
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+
+                                }
+                            }).setNegativeButton("Anuleaza", null)
+                            .create().show();
+                    alreadyDisplayed = false;
+                }
+
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
+
 
         restaurantAccounts.child(user.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -216,7 +250,7 @@ public class RestaurantMenu extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
 
                                 EditText name = view.findViewById(R.id.etName);
-                                if(name.getText().toString().isEmpty()) {
+                                if (name.getText().toString().isEmpty()) {
                                     name.setError("Campul este necesar pentru modificarea denumirii");
                                     return;
                                 }
@@ -254,7 +288,7 @@ public class RestaurantMenu extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
 
                                 EditText phoneNumber = view.findViewById(R.id.etPhoneNumber);
-                                if(phoneNumber.getText().toString().isEmpty()) {
+                                if (phoneNumber.getText().toString().isEmpty()) {
                                     phoneNumber.setError("Campul este necesar pentru modificarea numarului de telefon");
                                     return;
                                 }
@@ -301,18 +335,23 @@ public class RestaurantMenu extends AppCompatActivity {
         });
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.products);
+        bottomNavigationView.setSelectedItemId(R.id.account);
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.products:
+                    case R.id.account:
                         return true;
                     case R.id.orders:
                         startActivity(new Intent(getApplicationContext(), RestaurantOrders.class));
                         finish();
-                        overridePendingTransition(0, 0);
+                        //overridePendingTransition(0, 0);
+                        return true;
+                    case R.id.products:
+                        startActivity(new Intent(getApplicationContext(), RestaurantProducts.class));
+                        finish();
+                        //overridePendingTransition(0, 0);
                         return true;
                 }
                 return false;
@@ -356,7 +395,7 @@ public class RestaurantMenu extends AppCompatActivity {
                                     orders.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                                 Log.i("verificare", dataSnapshot.toString());
                                                 String userId = dataSnapshot.getKey();
 
@@ -389,7 +428,7 @@ public class RestaurantMenu extends AppCompatActivity {
                                                 orders.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
                                                     @Override
                                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                        for(DataSnapshot dataSnapshot2 : snapshot.getChildren()) {
+                                                        for (DataSnapshot dataSnapshot2 : snapshot.getChildren()) {
                                                             Log.i("verificare", dataSnapshot2.toString());
 
                                                             String orderId = dataSnapshot2.getKey();
@@ -399,8 +438,8 @@ public class RestaurantMenu extends AppCompatActivity {
                                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                                     Order order = snapshot.getValue(Order.class);
                                                                     Log.i("verificare", order.toString());
-                                                                    for(int i = 0; i < order.getRestaurantAddress().size(); i++) {
-                                                                        if(order.getRestaurantAddress().get(i).getId().equals(user.getUid())) {
+                                                                    for (int i = 0; i < order.getRestaurantAddress().size(); i++) {
+                                                                        if (order.getRestaurantAddress().get(i).getId().equals(user.getUid())) {
                                                                             order.getRestaurantAddress().get(i).setImage(uri.toString());
                                                                             orders.child(userId).child(orderId).child("restaurantAddress").setValue(order.getRestaurantAddress());
                                                                         }
@@ -416,7 +455,7 @@ public class RestaurantMenu extends AppCompatActivity {
                                                             orders.child(userId).child(orderId).child("restaurants").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                                                 @Override
                                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                    if(snapshot.exists()) {
+                                                                    if (snapshot.exists()) {
                                                                         Restaurant restaurant = snapshot.getValue(Restaurant.class);
                                                                         restaurant.setImage(uri.toString());
                                                                         orders.child(userId).child(orderId).child("restaurants").child(user.getUid()).setValue(restaurant);
@@ -476,5 +515,15 @@ public class RestaurantMenu extends AppCompatActivity {
         someActivityResultLauncher.launch(intent);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        alreadyDisplayed = false;
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        alreadyDisplayed = false;
+    }
 }

@@ -242,13 +242,14 @@ public class PrincipalMenu extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot snapshot1 : snapshot.getChildren()) {
                     Food food = snapshot1.getValue(Food.class);
-                    imageList.put(food.getName() + "_" + food.getId(), food.getImage());
+                    imageList.put(food.getName() + "_" + food.getId() + "_" + food.getRestaurantId(), food.getImage());
 
                 }
                 for(String key : imageList.keySet()) {
                     String[] keySplit = key.split("_");
                     String nameOfFood = keySplit[0];
                     String idOfFood = keySplit[1];
+                    String restaurantId = keySplit[2];
 
                     TextSliderView textSliderView = new TextSliderView(getBaseContext());
                     textSliderView.description(nameOfFood)
@@ -260,6 +261,7 @@ public class PrincipalMenu extends AppCompatActivity {
                                     Intent intent = new Intent(PrincipalMenu.this, FoodInfo.class);
                                     intent.putExtra("origin", "banner");
                                     intent.putExtra("foodId", idOfFood);
+                                    intent.putExtra("restaurantId", restaurantId);
                                     startActivity(intent);
                                 }
                             });

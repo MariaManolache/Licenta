@@ -16,20 +16,27 @@
         android:theme="@style/Theme.LicentaManolacheMariaCatalina"
         tools:replace="android:theme">
         <activity
+            android:name=".ProductInfo"
+            android:exported="false" />
+        <activity
+            android:name=".RestaurantProducts"
+            android:exported="false"
+            android:label="@string/products" />
+        <activity
             android:name=".order.RestaurantOrders"
             android:exported="false"
-            android:label="@string/orders"/>
+            android:label="@string/orders" />
         <activity
             android:name=".SplashScreenActivity"
             android:exported="false" />
         <activity
             android:name=".RestaurantLogin"
             android:exported="false"
-            android:label="@string/authenticate"/>
+            android:label="@string/authenticate" />
         <activity
-            android:name=".principalmenus.RestaurantMenu"
+            android:name=".principalmenus.RestaurantAccount"
             android:exported="false"
-            android:label="@string/products"/>
+            android:label="@string/informations" />
         <activity
             android:name=".account.DriverAccount"
             android:exported="false"

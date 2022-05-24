@@ -63,10 +63,13 @@ public class Category implements Serializable {
 //        this.restaurants = restaurants;
 //    }
 
+
     @Override
     public String toString() {
         return "Category{" +
-                "name='" + name + '\'' +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", image='" + image + '\'' +
                 '}';
     }
 }

@@ -144,4 +144,6 @@
     <string name="lei">lei</string>
     <string name="chosen_address">Adresa aleasa este: Strada Liviu Rebreanu</string>
     <string name="category">Categorie</string>
+    <string name="logout">Deconectare</string>
+    <string name="informations">Informatii</string>
 </resources>

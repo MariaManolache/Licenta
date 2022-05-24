@@ -39,6 +39,7 @@ public class CommentsList extends AppCompatActivity {
     DatabaseReference addresses;
     FirebaseUser user;
     String foodId;
+    String restaurantId;
     String userName;
     int count = 0;
     List<Rating> ratingList = new ArrayList<>();
@@ -51,6 +52,7 @@ public class CommentsList extends AppCompatActivity {
 
         if(getIntent() != null) {
             foodId = getIntent().getStringExtra("foodId");
+            restaurantId = getIntent().getStringExtra("restaurantId");
             Log.i("foodId", foodId);
             userName = getIntent().getStringExtra("userName");
         }
@@ -79,6 +81,7 @@ public class CommentsList extends AppCompatActivity {
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
                 .child("food")
+                .child(restaurantId)
                 .child(foodId)
                 .child("ratings")
                 .orderByChild("rateValue")

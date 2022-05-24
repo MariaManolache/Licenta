@@ -343,6 +343,7 @@ public class ShoppingCart extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), model.getName(), Toast.LENGTH_LONG).show();
                         Intent foodInfo = new Intent(ShoppingCart.this, FoodInfo.class);
                         foodInfo.putExtra("idCartItem", model.getId());
+                        foodInfo.putExtra("restaurantId", model.getRestaurantId());
                         foodInfo.putExtra("quantity", String.valueOf(model.getQuantity()));
                         foodInfo.putExtra("origin", "activityShoppingCart");
                         startActivity(foodInfo);

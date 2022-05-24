@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -27,10 +26,9 @@ import com.karumi.dexter.listener.single.PermissionListener;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.SignIn;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.SignUp;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.DriverMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.PrincipalMenu;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.RestaurantMenu;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.RestaurantAccount;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -114,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                                         restaurantAccounts.addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                startActivity(new Intent(getApplicationContext(), RestaurantMenu.class));
+                                                startActivity(new Intent(getApplicationContext(), RestaurantAccount.class));
                                             }
 
                                             @Override

@@ -10,4 +10,9 @@
         android:icon="@drawable/ic_bill"
         android:title="@string/orders"></item>
 
+    <item
+        android:id="@+id/account"
+        android:icon="@drawable/ic_baseline_account_circle_24"
+        android:title="@string/account"></item>
+
 </menu>

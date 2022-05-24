@@ -67,6 +67,7 @@ public class FoodList extends AppCompatActivity {
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
                 .child("food")
+                .child(restaurantId)
                 .orderByChild("restaurantId").equalTo(restaurantId)
                 .limitToLast(50);
 
@@ -89,7 +90,8 @@ public class FoodList extends AppCompatActivity {
 
                        //newActivity
                         Intent foodInfo= new Intent(FoodList.this, FoodInfo.class);
-                        foodInfo.putExtra("id", adapter.getRef(position).getKey());
+                        foodInfo.putExtra("id", model.getId());
+                        foodInfo.putExtra("restaurantId", model.getRestaurantId());
                         foodInfo.putExtra("origin", "activityFoodList");
                         //Log.i("foodid", adapter.getRef(position).getKey());
                         startActivity(foodInfo);
@@ -170,7 +172,7 @@ public class FoodList extends AppCompatActivity {
 
                         //newActivity
                         Intent foodInfo= new Intent(FoodList.this, FoodInfo.class);
-                        foodInfo.putExtra("id", adapter.getRef(position).getKey());
+                        foodInfo.putExtra("id", model.getId());
                         foodInfo.putExtra("origin", "activityFoodList");
                         //Log.i("foodid", adapter.getRef(position).getKey());
                         startActivity(foodInfo);

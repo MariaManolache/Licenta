@@ -58,6 +58,7 @@ public class FoodInfo extends FragmentActivity {
     int nbOfRatings = 0;
 
     String foodId = "";
+    String restaurantId = "";
 
     FirebaseDatabase database;
     DatabaseReference foodList;
@@ -136,33 +137,37 @@ public class FoodInfo extends FragmentActivity {
             origin = getIntent().getExtras().getString("origin");
             if (origin != null && origin.equals("activityFoodList")) {
                 foodId = getIntent().getStringExtra("id");
+                restaurantId = getIntent().getStringExtra("restaurantId");
                 if (!foodId.isEmpty()) {
-                    getFoodInfo(foodId);
+                    getFoodInfo(foodId, restaurantId);
                 }
             }
             if (origin != null && origin.equals("banner")) {
                 foodId = getIntent().getStringExtra("foodId");
+                restaurantId = getIntent().getStringExtra("restaurantId");
                 if (!foodId.isEmpty()) {
-                    getFoodInfo(foodId);
+                    getFoodInfo(foodId, restaurantId);
                 }
             }
             if (origin != null && origin.equals("activityShoppingCart")) {
                 foodId = getIntent().getStringExtra("idCartItem");
+                restaurantId = getIntent().getStringExtra("restaurantId");
                 Log.i("idCart", foodId);
                 if (!foodId.isEmpty()) {
                     quantityFromCart = getIntent().getStringExtra("quantity");
                     Log.i("idCart", quantityFromCart);
-                    getFoodInfoFromCart(foodId);
+                    getFoodInfoFromCart(foodId, restaurantId);
                 }
             }
             if (origin != null && origin.equals("ordersList")) {
 
                 orderId = getIntent().getStringExtra("orderId");
                 foodId = getIntent().getStringExtra("foodId");
+                restaurantId = getIntent().getStringExtra("restaurantId");
                 quantityFromOrdersList = getIntent().getIntExtra("quantity", 1);
                 quantity.setText(String.valueOf(quantityFromOrdersList));
 
-                foodList.child(foodId).child("ratings").child(orderId).addValueEventListener(new ValueEventListener() {
+                foodList.child(restaurantId).child(foodId).child("ratings").child(orderId).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
@@ -184,7 +189,7 @@ public class FoodInfo extends FragmentActivity {
                 });
 
 
-                getFoodInfo(foodId);
+                getFoodInfo(foodId, restaurantId);
 
                 ratingValue = 0.0f;
                 nbOfRatings = 0;
@@ -217,6 +222,7 @@ public class FoodInfo extends FragmentActivity {
                 public void onClick(View v) {
                     Intent commentsList = new Intent(FoodInfo.this, CommentsList.class);
                     commentsList.putExtra("foodId", foodId);
+                    commentsList.putExtra("restaurantId", restaurantId);
                     commentsList.putExtra("userName", userName);
                     startActivity(commentsList);
                 }
@@ -316,7 +322,7 @@ public class FoodInfo extends FragmentActivity {
 
     }
 
-    private void getFoodInfoFromCart(String foodId) {
+    private void getFoodInfoFromCart(String foodId, String restaurantId) {
         cart = database.getReference("carts").child(user.getUid()).child("foodList");
         cart.child(foodId).addValueEventListener(new ValueEventListener() {
             @Override
@@ -344,7 +350,7 @@ public class FoodInfo extends FragmentActivity {
 
                     ratingValue = 0.0f;
                     nbOfRatings = 0;
-                    foodList.child(foodId).child("ratings").addValueEventListener(new ValueEventListener() {
+                    foodList.child(restaurantId).child(foodId).child("ratings").addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -390,8 +396,8 @@ public class FoodInfo extends FragmentActivity {
         });
     }
 
-    private void getFoodInfo(String foodId) {
-        foodList.child(foodId).addValueEventListener(new ValueEventListener() {
+    private void getFoodInfo(String foodId, String restaurantId) {
+        foodList.child(restaurantId).child(foodId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
@@ -410,7 +416,7 @@ public class FoodInfo extends FragmentActivity {
 
                 ratingValue = 0.0f;
                 nbOfRatings = 0;
-                foodList.child(foodId).child("ratings").addValueEventListener(new ValueEventListener() {
+                foodList.child(restaurantId).child(foodId).child("ratings").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -485,8 +491,8 @@ public class FoodInfo extends FragmentActivity {
 
                 ratingValue = 0.0f;
                 nbOfRatings = 0;
-                foodList.child(foodId).child("ratings").child(orderId).setValue(rating);
-                foodList.child(foodId).child("ratings").addValueEventListener(new ValueEventListener() {
+                foodList.child(restaurantId).child(foodId).child("ratings").child(orderId).setValue(rating);
+                foodList.child(restaurantId).child(foodId).child("ratings").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {

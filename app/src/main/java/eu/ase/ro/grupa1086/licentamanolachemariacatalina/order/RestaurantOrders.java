@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
@@ -20,7 +19,6 @@ import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -33,29 +31,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.maps.android.SphericalUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.TreeMap;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.DriverAccount;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.RestaurantProducts;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Order;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.RestaurantOrder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Status;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.DriverMenu;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.RestaurantMenu;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.DriverOrderViewHolder;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.OrderDetailsViewHolder;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.OrderViewHolder;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.RestaurantAccount;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.RestaurantOrderDetailsViewHolder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.RestaurantOrderViewHolder;
 
@@ -119,10 +109,15 @@ public class RestaurantOrders extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.products:
-                        startActivity(new Intent(getApplicationContext(), RestaurantMenu.class));
+                    case R.id.account:
+                        startActivity(new Intent(getApplicationContext(), RestaurantAccount.class));
                         finish();
-                        overridePendingTransition(0, 0);
+                        //overridePendingTransition(0, 0);
+                        return true;
+                    case R.id.products:
+                        startActivity(new Intent(getApplicationContext(), RestaurantProducts.class));
+                        finish();
+                        //overridePendingTransition(0, 0);
                         return true;
                     case R.id.orders:
                         return true;

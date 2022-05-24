@@ -112,7 +112,6 @@ public class OrdersList extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
                 switch (item.getItemId()) {
                     case R.id.account:
                         startActivity(new Intent(getApplicationContext(), Account.class));
@@ -143,32 +142,32 @@ public class OrdersList extends AppCompatActivity {
         Log.i("ceva", query.getRef().toString());
 
 
-//        orders.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                if(snapshot.getValue() == null) {
-//                    imgNoOrderFound.setVisibility(View.VISIBLE);
-//                    tvNoOrderFound.setVisibility(View.VISIBLE);
-//
-//                    tvNoOrderFound.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            Intent principalMenu = new Intent(getApplicationContext(), PrincipalMenu.class);
-//                            startActivity(principalMenu);
-//                            finish();
-//                        }
-//                    });
-//                } else {
-//                    imgNoOrderFound.setVisibility(View.GONE);
-//                    tvNoOrderFound.setVisibility(View.GONE);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
+        orders.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.getValue() == null) {
+                    imgNoOrderFound.setVisibility(View.VISIBLE);
+                    tvNoOrderFound.setVisibility(View.VISIBLE);
+
+                    tvNoOrderFound.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent principalMenu = new Intent(getApplicationContext(), PrincipalMenu.class);
+                            startActivity(principalMenu);
+                            finish();
+                        }
+                    });
+                } else {
+                    imgNoOrderFound.setVisibility(View.GONE);
+                    tvNoOrderFound.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 //        if(query == null) {
 //            imgNoOrderFound.setVisibility(View.VISIBLE);
 //            tvNoOrderFound.setVisibility(View.VISIBLE);
@@ -287,6 +286,7 @@ public class OrdersList extends AppCompatActivity {
                                                                 foodInfo.putExtra("orderId", local.getId());
                                                                 foodInfo.putExtra("quantity", local2.getQuantity());
                                                                 foodInfo.putExtra("foodId", model.getId());
+                                                                foodInfo.putExtra("restaurantId", model.getRestaurantId());
                                                                 startActivity(foodInfo);
 
                                                         }

@@ -1,7 +1,6 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -26,11 +25,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.SignIn;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.DriverMenu;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.PrincipalMenu;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.RestaurantMenu;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.RestaurantAccount;
 
 public class RestaurantLogin extends AppCompatActivity {
 
@@ -142,7 +138,7 @@ public class RestaurantLogin extends AppCompatActivity {
                         }
                     });
 
-                    startActivity(new Intent(getApplicationContext(), RestaurantMenu.class));
+                    startActivity(new Intent(getApplicationContext(), RestaurantAccount.class));
                     finish();
                 }
 

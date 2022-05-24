@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".principalmenus.RestaurantMenu">
+    tools:context=".principalmenus.RestaurantAccount">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/editRestaurantImage"
@@ -233,53 +233,20 @@
         android:id="@+id/categorySpinner"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:spinnerMode="dropdown"
         app:layout_constraintTop_toBottomOf="@+id/flCategories"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintStart_toEndOf="parent"></Spinner>
-
-    <FrameLayout
-        android:id="@+id/flProducts"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/categorySpinner"
-        tools:targetApi="p">
-
-        <TextView
-            android:id="@+id/tvProducts"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/alata"
-            android:text="@string/products"
-            android:background="@drawable/buttons"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="30sp"
-            android:textStyle="bold"></TextView>
-
-    </FrameLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerFood"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/flProducts"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toEndOf="parent"
-        ></androidx.recyclerview.widget.RecyclerView>
 
     <Button
         android:id="@+id/btnLogout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="600dp"
-        android:text="Logout"
+        android:text="@string/logout"
+        android:layout_marginTop="150dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></Button>
+        app:layout_constraintTop_toBottomOf="@+id/categorySpinner"></Button>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
