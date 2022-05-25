@@ -40,10 +40,12 @@ public class CommentsList extends AppCompatActivity {
     FirebaseUser user;
     String foodId;
     String restaurantId;
-    String userName;
+    //String userName;
     int count = 0;
     List<Rating> ratingList = new ArrayList<>();
     TextView noComments;
+
+    String origin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +53,17 @@ public class CommentsList extends AppCompatActivity {
         setContentView(R.layout.activity_comments_list);
 
         if(getIntent() != null) {
-            foodId = getIntent().getStringExtra("foodId");
-            restaurantId = getIntent().getStringExtra("restaurantId");
-            Log.i("foodId", foodId);
-            userName = getIntent().getStringExtra("userName");
+            origin = getIntent().getStringExtra("origin");
+            if("foodInfo".equals(origin)) {
+                foodId = getIntent().getStringExtra("foodId");
+                restaurantId = getIntent().getStringExtra("restaurantId");
+                Log.i("foodId", foodId);
+                //userName = getIntent().getStringExtra("userName");
+            }
+            if("productInfo".equals(origin)) {
+                foodId = getIntent().getStringExtra("foodId");
+                restaurantId = getIntent().getStringExtra("restaurantId");
+            }
         }
 
         database = FirebaseDatabase.getInstance();

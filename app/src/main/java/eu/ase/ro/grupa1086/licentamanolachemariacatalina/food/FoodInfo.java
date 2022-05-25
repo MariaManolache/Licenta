@@ -221,6 +221,7 @@ public class FoodInfo extends FragmentActivity {
                 @Override
                 public void onClick(View v) {
                     Intent commentsList = new Intent(FoodInfo.this, CommentsList.class);
+                    commentsList.putExtra("origin", "foodInfo");
                     commentsList.putExtra("foodId", foodId);
                     commentsList.putExtra("restaurantId", restaurantId);
                     commentsList.putExtra("userName", userName);

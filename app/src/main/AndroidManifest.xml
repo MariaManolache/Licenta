@@ -17,7 +17,8 @@
         tools:replace="android:theme">
         <activity
             android:name=".ProductInfo"
-            android:exported="false" />
+            android:exported="false"
+            android:label="@string/product"/>
         <activity
             android:name=".RestaurantProducts"
             android:exported="false"

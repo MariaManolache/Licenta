@@ -146,4 +146,6 @@
     <string name="category">Categorie</string>
     <string name="logout">Deconectare</string>
     <string name="informations">Informatii</string>
+    <string name="product">Produs</string>
+    <string name="see_users_opinions">Vezi parerile clientilor</string>
 </resources>

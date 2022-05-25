@@ -49,6 +49,7 @@ public class Food implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+        this.restaurantIdName = this.restaurantId + name;
     }
 
     public float getPrice() {
@@ -81,6 +82,7 @@ public class Food implements Serializable {
 
     public void setRestaurantId(String restaurantId) {
         this.restaurantId = restaurantId;
+        this.restaurantIdName = restaurantId + this.name;
     }
 
     public String getDescription() {

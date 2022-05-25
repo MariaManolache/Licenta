@@ -66,6 +66,20 @@ public class CompleteFoodList extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+//        restaurantsList.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//                    String restaurantId = dataSnapshot.getValue(String.class);
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
         loadAllFoodList();
 
     }
@@ -75,7 +89,7 @@ public class CompleteFoodList extends AppCompatActivity {
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
                 .child("food")
-                .orderByChild("restaurantId")
+                .orderByChild("id")
                 .limitToLast(50);
 
         FirebaseRecyclerOptions<Food> options =
