@@ -2,30 +2,28 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
-    app:cardElevation="4dp"
-    android:layout_marginBottom="8dp">
+    android:layout_height="200dp"
+    app:cardElevation="4dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/restaurantName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/teal_200"
-            android:fontFamily="@font/alata"
-            android:gravity="center"
-            android:text="@string/restaurant_name"
-            android:textColor="@color/white"
-            android:textSize="20sp"></TextView>
+<!--        <TextView-->
+<!--            android:id="@+id/restaurantName"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@color/teal_200"-->
+<!--            android:fontFamily="@font/alata"-->
+<!--            android:gravity="center"-->
+<!--            android:text="@string/restaurant_name"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textSize="20sp"></TextView>-->
 
         <ImageView
             android:id="@+id/foodImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/restaurantName"
             android:layout_centerHorizontal="true"
             android:scaleType="centerCrop"
             android:src="@drawable/background2"

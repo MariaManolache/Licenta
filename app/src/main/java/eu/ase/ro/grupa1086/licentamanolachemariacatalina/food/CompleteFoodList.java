@@ -14,9 +14,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.firebase.ui.database.SnapshotParser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,17 +28,24 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.AllFoodViewHolder;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.AllRestaurantNameViewHolder;
 
 public class CompleteFoodList extends AppCompatActivity {
 
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
+
+    RecyclerView recyclerViewString;
+    RecyclerView.LayoutManager layoutManagerString;
 
     FirebaseDatabase database;
     DatabaseReference foodList;
@@ -45,6 +54,7 @@ public class CompleteFoodList extends AppCompatActivity {
     String restaurantId = "";
     String restaurantName = "";
 
+    FirebaseRecyclerAdapter<DataSnapshot, AllRestaurantNameViewHolder> stringAdapter;
     FirebaseRecyclerAdapter<Food, AllFoodViewHolder> adapter;
 
     List<String> restaurantsName = new ArrayList<String>();
@@ -61,44 +71,102 @@ public class CompleteFoodList extends AppCompatActivity {
         foodList = database.getReference("food");
         restaurantsList = database.getReference("restaurants");
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerAllFood);
-        recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+        recyclerViewString = (RecyclerView) findViewById(R.id.recyclerRestaurantName);
+        recyclerViewString.setHasFixedSize(true);
+        layoutManagerString = new LinearLayoutManager(this);
+        recyclerViewString.setLayoutManager(layoutManagerString);
 
-//        restaurantsList.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
-//                    String restaurantId = dataSnapshot.getValue(String.class);
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-        loadAllFoodList();
+//        recyclerView = (RecyclerView) findViewById(R.id.recyclerAllFood);
+//        recyclerView.setHasFixedSize(true);
+//        layoutManager = new LinearLayoutManager(this);
+//        recyclerView.setLayoutManager(layoutManager);
+
+        String emptyString = null;
+        loadAllRestaurantsName();
 
     }
 
-    private void loadAllFoodList() {
-
+    private void loadAllRestaurantsName() {
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
                 .child("food")
-                .orderByChild("id")
+                .orderByKey()
                 .limitToLast(50);
+
+        Log.i("queryRestaurant", String.valueOf(query.getRef()));
+
+        FirebaseRecyclerOptions<DataSnapshot> options =
+                new FirebaseRecyclerOptions.Builder<DataSnapshot>()
+                        .setQuery(query, new SnapshotParser<DataSnapshot>() {
+                            public DataSnapshot parseSnapshot(@NonNull DataSnapshot snapshot) {
+                                return snapshot;
+                            }
+                        })
+                        .build();
+
+        stringAdapter = new FirebaseRecyclerAdapter<DataSnapshot, AllRestaurantNameViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull AllRestaurantNameViewHolder holder, int position, @NonNull DataSnapshot model) {
+
+                String entry = model.getKey();
+                Log.i("queryRestaurant", entry);
+                restaurantsList.child(entry).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Restaurant restaurant = snapshot.getValue(Restaurant.class);
+                        holder.restaurantName.setText(restaurant.getName());
+
+                        loadAllFoodList(entry, holder);
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                final String local = entry;
+
+                holder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+
+                    }
+                });
+            }
+
+            @NonNull
+            @Override
+            public AllRestaurantNameViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.all_food_restaurant_name, parent, false);
+                view.setMinimumWidth(parent.getMeasuredWidth());
+
+                return new AllRestaurantNameViewHolder(view);
+            }
+        };
+
+        recyclerViewString.setAdapter(stringAdapter);
+        //restaurantsName = new ArrayList<String>();
+    }
+
+    private void loadAllFoodList(String id, @NonNull AllRestaurantNameViewHolder holder) {
+
+        Query query = FirebaseDatabase.getInstance()
+                    .getReference()
+                    .child("food")
+                    .child(id)
+                    .orderByChild("id")
+                    .limitToLast(50);
 
         FirebaseRecyclerOptions<Food> options =
                 new FirebaseRecyclerOptions.Builder<Food>()
                         .setQuery(query, Food.class)
                         .build();
 
-        restaurantsName = new ArrayList<String>();
-        restaurantsName = null;
+//        restaurantsName = new ArrayList<String>();
+//        restaurantsName = null;
 
         adapter = new FirebaseRecyclerAdapter<Food, AllFoodViewHolder>(options) {
             @Override
@@ -109,41 +177,43 @@ public class CompleteFoodList extends AppCompatActivity {
 
 
                 // same = 0;
-                restaurantsList.child(model.getRestaurantId()).child("name").addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        restaurantName = snapshot.getValue(String.class);
-                        restaurantsName.add(restaurantName);
+//                restaurantsList.child(model.getRestaurantId()).child("name").addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        restaurantName = snapshot.getValue(String.class);
+//                        restaurantsName.add(restaurantName);
+//
+//                        if (restaurantsName.size() == 1) {
+//                            holder.restaurantName.setVisibility(View.VISIBLE);
+//                            holder.restaurantName.setText(restaurantName);
+//                        } else {
+//                            if (restaurantsName.get(restaurantsName.size() - 1).equals(restaurantsName.get(restaurantsName.size() - 2))) {
+//                                holder.restaurantName.setVisibility(View.GONE);
+////                                if(model.getName().equals("Chicken and corn")) {
+////                                    holder.restaurantName.setVisibility(View.VISIBLE);
+////                                    holder.restaurantName.setText(restaurantName);
+////                                }
+//                            } else {
+//                                holder.restaurantName.setVisibility(View.VISIBLE);
+//                                holder.restaurantName.setText(restaurantName);
+//                            }
+//                        }
+//
+//                        Log.i("restaurantsName", restaurantsName.toString());
+//                        if (restaurantsName.size() == 2) {
+//                            restaurantsName.remove(restaurantsName.get(0));
+//                        }
+//
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
 
-                        if (restaurantsName.size() == 1) {
-                            holder.restaurantName.setVisibility(View.VISIBLE);
-                            holder.restaurantName.setText(restaurantName);
-                        } else {
-                            if (restaurantsName.get(restaurantsName.size() - 1).equals(restaurantsName.get(restaurantsName.size() - 2))) {
-                                holder.restaurantName.setVisibility(View.GONE);
-//                                if(model.getName().equals("Chicken and corn")) {
-//                                    holder.restaurantName.setVisibility(View.VISIBLE);
-//                                    holder.restaurantName.setText(restaurantName);
-//                                }
-                            } else {
-                                holder.restaurantName.setVisibility(View.VISIBLE);
-                                holder.restaurantName.setText(restaurantName);
-                            }
-                        }
-
-                        Log.i("restaurantsName", restaurantsName.toString());
-                        if (restaurantsName.size() == 2) {
-                            restaurantsName.remove(restaurantsName.get(0));
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+                //pana aici
 
 //                for(int i = 0; i < restaurantsName.size(); i++) {
 //                    if(restaurantName.equals(restaurantsName.get(i))) {
@@ -169,7 +239,8 @@ public class CompleteFoodList extends AppCompatActivity {
 
                         //newActivity
                         Intent foodInfo = new Intent(CompleteFoodList.this, FoodInfo.class);
-                        foodInfo.putExtra("id", adapter.getRef(position).getKey());
+                        foodInfo.putExtra("id", model.getId());
+                        foodInfo.putExtra("restaurantId", model.getRestaurantId());
                         foodInfo.putExtra("origin", "activityFoodList");
                         //Log.i("foodid", adapter.getRef(position).getKey());
                         startActivity(foodInfo);
@@ -188,14 +259,17 @@ public class CompleteFoodList extends AppCompatActivity {
             }
         };
 
-        recyclerView.setAdapter(adapter);
-        restaurantsName = new ArrayList<String>();
+        layoutManager = new LinearLayoutManager(getApplicationContext());
+        //holder.secondRecyclerView.setHasFixedSize(true);
+        holder.secondRecyclerView.setLayoutManager(layoutManager);
+        holder.secondRecyclerView.setAdapter(adapter);
+        adapter.startListening();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        adapter.startListening();
+        stringAdapter.startListening();
     }
 
     @Override
@@ -225,30 +299,110 @@ public class CompleteFoodList extends AppCompatActivity {
     }
 
     private void searchProcess(String s) {
-
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
                 .child("food")
-                .orderByChild("name").startAt(s).endAt(s + "\uf8ff")
+                .orderByKey()
                 .limitToLast(50);
 
-        FirebaseRecyclerOptions<Food> options =
-                new FirebaseRecyclerOptions.Builder<Food>()
-                        .setQuery(query, Food.class)
+        Log.i("queryRestaurant", String.valueOf(query.getRef()));
+
+        FirebaseRecyclerOptions<DataSnapshot> options =
+                new FirebaseRecyclerOptions.Builder<DataSnapshot>()
+                        .setQuery(query, new SnapshotParser<DataSnapshot>() {
+                            public DataSnapshot parseSnapshot(@NonNull DataSnapshot snapshot) {
+                                return snapshot;
+                            }
+                        })
                         .build();
 
-        adapter = new FirebaseRecyclerAdapter<Food, AllFoodViewHolder>(options) {
+        stringAdapter = new FirebaseRecyclerAdapter<DataSnapshot, AllRestaurantNameViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull AllFoodViewHolder holder, int position, @NonNull Food model) {
-                holder.foodName.setText(model.getName());
-                Picasso.with(getBaseContext()).load(model.getImage())
-                        .into(holder.imageView);
+            protected void onBindViewHolder(@NonNull AllRestaurantNameViewHolder holder, int position, @NonNull DataSnapshot model) {
 
-                restaurantsList.child(model.getRestaurantId()).child("name").addValueEventListener(new ValueEventListener() {
+                String entry = model.getKey();
+                Log.i("queryRestaurant", entry);
+                restaurantsList.child(entry).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String restaurantName = snapshot.getValue(String.class);
-                        holder.restaurantName.setText(restaurantName);
+                        Restaurant restaurant = snapshot.getValue(Restaurant.class);
+                        holder.restaurantName.setText(restaurant.getName());
+
+                        Query query = FirebaseDatabase.getInstance()
+                                .getReference()
+                                .child("food")
+                                .child(entry)
+                                .orderByChild("name").startAt(s).endAt(s + "\uf8ff")
+                                .limitToLast(50);
+
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                if(dataSnapshot.exists()) {
+
+                                    holder.restaurantName.setVisibility(View.VISIBLE);
+                                    Log.i("queryAllFood", String.valueOf(query.getRef()));
+
+                                    FirebaseRecyclerOptions<Food> options =
+                                            new FirebaseRecyclerOptions.Builder<Food>()
+                                                    .setQuery(query, Food.class)
+                                                    .build();
+
+                                    adapter = new FirebaseRecyclerAdapter<Food, AllFoodViewHolder>(options) {
+                                        @Override
+                                        protected void onBindViewHolder(@NonNull AllFoodViewHolder holder, int position, @NonNull Food model) {
+                                            holder.foodName.setText(model.getName());
+                                            Picasso.with(getBaseContext()).load(model.getImage())
+                                                    .into(holder.imageView);
+
+
+                                            final Food local = model;
+                                            holder.setItemClickListener(new ItemClickListener() {
+                                                @Override
+                                                public void onClick(View view, int position, boolean isLongClick) {
+
+                                                    //newActivity
+                                                    Intent foodInfo = new Intent(CompleteFoodList.this, FoodInfo.class);
+                                                    foodInfo.putExtra("id", model.getId());
+                                                    foodInfo.putExtra("restaurantId", model.getRestaurantId());
+                                                    foodInfo.putExtra("origin", "activityFoodList");
+                                                    //Log.i("foodid", adapter.getRef(position).getKey());
+                                                    startActivity(foodInfo);
+                                                }
+                                            });
+                                        }
+
+                                        @NonNull
+                                        @Override
+                                        public AllFoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                                            View view = LayoutInflater.from(parent.getContext())
+                                                    .inflate(R.layout.all_food_item, parent, false);
+                                            view.setMinimumWidth(parent.getMeasuredWidth());
+
+                                            return new AllFoodViewHolder(view);
+                                        }
+                                    };
+
+                                    layoutManager = new LinearLayoutManager(getApplicationContext());
+                                    //holder.secondRecyclerView.setHasFixedSize(true);
+                                    holder.secondRecyclerView.setLayoutManager(layoutManager);
+                                    holder.secondRecyclerView.setAdapter(adapter);
+                                    adapter.startListening();
+                                }
+                                else {
+
+                                    holder.restaurantName.setVisibility(View.GONE);
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                throw databaseError.toException();
+                            }
+                        });
+
                     }
 
                     @Override
@@ -257,34 +411,30 @@ public class CompleteFoodList extends AppCompatActivity {
                     }
                 });
 
-                final Food local = model;
+                final String local = entry;
+
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
 
-                        //newActivity
-                        Intent foodInfo = new Intent(CompleteFoodList.this, FoodInfo.class);
-                        foodInfo.putExtra("id", adapter.getRef(position).getKey());
-                        foodInfo.putExtra("origin", "activityFoodList");
-                        //Log.i("foodid", adapter.getRef(position).getKey());
-                        startActivity(foodInfo);
                     }
                 });
             }
 
             @NonNull
             @Override
-            public AllFoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public AllRestaurantNameViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.all_food_item, parent, false);
+                        .inflate(R.layout.all_food_restaurant_name, parent, false);
                 view.setMinimumWidth(parent.getMeasuredWidth());
 
-                return new AllFoodViewHolder(view);
+                return new AllRestaurantNameViewHolder(view);
             }
         };
 
-        adapter.startListening();
-        recyclerView.setAdapter(adapter);
+        stringAdapter.startListening();
+        recyclerViewString.setAdapter(stringAdapter);
+
     }
 
 }
