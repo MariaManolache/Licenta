@@ -84,7 +84,7 @@ public class RestaurantAccount extends AppCompatActivity {
 
     private Spinner categorySpinner;
 
-    private Boolean alreadyDisplayed;
+    private Boolean alreadyDisplayed = false;
 
     AlertDialog.Builder resetName;
     AlertDialog.Builder resetPhoneNumber;
@@ -197,7 +197,7 @@ public class RestaurantAccount extends AppCompatActivity {
                                             Restaurant restaurant = snapshot.getValue(Restaurant.class);
                                             String categoryName = (String) categorySpinner.getSelectedItem();
                                             for (Map.Entry<String, String> entry : mapCategoryId.entrySet()) {
-                                                if(categoryName.equals(entry.getValue())) {
+                                                if (categoryName.equals(entry.getValue())) {
                                                     String categoryId = entry.getKey();
                                                     restaurant.setCategoryId(categoryId);
                                                     restaurants.child(user.getUid()).setValue(restaurant);
@@ -211,6 +211,8 @@ public class RestaurantAccount extends AppCompatActivity {
 
                                         }
                                     });
+
+                                    alreadyDisplayed = false;
 
                                 }
                             }).setNegativeButton("Anuleaza", null)

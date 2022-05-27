@@ -19,7 +19,8 @@ public class Food implements Serializable {
     public Food() {
     }
 
-    public Food(String id, String name, float price, String description, int quantity, String image, String restaurantId) {
+    public Food(String id, String name, float price, String description, int quantity,
+                String image, String restaurantId) {
         this.id = id;
         this.name = name;
         this.price = price;

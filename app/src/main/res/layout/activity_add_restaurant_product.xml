@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/teal_100"
+    tools:context=".AddRestaurantProduct">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alatsi"
+            android:gravity="center"
+            android:text="@string/add_new_product"
+            android:textAlignment="center"
+            android:textColor="@color/violet"
+            android:textSize="35dp"></TextView>
+
+        <TextView
+            android:layout_margin="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alata"
+            android:text="@string/product_name"
+            android:textAlignment="center"
+            android:textColor="@color/violet"
+            android:textSize="25sp"></TextView>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:textAlignment="center"
+            android:background="@drawable/border"
+            android:outlineAmbientShadowColor="@android:color/darker_gray"
+            tools:targetApi="p">
+
+            <EditText
+                android:id="@+id/addProductName"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/alata"
+                android:hint="@string/margherita"
+                android:inputType="text"
+                android:textAlignment="center"
+                android:textColor="@color/violet"
+                android:textSize="15dp"></EditText>
+        </FrameLayout>
+
+        <TextView
+            android:layout_margin="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alata"
+            android:text="@string/product_price"
+            android:textAlignment="center"
+            android:textColor="@color/violet"
+            android:textSize="25sp"></TextView>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:textAlignment="center"
+            android:background="@drawable/border"
+            android:outlineAmbientShadowColor="@android:color/darker_gray"
+            tools:targetApi="p">
+
+            <EditText
+                android:id="@+id/addProductPrice"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/alata"
+                android:hint="@string/price_example"
+                android:inputType="numberDecimal"
+                android:textColor="@color/violet"
+                android:textAlignment="center"
+                android:textSize="15dp"></EditText>
+        </FrameLayout>
+
+        <TextView
+            android:layout_margin="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alata"
+            android:text="@string/product_description"
+            android:textAlignment="center"
+            android:textColor="@color/violet"
+            android:textSize="25sp"></TextView>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/border"
+            android:outlineAmbientShadowColor="@android:color/darker_gray"
+            tools:targetApi="p">
+
+            <EditText
+                android:id="@+id/addProductDescription"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/alata"
+                android:hint="@string/description_example"
+                android:inputType="text"
+                android:textAlignment="center"
+                android:textColor="@color/violet"
+                android:textSize="15dp"></EditText>
+        </FrameLayout>
+
+        <TextView
+            android:layout_margin="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alata"
+            android:text="@string/product_image"
+            android:textAlignment="center"
+            android:textColor="@color/violet"
+            android:textSize="25sp"></TextView>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/addProductImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/circle_background"
+            android:src="@drawable/pizza_example"></de.hdodenhof.circleimageview.CircleImageView>
+
+
+        <Button
+            android:id="@+id/btnAddProduct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="50dp"
+            android:gravity="center"
+            android:text="@string/add_product"
+            android:textAlignment="center"></Button>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

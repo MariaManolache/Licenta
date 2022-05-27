@@ -259,7 +259,7 @@ public class ShoppingCart extends AppCompatActivity {
                 holder.tvCartValue.setText(model.getPrice() * model.getQuantity() + " lei");
                 holder.tvQuantityDisplay.setText(String.valueOf(model.getQuantity()));
 
-                restaurants = database.getInstance().getReference("restaurants").child(model.getRestaurantId());
+                restaurants =  FirebaseDatabase.getInstance().getReference("restaurants").child(model.getRestaurantId());
 
                 restaurants.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -325,6 +325,8 @@ public class ShoppingCart extends AppCompatActivity {
                                     }
                                 }
                             });
+                        } else {
+                            Toast.makeText(ShoppingCart.this, "Cantitatea nu poate fi mai mica de 1!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

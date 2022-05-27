@@ -2,6 +2,7 @@ package eu.ase.ro.grupa1086.licentamanolachemariacatalina.order;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -293,6 +294,7 @@ public class PlaceOrder extends AppCompatActivity {
                                     restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).setValue(restaurantOrder);
                                     restaurantOrders.child(restaurantsId.get(i)).child("id").setValue(restaurantsId.get(i));
                                     restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).child("confirmed").setValue(false);
+
                                 }
 
 //                                driverOrders.child(orderId).setValue(order);

@@ -1,267 +1,322 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".principalmenus.RestaurantAccount">
+    android:layout_height="match_parent">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/editRestaurantImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/teal_800"
-        android:src="@drawable/ic_baseline_edit_note_24"
-        app:layout_constraintBottom_toBottomOf="@+id/restaurantDetailsLayout"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="parent"></com.google.android.material.floatingactionbutton.FloatingActionButton>
-
-
-    <LinearLayout
-        android:id="@+id/restaurantDetailsLayout"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        android:background="@color/teal_100"
+        android:scrollbars="horizontal"
+        tools:context=".principalmenus.RestaurantAccount">
 
-
-        <ImageView
-            android:id="@+id/restaurantImage"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_baseline_account_circle_24"
-            app:layout_constraintHorizontal_bias="0.0"></ImageView>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            android:orientation="vertical">
-
-            <FrameLayout
-                android:id="@+id/firstFrameLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/border_account"
-                android:outlineAmbientShadowColor="@android:color/darker_gray"
-                tools:targetApi="p">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:id="@+id/firstLinearLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-
-                        <TextView
-                            android:id="@+id/restaurantName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="0.3"
-                            android:textAlignment="center"
-                            android:fontFamily="@font/alata"
-                            android:text="@string/name"
-                            android:textColor="@color/violet"
-                            android:textSize="25sp"></TextView>
-
-                        <ImageView
-                            android:id="@+id/changeName"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_marginLeft="20dp"
-                            android:src="@drawable/ic_baseline_edit_note_24"></ImageView>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-
-            </FrameLayout>
-
-
-            <FrameLayout
-                android:id="@+id/secondFrameLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/border_account"
-                android:outlineAmbientShadowColor="@android:color/darker_gray"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/firstFrameLayout"
-                tools:targetApi="p">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:id="@+id/secondLinearLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/tvPhoneNumber"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="0.3"
-                            android:fontFamily="@font/alata"
-                            android:text="@string/phone"
-                            android:textColor="@color/violet"
-                            android:textSize="20sp"></TextView>
-
-                        <ImageView
-                            android:id="@+id/changePhoneNumber"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_marginLeft="20dp"
-                            android:src="@drawable/ic_baseline_edit_note_24"></ImageView>
-
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/restaurantPhoneNumber"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:fontFamily="@font/alata"
-                        android:text="@string/example_phone_number"
-                        android:textColor="@color/violet"
-                        android:textSize="20sp"
-                        android:textStyle="bold"></TextView>
-
-                </LinearLayout>
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/thirdFrameLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/border_account"
-                android:outlineAmbientShadowColor="@android:color/darker_gray"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/firstFrameLayout"
-                tools:targetApi="p">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:id="@+id/thirdLinearLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/tvAddress"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="0.3"
-                            android:fontFamily="@font/alata"
-                            android:text="@string/address"
-                            android:textColor="@color/violet"
-                            android:textSize="20sp"></TextView>
-
-                        <ImageView
-                            android:id="@+id/changeRestaurantAddress"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_marginLeft="20dp"
-                            android:src="@drawable/ic_baseline_edit_note_24"></ImageView>
-
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/restaurantAddress"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:fontFamily="@font/alata"
-                        android:text="@string/address_example"
-                        android:textColor="@color/violet"
-                        android:textSize="20sp"
-                        android:textStyle="bold"></TextView>
-
-                </LinearLayout>
-            </FrameLayout>
-
-
-        </LinearLayout>
-
-
-    </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/flCategories"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:textAlignment="center"
-        android:layout_marginTop="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/restaurantDetailsLayout"
-        tools:targetApi="p">
-
-        <TextView
-            android:id="@+id/tvCategories"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/alata"
-            android:text="@string/category"
-            android:background="@drawable/buttons"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="30sp"
-            android:textStyle="bold"></TextView>
-
-    </FrameLayout>
-
-    <Spinner
-        android:id="@+id/categorySpinner"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:spinnerMode="dropdown"
-        app:layout_constraintTop_toBottomOf="@+id/flCategories"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toEndOf="parent"></Spinner>
-
-    <Button
-        android:id="@+id/btnLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/logout"
-        android:layout_marginTop="150dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/categorySpinner"></Button>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/teal_800"
-        app:itemBackground="@color/teal_800"
-        app:itemIconTint="@drawable/selector"
-        app:itemTextColor="@drawable/selector"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:menu="@menu/menu_restaurant"></com.google.android.material.bottomnavigation.BottomNavigationView>
+            android:background="@color/teal_100">
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <LinearLayout
+                android:id="@+id/restaurantDetailsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+
+                <ImageView
+                    android:id="@+id/restaurantImage"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_baseline_account_circle_24"
+                    app:layout_constraintHorizontal_bias="0.0"></ImageView>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/editRestaurantImage"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="50dp"
+                    android:backgroundTint="@color/teal_800"
+                    android:src="@drawable/ic_baseline_edit_note_24"
+                    app:layout_constraintBottom_toBottomOf="@+id/restaurantDetailsLayout"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"></com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:id="@+id/firstFrameLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/border_account"
+                        android:outlineAmbientShadowColor="@android:color/darker_gray"
+                        tools:targetApi="p">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:id="@+id/firstLinearLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+
+                                <TextView
+                                    android:id="@+id/restaurantName"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="0.3"
+                                    android:fontFamily="@font/alata"
+                                    android:text="@string/name"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/violet"
+                                    android:textSize="25sp"
+                                    android:textStyle="bold"></TextView>
+
+                                <ImageView
+                                    android:id="@+id/changeName"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:layout_marginLeft="20dp"
+                                    android:src="@drawable/ic_baseline_edit_note_24"></ImageView>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+
+                    </FrameLayout>
+
+
+                    <FrameLayout
+                        android:id="@+id/secondFrameLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/border_account"
+                        android:outlineAmbientShadowColor="@android:color/darker_gray"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/firstFrameLayout"
+                        tools:targetApi="p">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="50dp"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/ic_baseline_phone_android_24"></ImageView>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical">
+
+
+                                <LinearLayout
+                                    android:id="@+id/secondLinearLayout"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:id="@+id/tvPhoneNumber"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:layout_weight="0.3"
+                                        android:background="@drawable/address_background"
+                                        android:fontFamily="@font/alata"
+                                        android:text="@string/phone"
+                                        android:textAlignment="center"
+                                        android:textColor="@color/violet"
+                                        android:textSize="25sp"
+                                        android:textStyle="bold"></TextView>
+
+                                    <ImageView
+                                        android:id="@+id/changePhoneNumber"
+                                        android:layout_width="50dp"
+                                        android:layout_height="50dp"
+                                        android:layout_marginLeft="20dp"
+                                        android:src="@drawable/ic_baseline_edit_note_24"></ImageView>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/restaurantPhoneNumber"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:fontFamily="@font/alata"
+                                    android:text="@string/example_phone_number"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/violet"
+                                    android:textSize="20sp"
+                                    android:textStyle="normal"></TextView>
+
+                            </LinearLayout>
+                        </LinearLayout>
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/thirdFrameLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/border_account"
+                        android:outlineAmbientShadowColor="@android:color/darker_gray"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/firstFrameLayout"
+                        tools:targetApi="p">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="51dp"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/ic_baseline_home_24"></ImageView>
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:id="@+id/thirdLinearLayout"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:id="@+id/tvAddress"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:layout_weight="0.3"
+                                        android:fontFamily="@font/alata"
+                                        android:text="@string/address"
+                                        android:textAlignment="center"
+                                        android:textColor="@color/violet"
+                                        android:textSize="25sp"
+                                        android:textStyle="bold"></TextView>
+
+                                    <ImageView
+                                        android:id="@+id/changeRestaurantAddress"
+                                        android:layout_width="50dp"
+                                        android:layout_height="50dp"
+                                        android:layout_marginLeft="20dp"
+                                        android:src="@drawable/ic_baseline_edit_note_24"></ImageView>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/restaurantAddress"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:fontFamily="@font/alata"
+                                    android:text="@string/address_example"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/violet"
+                                    android:textSize="20sp"
+                                    android:textStyle="normal"></TextView>
+
+                            </LinearLayout>
+                        </LinearLayout>
+                    </FrameLayout>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/tvCategories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/address_background"
+                android:fontFamily="@font/alata"
+                android:text="@string/category"
+                android:textAlignment="center"
+                android:textColor="@color/violet"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/restaurantDetailsLayout"></TextView>
+
+
+            <Spinner
+                android:id="@+id/categorySpinner"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:spinnerMode="dropdown"
+                android:textAlignment="center"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintStart_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvCategories"></Spinner>
+
+            <Button
+                android:id="@+id/btnLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/logout"
+                android:layout_marginTop="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/categorySpinner"></Button>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnLogout"></TextView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottom_navigation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="100dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/teal_800"
+                app:itemBackground="@color/teal_800"
+                app:itemIconTint="@drawable/selector"
+                app:itemTextColor="@drawable/selector"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:menu="@menu/menu_restaurant"></com.google.android.material.bottomnavigation.BottomNavigationView>
+
+
+</RelativeLayout>

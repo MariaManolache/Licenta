@@ -148,4 +148,14 @@
     <string name="informations">Informatii</string>
     <string name="product">Produs</string>
     <string name="see_users_opinions">Vezi parerile clientilor</string>
+    <string name="add_new_product">Adaugă un produs nou</string>
+    <string name="margherita">Margherita</string>
+    <string name="price_example">25.75</string>
+    <string name="description_example">Pizza cu sos de roșii și mozzarella...</string>
+    <string name="product_name">Numele produsului:</string>
+    <string name="product_price">Pretul produsului:</string>
+    <string name="product_description">Descrierea produsului:</string>
+    <string name="add_product">Adaugă produsul</string>
+    <string name="product_image">Imaginea produsului:</string>
+    <string name="new_product">Produs nou</string>
 </resources>

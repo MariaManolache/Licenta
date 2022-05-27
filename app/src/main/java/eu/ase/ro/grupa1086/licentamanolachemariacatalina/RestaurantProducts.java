@@ -17,6 +17,7 @@ import android.widget.Button;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -50,6 +51,8 @@ public class RestaurantProducts extends AppCompatActivity {
 
     FirebaseRecyclerAdapter<Food, FoodViewHolder> adapter;
 
+    FloatingActionButton fabAddProduct;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +70,16 @@ public class RestaurantProducts extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         loadFoodList(user.getUid());
+
+        fabAddProduct = findViewById(R.id.fabAddProduct);
+
+        fabAddProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent addNewProduct = new Intent(getApplicationContext(), AddRestaurantProduct.class);
+                startActivity(addNewProduct);
+            }
+        });
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.products);

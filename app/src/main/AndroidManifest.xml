@@ -16,9 +16,13 @@
         android:theme="@style/Theme.LicentaManolacheMariaCatalina"
         tools:replace="android:theme">
         <activity
+            android:name=".AddRestaurantProduct"
+            android:exported="false"
+            android:label="@string/new_product"/>
+        <activity
             android:name=".ProductInfo"
             android:exported="false"
-            android:label="@string/product"/>
+            android:label="@string/product" />
         <activity
             android:name=".RestaurantProducts"
             android:exported="false"
