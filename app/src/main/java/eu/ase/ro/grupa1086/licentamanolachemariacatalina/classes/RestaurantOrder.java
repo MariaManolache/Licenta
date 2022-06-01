@@ -13,6 +13,7 @@ public class RestaurantOrder implements Serializable {
     private String userId;
     private Restaurant restaurant;
     private Address address;
+    private int preparationTime;
 
     public RestaurantOrder() {
 
@@ -28,6 +29,19 @@ public class RestaurantOrder implements Serializable {
         this.userId = userId;
         this.restaurant = restaurant;
         this.address = address;
+    }
+
+    public RestaurantOrder(String restaurantId, List<Food> foodList, String orderId, Status status, double total, PaymentMethod paymentMethod, String userId, Restaurant restaurant, Address address, int preparationTime) {
+        this.restaurantId = restaurantId;
+        this.foodList = foodList;
+        this.orderId = orderId;
+        this.status = status;
+        this.total = total;
+        this.paymentMethod = paymentMethod;
+        this.userId = userId;
+        this.restaurant = restaurant;
+        this.address = address;
+        this.preparationTime = preparationTime;
     }
 
     public String getRestaurantId() {
@@ -100,6 +114,14 @@ public class RestaurantOrder implements Serializable {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public int getPreparationTime() {
+        return preparationTime;
+    }
+
+    public void setPreparationTime(int preparationTime) {
+        this.preparationTime = preparationTime;
     }
 
     @Override

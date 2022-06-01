@@ -136,7 +136,7 @@
     <string name="join_our_team">Fa parte din echipa noastra!</string>
     <string name="enter_given_credentials">Introdu mai sus datele primite de la administrator</string>
     <string name="authenticate">Autentificare</string>
-    <string name="click_here_for_restaurants">Esti furnizor? Da click aici!</string>
+    <string name="click_here_for_restaurants">Esti furnizor? Dă click aici!</string>
     <string name="products">Produse</string>
     <string name="order1">Comanda #1</string>
     <string name="order_status">Status: </string>
@@ -158,4 +158,10 @@
     <string name="add_product">Adaugă produsul</string>
     <string name="product_image">Imaginea produsului:</string>
     <string name="new_product">Produs nou</string>
+    <string name="driver_click_here">Esti livrator? Dă click aici!</string>
+    <string name="auth_driver">Autentificare livrator</string>
+    <string name="preparation_duration">Durata de preparare:</string>
+    <string name="pick_up_distance">Distanta de preluare:</string>
+    <string name="delivery_distance">Distanta de livrare</string>
+    <string name="total_distance">Distanta totala:</string>
 </resources>

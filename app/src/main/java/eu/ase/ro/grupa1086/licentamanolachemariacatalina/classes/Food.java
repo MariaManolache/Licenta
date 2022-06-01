@@ -1,6 +1,7 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes;
 
 import java.io.Serializable;
+import java.time.Duration;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.rating.Rating;
 
@@ -15,6 +16,7 @@ public class Food implements Serializable {
     private String restaurantId;
     private String restaurantIdName;
     private Rating ratings;
+    private int preparationTime;
 
     public Food() {
     }
@@ -29,6 +31,19 @@ public class Food implements Serializable {
         this.image = image;
         this.restaurantId = restaurantId;
         this.restaurantIdName = restaurantId + name;
+    }
+
+    public Food(String id, String name, float price, String description, int quantity,
+                String image, String restaurantId, int preparationTime) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.quantity = quantity;
+        this.image = image;
+        this.restaurantId = restaurantId;
+        this.restaurantIdName = restaurantId + name;
+        this.preparationTime = preparationTime;
     }
 
     public Food(String id, String restaurantId) {
@@ -108,6 +123,14 @@ public class Food implements Serializable {
 
     public void setRatings(Rating ratings) {
         this.ratings = ratings;
+    }
+
+    public int getPreparationTime() {
+        return preparationTime;
+    }
+
+    public void setPreparationTime(int preparationTime) {
+        this.preparationTime = preparationTime;
     }
 
     @Override

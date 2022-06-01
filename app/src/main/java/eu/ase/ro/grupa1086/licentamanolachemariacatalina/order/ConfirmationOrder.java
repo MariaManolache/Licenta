@@ -47,12 +47,18 @@ import com.google.maps.android.SphericalUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Order;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.PrincipalMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Address;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.UserComparator;
 //import eu.ase.ro.grupa1086.licentamanolachemariacatalina.databinding.ActivityConfirmationOrderBinding;
 
 public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCallback, RoutingListener {
@@ -132,6 +138,7 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
             }
         });
 
+
 //        cart.addValueEventListener(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -161,6 +168,19 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
                     return;
                 }
 
+                orders.child(orderId).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Order order = snapshot.getValue(Order.class);
+                        tvTime.setText(order.getPreparationTime() + " de minute");
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
                 orders.child(orderId).child("address").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -179,11 +199,56 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
                                     Log.i("mapsAddress", restaurantAddress.toString());
                                     restaurantCoordinates.add(getLocationFromAddress(restaurantAddress.getAddress()));
 
-                                    float results[] = new float[10];
-                                    Double distance = SphericalUtil.computeDistanceBetween(clientAddress, restaurantCoordinates.get(0));
-                                    Location.distanceBetween(restaurantCoordinates.get(0).latitude, restaurantCoordinates.get(0).longitude, clientAddress.latitude, clientAddress.longitude, results);
-//                                    tvDistance.setText("Distanta " + String.valueOf(results[0]));
-                                    tvDistance.setText("Distanta " + String.format("%.2f", distance / 1000) + " km");
+//                                    float results[] = new float[10];
+//                                    Double distance = SphericalUtil.computeDistanceBetween(clientAddress, restaurantCoordinates.get(0));
+//                                    Location.distanceBetween(restaurantCoordinates.get(0).latitude, restaurantCoordinates.get(0).longitude, clientAddress.latitude, clientAddress.longitude, results);
+////                                    tvDistance.setText("Distanta " + String.valueOf(results[0]));
+//                                    tvDistance.setText("Distanta " + String.format("%.2f", distance / 1000) + " km");
+
+                                }
+
+
+                                float results[] = new float[10];
+                                    Map<LatLng, Double> distances = new LinkedHashMap<>();
+                                    for (int i = 0; i < restaurantCoordinates.size(); i++) {
+                                        LatLng latLngClient = getLocationFromAddress(mapsAddress);
+                                        Double distance = SphericalUtil.computeDistanceBetween(latLngClient, restaurantCoordinates.get(i));
+                                        Log.i("distancesCheck", distance.toString());
+                                        distances.put(restaurantCoordinates.get(i), distance);
+                                        Location.distanceBetween(latLngClient.latitude, latLngClient.longitude, restaurantCoordinates.get(i).latitude, restaurantCoordinates.get(i).longitude, results);
+                                    }
+
+                                    UserComparator comparator = new UserComparator(distances);
+                                    Map<LatLng, Double> sortedDistances = new TreeMap<>(comparator);
+                                    sortedDistances.putAll(distances);
+
+
+                                    Map.Entry<LatLng, Double> entry = sortedDistances.entrySet().iterator().next();
+                                    LatLng key = entry.getKey();
+                                    Double minimumDistance = entry.getValue();
+                                    Double totalDistance = minimumDistance;
+                                    Log.i("distancesCheck", totalDistance.toString() + "...");
+
+                                    List<LatLng> sortedLocations = new ArrayList<>();
+                                    for (Map.Entry<LatLng, Double> entry2 : sortedDistances.entrySet()) {
+                                        sortedLocations.add(entry2.getKey());
+                                    }
+
+                                    if (sortedLocations.size() > 1) {
+                                        for (int i = 0; i < sortedLocations.size() - 1; i++) {
+                                            totalDistance += SphericalUtil.computeDistanceBetween(sortedLocations.get(i), sortedLocations.get(i + 1));
+                                            Log.i("distancesCheck", totalDistance.toString() + "...");
+                                        }
+                                    }
+
+                                    LatLng latLngClient = getLocationFromAddress(mapsAddress);
+                                    Double deliveryDistanceKm = SphericalUtil.computeDistanceBetween(sortedLocations.get(sortedLocations.size() - 1), clientAddress);
+
+
+                                    tvDistance.setText(String.format("%.2f", (totalDistance + deliveryDistanceKm) / 1000) + " km");
+//                                    holder.pickUpDistance.setText("Distanta de preluare: " + String.format("%.2f", totalDistance / 1000) + " km");
+//                                    holder.deliveryDistance.setText("Distanta de livrare: " + String.format("%.2f", deliveryDistanceKm / 1000) + " km");
+//                                    holder.totalDistance.setText("Distanta totala: " + String.format("%.2f", (totalDistance + deliveryDistanceKm) / 1000) + " km");
 
                                     getDestinationInfo(restaurantCoordinates.get(0));
 
@@ -191,7 +256,7 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
                                             .findFragmentById(R.id.map);
                                     assert mapFragment != null;
                                     mapFragment.getMapAsync(ConfirmationOrder.this);
-                                }
+
 
                             }
 
@@ -214,6 +279,19 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
             }
             if (origin != null && (origin.equals("addAnotherAddress") || origin.equals("cardPayment-anotherAddress"))) {
                 orderId = getIntent().getStringExtra("orderId");
+
+                orders.child(orderId).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Order order = snapshot.getValue(Order.class);
+                        tvTime.setText(order.getPreparationTime() + " de minute");
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
 
                 orders.child(orderId).child("address").addValueEventListener(new ValueEventListener() {
                     @Override
@@ -241,20 +319,60 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
                                     Log.i("mapsAddress", restaurantAddress.toString());
                                     restaurantCoordinates.add(getLocationFromAddress(restaurantAddress.getAddress()));
 
-                                    float results[] = new float[10];
-                                    Double distance = SphericalUtil.computeDistanceBetween(clientAddress, restaurantCoordinates.get(0));
-                                    Location.distanceBetween(restaurantCoordinates.get(0).latitude, restaurantCoordinates.get(0).longitude, clientAddress.latitude, clientAddress.longitude, results);
-//                                    tvDistance.setText("Distanta " + String.valueOf(results[0]));
-                                    tvDistance.setText("Distanta " + String.format("%.2f", distance / 1000) + " km");
+//                                    float results[] = new float[10];
+//                                    Double distance = SphericalUtil.computeDistanceBetween(clientAddress, restaurantCoordinates.get(0));
+//                                    Location.distanceBetween(restaurantCoordinates.get(0).latitude, restaurantCoordinates.get(0).longitude, clientAddress.latitude, clientAddress.longitude, results);
+////                                    tvDistance.setText("Distanta " + String.valueOf(results[0]));
+//                                    tvDistance.setText("Distanta " + String.format("%.2f", distance / 1000) + " km");
 
-                                    getDestinationInfo(restaurantCoordinates.get(0));
-
-                                    SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                                            .findFragmentById(R.id.map);
-                                    assert mapFragment != null;
-                                    mapFragment.getMapAsync(ConfirmationOrder.this);
                                 }
 
+
+                                float results[] = new float[10];
+                                Map<LatLng, Double> distances = new LinkedHashMap<>();
+                                for (int i = 0; i < restaurantCoordinates.size(); i++) {
+                                    LatLng latLngClient = getLocationFromAddress(mapsAddress);
+                                    Double distance = SphericalUtil.computeDistanceBetween(latLngClient, restaurantCoordinates.get(i));
+                                    Log.i("distancesCheck", distance.toString());
+                                    distances.put(restaurantCoordinates.get(i), distance);
+                                    Location.distanceBetween(latLngClient.latitude, latLngClient.longitude, restaurantCoordinates.get(i).latitude, restaurantCoordinates.get(i).longitude, results);
+                                }
+
+                                UserComparator comparator = new UserComparator(distances);
+                                Map<LatLng, Double> sortedDistances = new TreeMap<>(comparator);
+                                sortedDistances.putAll(distances);
+
+
+                                Map.Entry<LatLng, Double> entry = sortedDistances.entrySet().iterator().next();
+                                LatLng key = entry.getKey();
+                                Double minimumDistance = entry.getValue();
+                                Double totalDistance = minimumDistance;
+                                Log.i("distancesCheck", totalDistance.toString() + "...");
+
+                                List<LatLng> sortedLocations = new ArrayList<>();
+                                for (Map.Entry<LatLng, Double> entry2 : sortedDistances.entrySet()) {
+                                    sortedLocations.add(entry2.getKey());
+                                }
+
+                                if (sortedLocations.size() > 1) {
+                                    for (int i = 0; i < sortedLocations.size() - 1; i++) {
+                                        totalDistance += SphericalUtil.computeDistanceBetween(sortedLocations.get(i), sortedLocations.get(i + 1));
+                                        Log.i("distancesCheck", totalDistance.toString() + "...");
+                                    }
+                                }
+
+                                LatLng latLngClient = getLocationFromAddress(mapsAddress);
+                                Double deliveryDistanceKm = SphericalUtil.computeDistanceBetween(sortedLocations.get(sortedLocations.size() - 1), clientAddress);
+
+
+                                tvDistance.setText(String.format("%.2f", (totalDistance + deliveryDistanceKm) / 1000) + " km");
+
+                                getDestinationInfo(restaurantCoordinates.get(0));
+
+                                SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                                        .findFragmentById(R.id.map);
+                                assert mapFragment != null;
+                                mapFragment.getMapAsync(ConfirmationOrder.this);
                             }
 
                             @Override

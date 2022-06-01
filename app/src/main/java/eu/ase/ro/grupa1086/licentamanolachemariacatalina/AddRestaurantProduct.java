@@ -5,14 +5,17 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -36,6 +39,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.time.Duration;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Order;
@@ -46,6 +51,7 @@ public class AddRestaurantProduct extends AppCompatActivity {
     private EditText addProductName;
     private EditText addProductPrice;
     private EditText addProductDescription;
+    private EditText addProductTime;
     private CircleImageView addProductImage;
     private Button btnAddProduct;
 
@@ -66,6 +72,7 @@ public class AddRestaurantProduct extends AppCompatActivity {
         addProductPrice = findViewById(R.id.addProductPrice);
         addProductDescription = findViewById(R.id.addProductDescription);
         addProductImage = findViewById(R.id.addProductImage);
+        addProductTime = findViewById(R.id.addPreparationTime);
         btnAddProduct = findViewById(R.id.btnAddProduct);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -128,6 +135,8 @@ public class AddRestaurantProduct extends AppCompatActivity {
                                     String productName = addProductName.getText().toString();
                                     float productPrice = Float.parseFloat(addProductPrice.getText().toString());
                                     String productDescription = addProductDescription.getText().toString();
+                                    int preparationTime = Integer.parseInt(addProductTime.getText().toString());
+                                    Log.i("preparation", String.valueOf(preparationTime));
 
                                     if (TextUtils.isEmpty(productName)) {
                                         addProductName.setError("Numele este necesar pentru adaugarea produsului");
@@ -150,7 +159,7 @@ public class AddRestaurantProduct extends AppCompatActivity {
                                     }
 
 
-                                    Food food = new Food(id, productName, productPrice, productDescription, 0, productImage, user.getUid());
+                                    Food food = new Food(id, productName, productPrice, productDescription, 0, productImage, user.getUid(), preparationTime);
                                     restaurants.child(id).setValue(food).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {

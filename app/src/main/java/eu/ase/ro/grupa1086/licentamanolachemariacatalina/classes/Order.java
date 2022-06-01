@@ -16,6 +16,7 @@ public class Order implements Serializable {
     private List<Restaurant> restaurantAddress;
     private List<Rating> ratingsList;
     private List<Restaurant> restaurants;
+    private int preparationTime;
 
     public Order() {
 
@@ -40,6 +41,17 @@ public class Order implements Serializable {
         this.address = address;
         this.cart = cart;
         this.status = status;
+    }
+
+    public Order(String id, float total, String userId, PaymentMethod paymentMethod, Address address,List<Food> cart, Status status, int preparationTime) {
+        this.id = id;
+        this.total = total;
+        this.userId = userId;
+        this.paymentMethod = paymentMethod;
+        this.address = address;
+        this.cart = cart;
+        this.status = status;
+        this.preparationTime = preparationTime;
     }
 
     public String getId() {
@@ -115,7 +127,13 @@ public class Order implements Serializable {
         this.ratingsList = ratingsList;
     }
 
+    public int getPreparationTime() {
+        return preparationTime;
+    }
 
+    public void setPreparationTime(int preparationTime) {
+        this.preparationTime = preparationTime;
+    }
 
     @Override
     public String toString() {

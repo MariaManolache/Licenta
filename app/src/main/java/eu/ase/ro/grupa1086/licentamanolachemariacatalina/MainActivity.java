@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference restaurantAccounts;
 
     Button btnRestaurantRegister;
+    Button btnDriverRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +82,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent restaurantLogin = new Intent(getApplicationContext(), RestaurantLogin.class);
                 startActivity(restaurantLogin);
-                finish();
+            }
+        });
+
+        btnDriverRegister = findViewById(R.id.btnDriverRegister);
+        btnDriverRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent driverLogin = new Intent(getApplicationContext(), DriverLogIn.class);
+                startActivity(driverLogin);
             }
         });
     }

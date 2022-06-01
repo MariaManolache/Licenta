@@ -202,7 +202,6 @@ public class SignIn extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             onAuthSuccess(task.getResult().getUser());
-                            Toast.makeText(SignIn.this, "Autentificare realizata cu succes", Toast.LENGTH_LONG).show();
 //                            startActivity(new Intent(getApplicationContext(), MainMenu.class));
 
 
@@ -230,15 +229,17 @@ public class SignIn extends AppCompatActivity {
             users.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    int isDriver = snapshot.getValue(Integer.class);
-                    if (isDriver == 1) {
-                        startActivity(new Intent(getApplicationContext(), DriverMenu.class));
-                        finish();
-                    } else {
-                        startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
-                        finish();
+                    if (snapshot.exists()) {
+                        int isDriver = snapshot.getValue(Integer.class);
+                        if (isDriver == 0) {
+                            Toast.makeText(SignIn.this, "Autentificare realizata cu succes", Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
+                            finish();
+                        } else {
+                           Toast.makeText(getApplicationContext(), "Utilizatorul introdus nu se afla in baza de date", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
+                        }
                     }
-                    finish();
                 }
 
                 @Override

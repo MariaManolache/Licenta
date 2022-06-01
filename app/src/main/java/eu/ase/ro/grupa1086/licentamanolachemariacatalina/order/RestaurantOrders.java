@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -45,6 +46,7 @@ import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Order;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.RestaurantOrder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Status;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.PrincipalMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.RestaurantAccount;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.RestaurantOrderDetailsViewHolder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.RestaurantOrderViewHolder;
@@ -65,6 +67,7 @@ public class RestaurantOrders extends AppCompatActivity {
     DatabaseReference restaurants;
     DatabaseReference driverOrders;
     DatabaseReference restaurantOrders;
+    DatabaseReference users;
     FirebaseUser user;
 
     AlertDialog.Builder acceptOrder;
@@ -74,9 +77,11 @@ public class RestaurantOrders extends AppCompatActivity {
     String restaurantName;
     String restaurantImage;
     String orderId;
+    ImageView callButton;
 
     BottomNavigationView bottomNavigationView;
     boolean allRestaurantsConfirmed;
+    ImageView noRestaurantOrderFound;
 
 
     @Override
@@ -91,6 +96,7 @@ public class RestaurantOrders extends AppCompatActivity {
         driverOrders = database.getReference().child("driverOrders");
         restaurantOrders = database.getReference().child("restaurantOrders");
         orders = database.getReference().child("orders");
+        users = database.getReference("users");
 
 
         recyclerView = (RecyclerView) findViewById(R.id.restaurantOrdersList);
@@ -98,7 +104,11 @@ public class RestaurantOrders extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+        callButton = findViewById(R.id.callButton);
+
         acceptOrder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
+
+        noRestaurantOrderFound = findViewById(R.id.noRestaurantOrderFound);
 
         loadOrders();
 
@@ -142,6 +152,22 @@ public class RestaurantOrders extends AppCompatActivity {
                         .setQuery(query, RestaurantOrder.class)
                         .build();
 
+        restaurantOrders.child(user.getUid()).child("orders").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.getValue() == null) {
+                   noRestaurantOrderFound.setVisibility(View.VISIBLE);
+                } else {
+                    noRestaurantOrderFound.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         adapter = new FirebaseRecyclerAdapter<RestaurantOrder, RestaurantOrderViewHolder>(options) {
 
             @NonNull
@@ -158,18 +184,30 @@ public class RestaurantOrders extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull RestaurantOrderViewHolder holder, int position, @NonNull RestaurantOrder model) {
 
                 orderList.add(model);
-                int orderNumber = 0;
-                for (int i = 0; i < orderList.size(); i++) {
-                    if (orderList.get(i).equals(model)) {
-                        orderNumber = i + 1;
-                    }
-                }
+//                int orderNumber = 0;
+//                for (int i = 0; i < orderList.size(); i++) {
+//                    if (orderList.get(i).equals(model)) {
+//                        orderNumber = i + 1;
+//                    }
+//                }
                 orderId = model.getOrderId();
                 Log.i("restaurantOrder", orderId);
 
                 if (!model.getStatus().equals(Status.finalizata)) {
 
-                    holder.orderName.setText("Comanda #" + orderNumber);
+                    users.child(model.getUserId()).child("name").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String userName = snapshot.getValue(String.class);
+                            holder.orderName.setText("Comanda #" + userName);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
                     holder.orderStatus.setText("Status: " + String.valueOf(model.getStatus()).substring(0, 1).toUpperCase(Locale.ROOT) + String.valueOf(model.getStatus()).replace("_", " ").substring(1));
                     holder.orderAddress.setText("Adresa: " + model.getAddress().getMapsAddress());
                     holder.orderPriceTotal.setText("Total: " + Math.round(model.getTotal() * 100.0) / 100.0 + " lei");

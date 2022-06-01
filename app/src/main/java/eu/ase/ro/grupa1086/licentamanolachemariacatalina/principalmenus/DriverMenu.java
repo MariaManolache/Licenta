@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
@@ -21,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,6 +100,8 @@ public class DriverMenu extends AppCompatActivity {
     String restaurantImage;
     String orderId;
 
+    ImageView callButton;
+
     AlertDialog.Builder acceptOrder;
 
     BottomNavigationView bottomNavigationView;
@@ -129,6 +133,8 @@ public class DriverMenu extends AppCompatActivity {
         restaurantOrders = database.getReference().child("restaurantOrders");
 
         users = database.getReference().child("users");
+
+        callButton = findViewById(R.id.callButton);
 
         recyclerView = (RecyclerView) findViewById(R.id.ordersList);
         recyclerView.setHasFixedSize(true);
@@ -386,8 +392,34 @@ public class DriverMenu extends AppCompatActivity {
                                     }
                                 }
 
+                                LatLng clientAddress = getLocationFromAddress(String.valueOf(model.getAddress().getMapsAddress()));
+                                Double deliveryDistanceKm = SphericalUtil.computeDistanceBetween(sortedLocations.get(sortedLocations.size()-1), clientAddress);
 
-                                holder.distance.setText("Distanta: " + String.format("%.2f", totalDistance / 1000) + " km");
+
+                                holder.pickUpDistance.setText("Distanta de preluare: " + String.format("%.2f", totalDistance / 1000) + " km");
+                                holder.deliveryDistance.setText("Distanta de livrare: " + String.format("%.2f", deliveryDistanceKm / 1000) + " km");
+                                holder.totalDistance.setText("Distanta totala: " + String.format("%.2f", (totalDistance + deliveryDistanceKm) / 1000) + " km");
+
+                                users.child(model.getUserId()).child("phoneNumber").addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        String phoneNumber = snapshot.getValue(String.class);
+                                        holder.callButton.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Intent dialIntent = new Intent(Intent.ACTION_DIAL);
+                                                dialIntent.setData(Uri.parse("tel:" + phoneNumber));
+                                                startActivity(dialIntent);
+                                                finish();
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
                             }
                             String restaurantName2 = restaurantName;
                             String restaurantImage2 = restaurantImage;
@@ -643,16 +675,3 @@ class ParentViewHolderDriver
 
 }
 
-class UserComparator implements Comparator<Object> {
-    Map<LatLng, Double> map;
-    public UserComparator(Map<LatLng, Double> map) {
-        this.map = map;
-    }
-    public int compare(Object o1, Object o2) {
-        if (map.get(o2) == map.get(o1))
-            return 1;
-        else
-            return ((Double) map.get(o1)).compareTo((Double)
-                    map.get(o2));
-    }
-}

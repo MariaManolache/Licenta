@@ -4,61 +4,93 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".order.ConfirmationOrder" >
+    tools:context=".order.ConfirmationOrder">
 
 
     <TextView
         android:id="@+id/tvTimeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Timpul estimat de livrare este:"
-        android:textSize="20sp"
-        android:textColor="@color/violet"
-        android:textAlignment="center"
         android:fontFamily="@font/alata"
+        android:text="Comanda a fost plasata cu succes!"
+        android:textAlignment="center"
+        android:textColor="@color/violet"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"></TextView>
 
-    <TextView
-        android:id="@+id/tvDistance"
+    <LinearLayout
+        android:id="@+id/llDistance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="2000m"
-        android:textColor="@color/violet"
-        android:textSize="20sp"
-        android:fontFamily="@font/alata"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTimeText" ></TextView>
+        app:layout_constraintTop_toBottomOf="@+id/tvTimeText">
 
-    <TextView
-        android:id="@+id/tvTime"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alata"
+            android:text="Distanta totala este:"
+            android:textColor="@color/violet"
+            android:textSize="20sp"></TextView>
+
+        <TextView
+            android:id="@+id/tvDistance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alata"
+            android:text="2000m"
+            android:textColor="@color/violet"
+            android:textSize="20sp"></TextView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/estimated_arrival_time"
-        android:textSize="20sp"
-        android:textColor="@color/violet"
-        android:fontFamily="@font/alata"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDistance" ></TextView>
+        app:layout_constraintTop_toBottomOf="@+id/llDistance">
 
-<fragment
-    android:id="@+id/map"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
-    android:layout_width="match_parent"
-    android:layout_height="400dp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/tvTime" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alata"
+            android:text="Timpul de preparare este: "
+            android:textColor="@color/violet"
+            android:textSize="20sp"></TextView>
+
+        <TextView
+            android:id="@+id/tvTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alata"
+            android:text="@string/estimated_arrival_time"
+            android:textColor="@color/violet"
+            android:textSize="20sp"></TextView>
+
+    </LinearLayout>
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llTime" />
 
 
     <Button
         android:id="@+id/btnReturnToMainMenu"
-        android:text="@string/return_to_main_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/return_to_main_menu"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/map"></Button>

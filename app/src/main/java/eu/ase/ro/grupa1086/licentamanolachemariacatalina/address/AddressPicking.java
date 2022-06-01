@@ -83,6 +83,7 @@ public class AddressPicking extends AppCompatActivity {
     LocationCallback locationCallback;
     FusedLocationProviderClient fusedLocationProviderClient;
     Location currentLocation;
+    String sCurrentLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -363,7 +364,7 @@ public class AddressPicking extends AppCompatActivity {
                                                 placeOrder.putExtra("origin", "currentLocation");
                                                 placeOrder.putExtra("currentAddress", s);
                                                 startActivity(placeOrder);
-
+                                                finish();
 //                                                btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
 //                                                    @SuppressLint("MissingPermission")
 //                                                    @Override
@@ -689,6 +690,7 @@ public class AddressPicking extends AppCompatActivity {
             public void onLocationResult(@NonNull LocationResult locationResult) {
                 super.onLocationResult(locationResult);
                 currentLocation = locationResult.getLastLocation();
+                sCurrentLocation = getAddressFromLatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
             }
         };
     }

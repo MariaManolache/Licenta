@@ -84,7 +84,7 @@ public class Account extends AppCompatActivity {
 
         deleteAlert = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
 
-        //if(firebaseUser != null) {
+        if(firebaseUser != null) {
             databaseReference = FirebaseDatabase.getInstance().getReference("users").child(firebaseUser.getUid());
             listener = databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -102,7 +102,7 @@ public class Account extends AppCompatActivity {
                     Toast.makeText(Account.this, error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
-        //}
+        }
 
 
 
@@ -234,23 +234,42 @@ public class Account extends AppCompatActivity {
 //                                }
 //                            });
 
-                            user.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            databaseReference.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
-                                    Toast.makeText(Account.this, "Cont sters", Toast.LENGTH_LONG).show();
-                                    databaseReference.removeValue();
-                                    databaseReferenceCart.removeValue();
-                                    FirebaseAuth.getInstance().signOut();
-                                    startActivity(new Intent(getApplicationContext(), SignIn.class));
-                                    finish();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(Account.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                                    finish();
+                                    databaseReferenceCart.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            user.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void unused) {
+                                                    Toast.makeText(Account.this, "Cont sters", Toast.LENGTH_LONG).show();
+                                                    FirebaseAuth.getInstance().signOut();
+                                                    startActivity(new Intent(getApplicationContext(), SignIn.class));
+                                                    finish();
+                                                }
+                                            });
+                                        }
+                                    });
                                 }
                             });
+//                            user.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                @Override
+//                                public void onSuccess(Void unused) {
+//                                    Toast.makeText(Account.this, "Cont sters", Toast.LENGTH_LONG).show();
+//                                    databaseReference.removeValue();
+//                                    databaseReferenceCart.removeValue();
+//                                    FirebaseAuth.getInstance().signOut();
+//                                    startActivity(new Intent(getApplicationContext(), SignIn.class));
+//                                    finish();
+//                                }
+//                            }).addOnFailureListener(new OnFailureListener() {
+//                                @Override
+//                                public void onFailure(@NonNull Exception e) {
+//                                    Toast.makeText(Account.this, e.getMessage(), Toast.LENGTH_LONG).show();
+//                                    finish();
+//                                }
+//                            });
 
                         }
                     }).setNegativeButton("Nu", null)

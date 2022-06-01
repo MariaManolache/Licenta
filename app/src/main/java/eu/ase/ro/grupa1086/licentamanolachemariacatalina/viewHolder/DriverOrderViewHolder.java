@@ -16,10 +16,13 @@ public class DriverOrderViewHolder extends RecyclerView.ViewHolder implements Vi
     public TextView orderStatus;
     public TextView orderAddress;
     public TextView orderPriceTotal;
-    public TextView distance;
+    public TextView pickUpDistance;
+    public TextView deliveryDistance;
+    public TextView totalDistance;
     public ImageView restaurantImage;
     public ImageView downArrow;
     public ImageView upArrow;
+    public ImageView callButton;
 
     private ItemClickListener itemClickListener;
 
@@ -33,10 +36,13 @@ public class DriverOrderViewHolder extends RecyclerView.ViewHolder implements Vi
         orderStatus = itemView.findViewById(R.id.orderStatus);
         orderAddress = itemView.findViewById(R.id.orderAddress);
         orderPriceTotal = itemView.findViewById(R.id.orderPriceTotal);
-        distance = itemView.findViewById(R.id.kmDistance);
+        pickUpDistance = itemView.findViewById(R.id.pickUpDistance);
+        deliveryDistance = itemView.findViewById(R.id.deliveryDistance);
+        totalDistance = itemView.findViewById(R.id.totalDistance);
         restaurantImage = itemView.findViewById(R.id.restaurantImage);
         downArrow = itemView.findViewById(R.id.downArrow);
         upArrow = itemView.findViewById(R.id.upArrow);
+        callButton = itemView.findViewById(R.id.callButton);
 
         secondRecyclerView = itemView.findViewById(R.id.orderDetails);
         //secondRecyclerView.setHasFixedSize(true);

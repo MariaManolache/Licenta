@@ -18,6 +18,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:src="@drawable/driver"></ImageView>
+
 
         <TextView
             android:layout_width="match_parent"
@@ -77,16 +83,6 @@
                 android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
         </FrameLayout>
 
-        <TextView
-            android:id="@+id/tvSignUp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/register_here"
-            android:textColor="@color/violet"
-            android:textStyle="italic"
-            android:textAlignment="center"
-            android:textSize="20dp"
-            android:layout_marginTop="25dp"/>
 
         <Button
             android:id="@+id/btnConnect"

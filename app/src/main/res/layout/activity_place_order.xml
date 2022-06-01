@@ -464,6 +464,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/violet"
                 android:textSize="25sp"
+                android:textStyle="bold"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

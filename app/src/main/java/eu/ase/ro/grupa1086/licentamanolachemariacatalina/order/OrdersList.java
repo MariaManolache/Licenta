@@ -283,9 +283,9 @@ public class OrdersList extends AppCompatActivity {
 
                                                                 Intent foodInfo = new Intent(OrdersList.this, FoodInfo.class);
                                                                 foodInfo.putExtra("origin", "ordersList");
-                                                                foodInfo.putExtra("orderId", local.getId());
+                                                                foodInfo.putExtra("orderId", model.getId());
                                                                 foodInfo.putExtra("quantity", local2.getQuantity());
-                                                                foodInfo.putExtra("foodId", model.getId());
+                                                                foodInfo.putExtra("foodId", local2.getId());
                                                                 foodInfo.putExtra("restaurantId", model.getRestaurantId());
                                                                 startActivity(foodInfo);
 
@@ -607,6 +607,12 @@ public class OrdersList extends AppCompatActivity {
         adapter.startListening();
         //secondAdapter.startListening();
     }
+
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        adapter.stopListening();
+//    }
 }
 
 class ParentViewHolder

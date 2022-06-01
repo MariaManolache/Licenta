@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.Home;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.PrincipalMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Address;
@@ -89,16 +90,18 @@ public class PhoneNumberValidation extends AppCompatActivity {
                                 FirebaseUser user = firebaseAuth.getCurrentUser();
                                 String id = user.getUid();
                                 databaseReference = FirebaseDatabase.getInstance().getReference("users").child(id);
-                                HashMap<String, String> hashMap = new HashMap<>();
-                                hashMap.put("id", id);
-                                hashMap.put("name", name);
-                                hashMap.put("email", email);
-                                hashMap.put("phoneNumber", phoneNumber);
-                                hashMap.put("password", password);
-                                hashMap.put("isDriver", String.valueOf(isDriver));
+//                                HashMap<String, String> hashMap = new HashMap<>();
+//                                hashMap.put("id", id);
+//                                hashMap.put("name", name);
+//                                hashMap.put("email", email);
+//                                hashMap.put("phoneNumber", phoneNumber);
+//                                hashMap.put("password", password);
+//                                hashMap.put("isDriver", isDriver);
+
+                                User newUser = new User(id, email, name, password,phoneNumber, isDriver);
 
 
-                                databaseReference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                databaseReference.setValue(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
