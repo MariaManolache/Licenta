@@ -31,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.MainActivity;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.PersonalDriverOrders;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.DriverMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
@@ -207,6 +208,11 @@ public class DriverAccount extends AppCompatActivity {
                         return true;
                     case R.id.orders:
                         startActivity(new Intent(getApplicationContext(), DriverMenu.class));
+                        overridePendingTransition(0, 0);
+                        return true;
+                    case R.id.personalOrders:
+                        startActivity(new Intent(getApplicationContext(), PersonalDriverOrders.class));
+                        finish();
                         overridePendingTransition(0, 0);
                         return true;
                 }

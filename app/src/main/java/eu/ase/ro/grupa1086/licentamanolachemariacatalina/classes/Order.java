@@ -17,6 +17,7 @@ public class Order implements Serializable {
     private List<Rating> ratingsList;
     private List<Restaurant> restaurants;
     private int preparationTime;
+    private String driverId;
 
     public Order() {
 
@@ -133,6 +134,14 @@ public class Order implements Serializable {
 
     public void setPreparationTime(int preparationTime) {
         this.preparationTime = preparationTime;
+    }
+
+    public String getDriverId() {
+        return driverId;
+    }
+
+    public void setDriverId(String driverId) {
+        this.driverId = driverId;
     }
 
     @Override

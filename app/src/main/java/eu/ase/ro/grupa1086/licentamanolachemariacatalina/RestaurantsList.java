@@ -103,7 +103,7 @@ public class RestaurantsList extends AppCompatActivity {
 
                             //restaurantId
                             Intent foodList = new Intent(RestaurantsList.this, FoodList.class);
-                            foodList.putExtra("restaurantId", adapter.getRef(position).getKey());
+                            foodList.putExtra("restaurantId", model.getId());
                             startActivity(foodList);
 
                         }

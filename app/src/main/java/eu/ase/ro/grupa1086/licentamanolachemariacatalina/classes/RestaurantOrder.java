@@ -14,6 +14,7 @@ public class RestaurantOrder implements Serializable {
     private Restaurant restaurant;
     private Address address;
     private int preparationTime;
+    private String driverId;
 
     public RestaurantOrder() {
 
@@ -122,6 +123,14 @@ public class RestaurantOrder implements Serializable {
 
     public void setPreparationTime(int preparationTime) {
         this.preparationTime = preparationTime;
+    }
+
+    public String getDriverId() {
+        return driverId;
+    }
+
+    public void setDriverId(String driverId) {
+        this.driverId = driverId;
     }
 
     @Override

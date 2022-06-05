@@ -209,7 +209,7 @@ public class OrdersList extends AppCompatActivity {
                         holder.restaurantsName.setText(restaurantName);
                         holder.orderStatus.setText(getString(R.string.order_status) + " " + String.valueOf(model.getStatus()).substring(0, 1).toUpperCase(Locale.ROOT) + String.valueOf(model.getStatus()).replace("_", " ").substring(1));
                         holder.orderAddress.setText(getString(R.string.address) + " " + model.getAddress().getMapsAddress());
-                        holder.orderPriceTotal.setText(getString(R.string.total) + " " + model.getTotal() + " " + getString(R.string.lei));
+                        holder.orderPriceTotal.setText(getString(R.string.total) + " " + (double)Math.round(model.getTotal() * 100d) / 100d + " " + getString(R.string.lei));
                         Picasso.with(getBaseContext()).load(restaurantImage)
                                 .into(holder.restaurantImage);
 
@@ -269,7 +269,7 @@ public class OrdersList extends AppCompatActivity {
 
                                                     holder2.foodPrice.setText(String.valueOf(model.getPrice()));
                                                     holder2.foodQuantity.setText(String.valueOf(model.getQuantity()));
-                                                    holder2.foodTotal.setText(model.getPrice() * model.getQuantity() + " lei");
+                                                    holder2.foodTotal.setText((double)Math.round(model.getPrice() * model.getQuantity() * 100d) / 100d + " lei");
                                                     Picasso.with(getBaseContext()).load(model.getImage())
                                                             .into(holder2.foodImage);
 
@@ -547,7 +547,7 @@ public class OrdersList extends AppCompatActivity {
 
                         holder.foodPrice.setText(String.valueOf(model.getPrice()));
                         holder.foodQuantity.setText(String.valueOf(model.getQuantity()));
-                        holder.foodTotal.setText(model.getPrice() * model.getQuantity() + " lei");
+                        holder.foodTotal.setText((double)Math.round(model.getPrice() * model.getQuantity() * 100d) / 100d + " lei");
                         Picasso.with(getBaseContext()).load(model.getImage())
                                 .into(holder.foodImage);
 

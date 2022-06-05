@@ -137,12 +137,12 @@
 
                         </LinearLayout>
 
-                            <ImageView
-                                android:id="@+id/callButton"
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:layout_gravity="bottom"
-                                android:src="@drawable/ic_baseline_phone_in_talk_24"></ImageView>
+<!--                            <ImageView-->
+<!--                                android:id="@+id/callButton"-->
+<!--                                android:layout_width="50dp"-->
+<!--                                android:layout_height="50dp"-->
+<!--                                android:layout_gravity="bottom"-->
+<!--                                android:src="@drawable/ic_baseline_phone_in_talk_24"></ImageView>-->
 
                         </LinearLayout>
 

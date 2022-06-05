@@ -3,9 +3,13 @@ package eu.ase.ro.grupa1086.licentamanolachemariacatalina.order;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +25,7 @@ import android.widget.Toast;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -77,7 +82,7 @@ public class RestaurantOrders extends AppCompatActivity {
     String restaurantName;
     String restaurantImage;
     String orderId;
-    ImageView callButton;
+    //ImageView callButton;
 
     BottomNavigationView bottomNavigationView;
     boolean allRestaurantsConfirmed;
@@ -104,7 +109,7 @@ public class RestaurantOrders extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        callButton = findViewById(R.id.callButton);
+        //callButton = findViewById(R.id.callButton);
 
         acceptOrder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
 
@@ -337,7 +342,23 @@ public class RestaurantOrders extends AppCompatActivity {
                                                                                                     @Override
                                                                                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                                                                         Order orderToBeAdded = snapshot.getValue(Order.class);
-                                                                                                        driverOrders.child(model.getOrderId()).setValue(orderToBeAdded);
+                                                                                                        driverOrders.child("orders").child(model.getOrderId()).setValue(orderToBeAdded).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                                            @Override
+                                                                                                            public void onSuccess(Void unused) {
+//                                                                                                                String message = "Comanda a fost acceptata! Restaurantele au inceput sa o prepare";
+//                                                                                                                NotificationCompat.Builder builder = new NotificationCompat.Builder(RestaurantOrders.this, "my_channel_id_01")
+//                                                                                                                        .setSmallIcon(R.drawable.ic_baseline_restaurant_menu_24)
+//                                                                                                                        .setContentTitle("Notificare noua")
+//                                                                                                                        .setContentText(message)
+//                                                                                                                        .setAutoCancel(true)
+//                                                                                                                        .setDefaults(Notification.DEFAULT_ALL)
+//                                                                                                                        .setPriority(Notification.PRIORITY_MAX);
+//
+//
+//                                                                                                                NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+//                                                                                                                notificationManager.notify(1, builder.build());
+                                                                                                            }
+                                                                                                        });
                                                                                                     }
 
                                                                                                     @Override

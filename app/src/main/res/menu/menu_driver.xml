@@ -6,6 +6,11 @@
         android:icon="@drawable/ic_bill"></item>
 
     <item
+        android:id="@+id/personalOrders"
+        android:title="@string/personal_orders"
+        android:icon="@drawable/ic_bill"></item>
+
+    <item
         android:id="@+id/account"
         android:title="@string/account"
         android:icon="@drawable/ic_baseline_account_circle_24"></item>

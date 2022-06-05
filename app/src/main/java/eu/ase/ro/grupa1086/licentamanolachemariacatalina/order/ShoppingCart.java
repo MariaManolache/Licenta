@@ -208,7 +208,7 @@ public class ShoppingCart extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent placeOrder = new Intent(ShoppingCart.this, PlaceOrder.class);
-                        placeOrder.putExtra("total", total);
+                        placeOrder.putExtra("total", (double) Math.round(total * 100d) / 100d);
                         startActivity(placeOrder);
                     }
                 });
@@ -231,7 +231,7 @@ public class ShoppingCart extends AppCompatActivity {
                 .child("carts")
                 .child(id)
                 .child("foodList")
-                //.orderByChild("restaurantId").equalTo(restaurantId)
+                .orderByChild("restaurantId")
                 .limitToLast(50);
 
         Log.i("hello", query.toString());
@@ -256,7 +256,7 @@ public class ShoppingCart extends AppCompatActivity {
 
                 holder.tvCartPrice.setText(String.valueOf(model.getPrice()));
                 holder.tvCartQuantity.setText(String.valueOf(model.getQuantity()));
-                holder.tvCartValue.setText(model.getPrice() * model.getQuantity() + " lei");
+                holder.tvCartValue.setText((double)Math.round(model.getPrice() * model.getQuantity() * 100d) / 100d + " lei");
                 holder.tvQuantityDisplay.setText(String.valueOf(model.getQuantity()));
 
                 restaurants =  FirebaseDatabase.getInstance().getReference("restaurants").child(model.getRestaurantId());
@@ -332,7 +332,7 @@ public class ShoppingCart extends AppCompatActivity {
                 });
 
                 if (total > 0) {
-                    tvTotalPrice.setText(total + " LEI");
+                    tvTotalPrice.setText((double)Math.round(total * 100d) / 100d + " LEI");
                 } else {
                     tvTotalPrice.setText("0 LEI");
                 }

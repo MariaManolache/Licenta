@@ -266,13 +266,15 @@ public class PlaceOrder extends AppCompatActivity {
                                 int totalPreparationTime = 0;
                                 for(int i = 0; i < cartList.size(); i++) {
                                     totalPreparationTime += cartList.get(i).getPreparationTime() * cartList.get(i).getQuantity();
-                                    listOfTimes.add(totalPreparationTime);
+                                    listOfTimes.add(cartList.get(i).getPreparationTime() * cartList.get(i).getQuantity());
                                 }
 
                                 Integer max = Collections.max(listOfTimes);
 
                                 Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, max);
                                 order.setRestaurantAddress(restaurantAddresses);
+
+                                listOfTimes = new ArrayList<>();
 
                                 List<String> restaurantsId = new ArrayList<>();
                                 restaurantsId.add(cartList.get(0).getRestaurantId());
@@ -439,13 +441,15 @@ public class PlaceOrder extends AppCompatActivity {
                         int totalPreparationTime = 0;
                         for(int i = 0; i < cartList.size(); i++) {
                             totalPreparationTime += cartList.get(i).getPreparationTime() * cartList.get(i).getQuantity();
-                            listOfTimes.add(totalPreparationTime);
+                            listOfTimes.add(cartList.get(i).getPreparationTime() * cartList.get(i).getQuantity());
                         }
 
                         Integer max = Collections.max(listOfTimes);
 
                         Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, max);
                         order.setRestaurantAddress(restaurantAddresses);
+
+                        listOfTimes = new ArrayList<>();
 
                         List<String> restaurantsId = new ArrayList<>();
                         restaurantsId.add(cartList.get(0).getRestaurantId());
@@ -609,13 +613,15 @@ public class PlaceOrder extends AppCompatActivity {
                         int totalPreparationTime = 0;
                         for(int i = 0; i < cartList.size(); i++) {
                             totalPreparationTime += cartList.get(i).getPreparationTime() * cartList.get(i).getQuantity();
-                            listOfTimes.add(totalPreparationTime);
+                            listOfTimes.add(cartList.get(i).getPreparationTime() * cartList.get(i).getQuantity());
                         }
 
                         Integer max = Collections.max(listOfTimes);
 
                         Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, max);
                         order.setRestaurantAddress(restaurantAddresses);
+
+                        listOfTimes = new ArrayList<>();
 
                         List<String> restaurantsId = new ArrayList<>();
                         restaurantsId.add(cartList.get(0).getRestaurantId());
@@ -727,13 +733,15 @@ public class PlaceOrder extends AppCompatActivity {
                             int totalPreparationTime = 0;
                             for(int i = 0; i < cartList.size(); i++) {
                                 totalPreparationTime += cartList.get(i).getPreparationTime() * cartList.get(i).getQuantity();
-                                listOfTimes.add(totalPreparationTime);
+                                listOfTimes.add(cartList.get(i).getPreparationTime() * cartList.get(i).getQuantity());
                             }
 
                             Integer max = Collections.max(listOfTimes);
 
                             Order order = new Order(orderId, total, userId, paymentMethod, address, cartList, status, max);
                             order.setRestaurantAddress(restaurantAddresses);
+
+                            listOfTimes = new ArrayList<>();
 
                             List<String> restaurantsId = new ArrayList<>();
                             restaurantsId.add(cartList.get(0).getRestaurantId());
