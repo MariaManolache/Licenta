@@ -97,14 +97,16 @@ public class ResetPassword extends AppCompatActivity {
 
                                             assert user2 != null;
                                             if(user2.getId().equals(user.getUid())) {
-                                                HashMap<String, String> hashMap = new HashMap<>();
-                                                hashMap.put("id", user2.getId());
-                                                hashMap.put("name", user2.getName());
-                                                hashMap.put("email", user2.getEmail());
-                                                hashMap.put("phoneNumber", user2.getPhoneNumber());
-                                                hashMap.put("password", newPassword.getText().toString());
+                                                User newUserPassword = new User(user2.getId(), user2.getEmail(), user2.getName(), newPassword.getText().toString(), user2.getPhoneNumber(), 0);
 
-                                                databaseReference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                                HashMap<String, String> hashMap = new HashMap<>();
+//                                                hashMap.put("id", user2.getId());
+//                                                hashMap.put("name", user2.getName());
+//                                                hashMap.put("email", user2.getEmail());
+//                                                hashMap.put("phoneNumber", user2.getPhoneNumber());
+//                                                hashMap.put("password", newPassword.getText().toString());
+
+                                                databaseReference.setValue(newUserPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
                                                         if(task.isSuccessful()) {

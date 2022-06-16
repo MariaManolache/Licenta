@@ -100,7 +100,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerRestaurants"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="160dp"
                 android:scrollbars="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -110,7 +110,7 @@
                 android:id="@+id/foodFrameLayout"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/border_account"
                 android:outlineAmbientShadowColor="@android:color/darker_gray"
                 app:layout_constraintEnd_toEndOf="parent"

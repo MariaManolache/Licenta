@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/alata"
-        android:text="Comanda a fost plasata cu succes!"
+        android:text="@string/order_placed_successfully"
         android:textAlignment="center"
         android:textColor="@color/violet"
         android:textSize="30sp"
@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/alata"
-            android:text="Distanta totala este:"
+            android:text="Distanța totală este:"
             android:textColor="@color/violet"
             android:textSize="20sp"></TextView>
 

@@ -150,17 +150,19 @@ public class RestaurantAccount extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Restaurant restaurant = snapshot.getValue(Restaurant.class);
-                        restaurantName.setText(restaurant.getName());
-                        restaurantAddress.setText(restaurant.getAddress());
-                        Picasso.with(getBaseContext()).load(restaurant.getImage()).into(restaurantImage);
+                        if(restaurant != null) {
+                            restaurantName.setText(restaurant.getName());
+                            restaurantAddress.setText(restaurant.getAddress());
+                            Picasso.with(getBaseContext()).load(restaurant.getImage()).into(restaurantImage);
 
-                        String categoryName = "";
-                        for (Map.Entry<String, String> entry : mapCategoryId.entrySet()) {
-                            if (restaurant.getCategoryId().equals(entry.getKey())) {
-                                categoryName = entry.getValue();
-                                Log.i("categoryName", categoryName);
-                                int spinnerPosition = departsAdapter.getPosition(categoryName);
-                                categorySpinner.setSelection(spinnerPosition);
+                            String categoryName = "";
+                            for (Map.Entry<String, String> entry : mapCategoryId.entrySet()) {
+                                if (restaurant.getCategoryId().equals(entry.getKey())) {
+                                    categoryName = entry.getValue();
+                                    Log.i("categoryName", categoryName);
+                                    int spinnerPosition = departsAdapter.getPosition(categoryName);
+                                    categorySpinner.setSelection(spinnerPosition);
+                                }
                             }
                         }
 
@@ -233,7 +235,9 @@ public class RestaurantAccount extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User restaurantUser = snapshot.getValue(User.class);
-                restaurantPhoneNumber.setText(restaurantUser.getPhoneNumber());
+                if(restaurantUser != null) {
+                    restaurantPhoneNumber.setText(restaurantUser.getPhoneNumber());
+                }
             }
 
             @Override

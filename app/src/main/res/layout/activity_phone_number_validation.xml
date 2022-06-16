@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/mintgreenbackground"
+    android:background="@color/teal_100"
     tools:context=".account.PhoneNumberValidation">
 
     <LinearLayout
@@ -45,6 +45,7 @@
                 android:backgroundTint="@color/white"
                 android:fontFamily="@font/alata"
                 android:hint="123456"
+                android:textAlignment="center"
                 android:inputType="number"
                 android:textColorHint="@color/violet"
                 android:textSize="25dp"
@@ -66,6 +67,7 @@
             android:id="@+id/btnValidate"
             android:layout_width="match_parent"
             android:gravity="center"
+            android:fontFamily="@font/alata"
             android:textAlignment="center"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
