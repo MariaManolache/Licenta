@@ -175,4 +175,10 @@
         app:itemTextColor="@drawable/selector"
         app:menu="@menu/menu_navigation"></com.google.android.material.bottomnavigation.BottomNavigationView>
 
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:popupTheme="@style/customMenu"
+        android:id="@+id/toolbarMenu"></androidx.appcompat.widget.Toolbar>
+
 </RelativeLayout>

@@ -105,9 +105,9 @@ public class ShoppingCart extends AppCompatActivity {
         SwipeHelper swipeHelper = new SwipeHelper(getApplicationContext(), recyclerView, 200) {
             @Override
             public void instantiateMyButton(RecyclerView.ViewHolder viewHolder, List<MyButton> buffer) {
-                buffer.add(new MyButton(getApplicationContext(), "Stergere", 30, 0, Color.parseColor("#FF3C30"),
+                buffer.add(new MyButton(getApplicationContext(), "Ștergere", 30, 0, Color.parseColor("#FF3C30"),
                         position -> {
-                            Toast.makeText(getApplicationContext(), "Produsul a fost eliminat din cos", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Produsul a fost eliminat din coș", Toast.LENGTH_SHORT).show();
                             Food deletedFood = adapter.getItem(position);
                             total -= deletedFood.getPrice() * deletedFood.getQuantity();
                             DatabaseReference cartItem = cart.child(deletedFood.getId());

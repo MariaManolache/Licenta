@@ -16,8 +16,9 @@
 
         <EditText
             android:id="@+id/etComment"
-            android:hint="Spune-ti parerea in legatura cu produsul comandat"
+            android:hint="Spune-ți părerea în legatură cu produsul comandat"
             android:textSize="25sp"
+            android:textAlignment="center"
             android:fontFamily="@font/alata"
             android:textColor="@color/violet"
             android:textColorHint="@color/violet"

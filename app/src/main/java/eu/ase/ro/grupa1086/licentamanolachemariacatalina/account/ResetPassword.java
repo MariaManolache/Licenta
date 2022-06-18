@@ -111,10 +111,13 @@ public class ResetPassword extends AppCompatActivity {
                                                     public void onComplete(@NonNull Task<Void> task) {
                                                         if(task.isSuccessful()) {
                                                             Toast.makeText(ResetPassword.this, "Parola a fost resetata", Toast.LENGTH_LONG).show();
+                                                            firebaseAuth.signOut();
+                                                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                                            finish();
 //                                                startActivity(new Intent(getApplicationContext(), MainMenu.class));
 //                                                finish();
                                                         } else {
-                                                            Toast.makeText(ResetPassword.this, "Eroare la modificarea parolei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                                            //Toast.makeText(ResetPassword.this, "Eroare la modificarea parolei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                                         }
                                                     }
                                                 });
@@ -134,9 +137,7 @@ public class ResetPassword extends AppCompatActivity {
 //                                    hashMap.put("email", email);
 
                                     Toast.makeText(ResetPassword.this, "Parola a fost resetata", Toast.LENGTH_LONG).show();
-                                    firebaseAuth.signOut();
-                                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                    finish();
+
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override

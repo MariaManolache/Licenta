@@ -462,7 +462,7 @@ public class FoodInfo extends FragmentActivity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
         builder.setTitle("Rating produs");
-        builder.setMessage("Lasa un rating pentru acest produs");
+        builder.setMessage("Lasă un rating pentru acest produs");
 
         View itemView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.rating, null);
 

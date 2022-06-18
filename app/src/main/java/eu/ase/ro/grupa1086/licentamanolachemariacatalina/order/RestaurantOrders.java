@@ -302,7 +302,7 @@ public class RestaurantOrders extends AppCompatActivity {
                             } else if (isLongClick) {
                                 if (model.getStatus().equals(Status.plasata)) {
 //                                    View viewPopUp = inflater.inflate(R.layout.reset_name_pop_up, null);
-                                    acceptOrder.setTitle("Acceptati aceasta comanda?")
+                                    acceptOrder.setTitle("Acceptați această comandă?")
                                             .setPositiveButton("Confirmare", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
@@ -391,7 +391,8 @@ public class RestaurantOrders extends AppCompatActivity {
                                                     });
 
                                                 }
-                                            }).setNegativeButton("Anuleaza", null)
+                                            }).setNegativeButton("Respingere", null)
+                                            .setNeutralButton("Anulează", null)
                                             .create().show();
 
                                 }

@@ -78,4 +78,19 @@
         <item name="android:singleLine">true</item>
     </style>
 
+    <style name="prefixText" parent="Theme.AppCompat.Light">
+        <item name="android:fontFamily">@font/alata</item>
+        <item name="android:textSize">20sp</item>
+        <item name="textFillColor">@color/violet</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="customMenu" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:textColor">@color/violet</item>
+        <item name="fontFamily">@font/alata</item>
+    </style>
+
 </resources>

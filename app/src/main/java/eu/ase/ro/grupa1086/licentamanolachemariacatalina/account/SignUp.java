@@ -96,7 +96,7 @@ public class SignUp extends AppCompatActivity {
             public void onClick(View v) {
                 final String name = etName.getText().toString().trim();
                 final String email = etEmail.getText().toString().trim();
-                final String phoneNumber = etPhoneNumber.getText().toString().trim();
+                final String phoneNumber = "+40" + etPhoneNumber.getText().toString().trim();
                 final String password = etPassword.getText().toString().trim();
 
                 if(TextUtils.isEmpty(name)) {

@@ -193,8 +193,8 @@ public class Account extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(), ResetPassword.class));
         }
         if(item.getItemId() == R.id.deleteAccount) {
-            deleteAlert.setTitle("Doresti sa iti stergi contul?")
-                    .setMessage("Esti sigur? Actiunea nu este reversibila.")
+            deleteAlert.setTitle("Dorești să îți ștergi contul?")
+                    .setMessage("Ești sigur? Acțiunea nu este reversibilă.")
                     .setPositiveButton("Da", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

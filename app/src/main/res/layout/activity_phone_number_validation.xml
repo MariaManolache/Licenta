@@ -11,8 +11,8 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_centerInParent="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_centerVertical="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -24,33 +24,237 @@
             android:gravity="center"
             android:text="@string/validate_phone_number"
             android:textStyle="bold"
+            android:fontFamily="@font/alata"
             android:textColor="@color/violet"
             android:textAlignment="center"
             android:textSize="40dp"></TextView>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_margin="50dp"
-            android:outlineAmbientShadowColor="@android:color/darker_gray"
-            android:background="@drawable/border"
-            tools:targetApi="p">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etValidationCode"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:backgroundTint="@color/white"
-                android:fontFamily="@font/alata"
-                android:hint="123456"
-                android:textAlignment="center"
-                android:inputType="number"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="50dp"
+                android:layout_height="70dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginRight="4dp"
+                android:splitMotionEvents="false"
+                app:boxBackgroundColor="@color/white"
                 android:textColorHint="@color/violet"
-                android:textSize="25dp"
-                android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
-        </FrameLayout>
+                app:boxStrokeColor="@color/violet"
+                app:counterTextColor="@color/violet"
+                android:outlineSpotShadowColor="@color/violet"
+                app:hintTextColor="@color/violet"
+                app:boxCornerRadiusBottomEnd="20dp"
+                app:boxCornerRadiusBottomStart="20dp"
+                app:boxCornerRadiusTopEnd="20dp"
+                app:boxCornerRadiusTopStart="20dp"
+                android:outlineAmbientShadowColor="@android:color/darker_gray"
+                tools:targetApi="p">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etValidationCode1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:backgroundTint="@color/white"
+                    android:fontFamily="@font/alata"
+                    android:inputType="number"
+                    android:textColor="@color/violet"
+                    android:textAlignment="center"
+                    android:textColorHint="@color/violet"
+                    android:textSize="25dp"
+                    android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="50dp"
+                android:layout_height="70dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginRight="4dp"
+                android:splitMotionEvents="false"
+                app:boxBackgroundColor="@color/white"
+                android:textColorHint="@color/violet"
+                app:boxStrokeColor="@color/violet"
+                app:counterTextColor="@color/violet"
+                android:outlineSpotShadowColor="@color/violet"
+                app:hintTextColor="@color/violet"
+                app:boxCornerRadiusBottomEnd="20dp"
+                app:boxCornerRadiusBottomStart="20dp"
+                app:boxCornerRadiusTopEnd="20dp"
+                app:boxCornerRadiusTopStart="20dp"
+                android:outlineAmbientShadowColor="@android:color/darker_gray"
+                tools:targetApi="p">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etValidationCode2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:backgroundTint="@color/white"
+                    android:fontFamily="@font/alata"
+                    android:inputType="number"
+                    android:textColor="@color/violet"
+                    android:textAlignment="center"
+                    android:textColorHint="@color/violet"
+                    android:textSize="25dp"
+                    android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="50dp"
+                android:layout_height="70dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginRight="4dp"
+                android:splitMotionEvents="false"
+                app:boxBackgroundColor="@color/white"
+                android:textColorHint="@color/violet"
+                app:boxStrokeColor="@color/violet"
+                app:counterTextColor="@color/violet"
+                android:outlineSpotShadowColor="@color/violet"
+                app:hintTextColor="@color/violet"
+                app:boxCornerRadiusBottomEnd="20dp"
+                app:boxCornerRadiusBottomStart="20dp"
+                app:boxCornerRadiusTopEnd="20dp"
+                app:boxCornerRadiusTopStart="20dp"
+                android:outlineAmbientShadowColor="@android:color/darker_gray"
+                tools:targetApi="p">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etValidationCode3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:backgroundTint="@color/white"
+                    android:fontFamily="@font/alata"
+                    android:inputType="number"
+                    android:textColor="@color/violet"
+                    android:textAlignment="center"
+                    android:textColorHint="@color/violet"
+                    android:textSize="25dp"
+                    android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="50dp"
+                android:layout_height="70dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginRight="4dp"
+                android:splitMotionEvents="false"
+                app:boxBackgroundColor="@color/white"
+                android:textColorHint="@color/violet"
+                app:boxStrokeColor="@color/violet"
+                app:counterTextColor="@color/violet"
+                android:outlineSpotShadowColor="@color/violet"
+                app:hintTextColor="@color/violet"
+                app:boxCornerRadiusBottomEnd="20dp"
+                app:boxCornerRadiusBottomStart="20dp"
+                app:boxCornerRadiusTopEnd="20dp"
+                app:boxCornerRadiusTopStart="20dp"
+                android:outlineAmbientShadowColor="@android:color/darker_gray"
+                tools:targetApi="p">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etValidationCode4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:backgroundTint="@color/white"
+                    android:fontFamily="@font/alata"
+                    android:textColor="@color/violet"
+                    android:inputType="number"
+                    android:textAlignment="center"
+                    android:textColorHint="@color/violet"
+                    android:textSize="25dp"
+                    android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="50dp"
+                android:layout_height="70dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginRight="4dp"
+                android:splitMotionEvents="false"
+                app:boxBackgroundColor="@color/white"
+                android:textColorHint="@color/violet"
+                app:boxStrokeColor="@color/violet"
+                app:counterTextColor="@color/violet"
+                android:outlineSpotShadowColor="@color/violet"
+                app:hintTextColor="@color/violet"
+                app:boxCornerRadiusBottomEnd="20dp"
+                app:boxCornerRadiusBottomStart="20dp"
+                app:boxCornerRadiusTopEnd="20dp"
+                app:boxCornerRadiusTopStart="20dp"
+                android:outlineAmbientShadowColor="@android:color/darker_gray"
+                tools:targetApi="p">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etValidationCode5"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:backgroundTint="@color/white"
+                    android:fontFamily="@font/alata"
+                    android:inputType="number"
+                    android:textColor="@color/violet"
+                    android:textAlignment="center"
+                    android:textColorHint="@color/violet"
+                    android:textSize="25dp"
+                    android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="50dp"
+                android:layout_height="70dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginRight="4dp"
+                android:splitMotionEvents="false"
+                app:boxBackgroundColor="@color/white"
+                android:textColorHint="@color/violet"
+                app:boxStrokeColor="@color/violet"
+                app:counterTextColor="@color/violet"
+                android:outlineSpotShadowColor="@color/violet"
+                app:hintTextColor="@color/violet"
+                app:boxCornerRadiusBottomEnd="20dp"
+                app:boxCornerRadiusBottomStart="20dp"
+                app:boxCornerRadiusTopEnd="20dp"
+                app:boxCornerRadiusTopStart="20dp"
+                android:outlineAmbientShadowColor="@android:color/darker_gray"
+                tools:targetApi="p">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etValidationCode6"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:backgroundTint="@color/white"
+                    android:fontFamily="@font/alata"
+                    android:inputType="number"
+                    android:textColor="@color/violet"
+                    android:textAlignment="center"
+                    android:textColorHint="@color/violet"
+                    android:textSize="25dp"
+                    android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tvSignUp"
@@ -66,14 +270,15 @@
         <Button
             android:id="@+id/btnValidate"
             android:layout_width="match_parent"
-            android:gravity="center"
-            android:fontFamily="@font/alata"
-            android:textAlignment="center"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
             android:layout_marginTop="100dp"
-            android:text="@string/validate"></Button>
+            android:layout_marginRight="50dp"
+            android:fontFamily="@font/alata"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="@string/validate"
+            android:textAlignment="center"></Button>
 
         <ProgressBar
             android:id="@+id/progressBarPhoneValidation"

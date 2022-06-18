@@ -26,12 +26,23 @@
             android:textColor="@color/violet"
             android:textSize="50dp"></TextView>
 
-        <FrameLayout
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_margin="20dp"
-            android:background="@drawable/border"
+            android:layout_height="70dp"
+            android:layout_margin="10dp"
             android:outlineAmbientShadowColor="@android:color/darker_gray"
+            android:outlineSpotShadowColor="@color/violet"
+            android:splitMotionEvents="false"
+            android:textColorHint="@color/violet"
+            app:boxBackgroundColor="@color/white"
+            app:boxCornerRadiusBottomEnd="20dp"
+            app:boxCornerRadiusBottomStart="20dp"
+            app:boxCornerRadiusTopEnd="20dp"
+            app:boxCornerRadiusTopStart="20dp"
+            app:boxStrokeColor="@color/violet"
+            app:counterTextColor="@color/violet"
+            app:hintTextColor="@color/violet"
             tools:targetApi="p">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -42,21 +53,33 @@
                 android:backgroundTint="@color/white"
                 android:fontFamily="@font/alata"
                 android:hint="@string/name"
-                android:inputType="text"
+                android:inputType="textCapWords"
                 android:textColor="@color/violet"
                 android:textColorHint="@color/violet"
-                android:textSize="25dp"
+                android:textSize="20dp"
                 android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
-        </FrameLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
 
-        <FrameLayout
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_margin="20dp"
-            android:background="@drawable/border"
+            android:layout_height="70dp"
+            android:layout_margin="10dp"
             android:outlineAmbientShadowColor="@android:color/darker_gray"
+            android:outlineSpotShadowColor="@color/violet"
+            android:splitMotionEvents="false"
+            android:textColorHint="@color/violet"
+            app:boxBackgroundColor="@color/white"
+            app:boxCornerRadiusBottomEnd="20dp"
+            app:boxCornerRadiusBottomStart="20dp"
+            app:boxCornerRadiusTopEnd="20dp"
+            app:boxCornerRadiusTopStart="20dp"
+            app:boxStrokeColor="@color/violet"
+            app:counterTextColor="@color/violet"
+            app:hintTextColor="@color/violet"
             tools:targetApi="p">
+
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etEmail"
@@ -69,32 +92,50 @@
                 android:inputType="textEmailAddress"
                 android:textColor="@color/violet"
                 android:textColorHint="@color/violet"
-                android:textSize="25dp"
+                android:textSize="20dp"
                 android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
-        </FrameLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_margin="20dp"
-            android:background="@drawable/border"
-            android:outlineAmbientShadowColor="@android:color/darker_gray"
-            tools:targetApi="p">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etPhoneNumber"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:backgroundTint="@color/white"
-                android:fontFamily="@font/alata"
-                android:hint="@string/phone"
-                android:inputType="phone"
-                android:textColor="@color/violet"
+                android:layout_height="70dp"
+                android:layout_margin="10dp"
+                android:outlineAmbientShadowColor="@android:color/darker_gray"
+                android:outlineSpotShadowColor="@color/violet"
+                android:splitMotionEvents="false"
                 android:textColorHint="@color/violet"
-                android:textSize="25dp"
-                android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
-        </FrameLayout>
+                app:boxBackgroundColor="@color/white"
+                app:boxCornerRadiusBottomEnd="20dp"
+                app:boxCornerRadiusBottomStart="20dp"
+                app:boxCornerRadiusTopEnd="20dp"
+                app:boxCornerRadiusTopStart="20dp"
+                app:boxStrokeColor="@color/violet"
+                app:counterTextColor="@color/violet"
+                app:hintTextColor="@color/violet"
+                app:prefixText="+40"
+                app:prefixTextColor="@color/violet"
+                app:prefixTextAppearance="@style/prefixText"
+                tools:targetApi="p">
+
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPhoneNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:backgroundTint="@color/white"
+                    android:fontFamily="@font/alata"
+                    android:hint="@string/phone"
+                    android:inputType="phone"
+                    android:textColor="@color/violet"
+                    android:textColorHint="@color/violet"
+                    android:textSize="20dp"
+                    android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+
+
+            </com.google.android.material.textfield.TextInputLayout>
 
         <!--    <EditText-->
         <!--        android:id="@+id/etEmail"-->
@@ -106,12 +147,23 @@
         <!--        android:maxLength="30"-->
         <!--        android:hint="Email"></EditText>-->
 
-        <FrameLayout
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_margin="20dp"
-            android:background="@drawable/border"
+            android:layout_height="70dp"
+            android:layout_margin="10dp"
             android:outlineAmbientShadowColor="@android:color/darker_gray"
+            android:outlineSpotShadowColor="@color/violet"
+            android:splitMotionEvents="false"
+            android:textColorHint="@color/violet"
+            app:boxBackgroundColor="@color/white"
+            app:boxCornerRadiusBottomEnd="20dp"
+            app:boxCornerRadiusBottomStart="20dp"
+            app:boxCornerRadiusTopEnd="20dp"
+            app:boxCornerRadiusTopStart="20dp"
+            app:boxStrokeColor="@color/violet"
+            app:counterTextColor="@color/violet"
+            app:hintTextColor="@color/violet"
             tools:targetApi="p">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -125,15 +177,16 @@
                 android:inputType="textPassword"
                 android:textColor="@color/violet"
                 android:textColorHint="@color/violet"
-                android:textSize="25dp"
+                android:textSize="20dp"
                 android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
-        </FrameLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/tvSignIn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
+            android:fontFamily="@font/alata"
             android:text="@string/already_has_account"
             android:textAlignment="center"
             android:textColor="@color/violet"
@@ -150,7 +203,8 @@
             android:fontFamily="@font/alata"
             android:gravity="center"
             android:text="@string/register"
-            android:textAlignment="center"></Button>
+            android:textAlignment="center"
+            android:textStyle="bold"></Button>
 
         <ProgressBar
             android:id="@+id/progressBar"

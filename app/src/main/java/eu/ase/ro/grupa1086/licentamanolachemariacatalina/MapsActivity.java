@@ -83,7 +83,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLngAddress, 18));
 
                     pickedAddress.setVisibility(View.VISIBLE);
-                    pickedAddress.setText("Adresa aleasa este: " + address.getAddressLine(0));
+                    pickedAddress.setText("Adresa aleasă este: " + address.getAddressLine(0));
 
                     fabPickedAddressed.setOnClickListener(new View.OnClickListener() {
                         @Override

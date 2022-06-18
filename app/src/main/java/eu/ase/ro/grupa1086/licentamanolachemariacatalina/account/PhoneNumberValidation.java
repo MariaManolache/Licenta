@@ -38,7 +38,12 @@ import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 public class PhoneNumberValidation extends AppCompatActivity {
 
     private Button btnValidate;
-    private EditText etValidationCode;
+    private EditText etValidationCode1;
+    private EditText etValidationCode2;
+    private EditText etValidationCode3;
+    private EditText etValidationCode4;
+    private EditText etValidationCode5;
+    private EditText etValidationCode6;
     private DatabaseReference databaseReference;
     private DatabaseReference databaseReferenceShoppingCart;
     private DatabaseReference databaseReferenceAddresses;
@@ -53,7 +58,12 @@ public class PhoneNumberValidation extends AppCompatActivity {
         setContentView(R.layout.activity_phone_number_validation);
 
         btnValidate = findViewById(R.id.btnValidate);
-        etValidationCode = findViewById(R.id.etValidationCode);
+        etValidationCode1 = findViewById(R.id.etValidationCode1);
+        etValidationCode2 = findViewById(R.id.etValidationCode2);
+        etValidationCode3 = findViewById(R.id.etValidationCode3);
+        etValidationCode4 = findViewById(R.id.etValidationCode4);
+        etValidationCode5 = findViewById(R.id.etValidationCode5);
+        etValidationCode6 = findViewById(R.id.etValidationCode6);
         progressBar = findViewById(R.id.progressBarPhoneValidation);
         firebaseAuth = FirebaseAuth.getInstance();
         foodList = new ArrayList<>();
@@ -69,10 +79,11 @@ public class PhoneNumberValidation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String validationCode = etValidationCode.getText().toString();
+                String validationCode = etValidationCode1.getText().toString() + etValidationCode2.getText().toString() + etValidationCode3.getText().toString()
+                        + etValidationCode4.getText().toString() + etValidationCode5.getText().toString() + etValidationCode6.getText().toString();
 
                 if (validationCode.isEmpty()) {
-                    etValidationCode.setError(getString(R.string.necesity_validation_code));
+                    etValidationCode6.setError(getString(R.string.necesity_validation_code));
 
                 } else {
                     progressBar.setVisibility(View.VISIBLE);

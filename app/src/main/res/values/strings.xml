@@ -60,7 +60,7 @@
     <string name="restaurants">Restaurante</string>
     <string name="search_restaurant">Caută restaurantul dorit</string>
     <string name="search_favourite_restaurant">Caută-ti restaurantul preferat</string>
-    <string name="cart">Cos</string>
+    <string name="cart">Coș</string>
     <string name="pick_address">Alege adresa de livrare:</string>
     <string name="street">Strada</string>
     <string name="number">Număr</string>
@@ -69,7 +69,7 @@
     <string name="floor">Etaj</string>
     <string name="apartment">Apartament</string>
     <string name="shipping_address">Introdu adresa de livrare:</string>
-    <string name="pick_payment_method">Alege metoda de plata:</string>
+    <string name="pick_payment_method">Alege metoda de plată:</string>
     <string name="place_order">Plasează comanda</string>
     <string name="register">Inregistrează-te</string>
     <string name="currency">\" RON\"</string>
@@ -167,4 +167,9 @@
     <string name="personal_orders">Comenzile mele</string>
     <string name="deliver_it_right">Deliver It Right!</string>
     <string name="order_placed_successfully">Comanda a fost plasată cu succes!</string>
+    <string name="change_password">Modifică parola</string>
+    <string name="confirm_new_password">Confirmare parolă nouă</string>
+    <string name="new_password">Parolă nouă</string>
+    <string name="old_password">Parolă veche</string>
+    <string name="select_from_the_saved_addresses">Selectează una din adresele tale</string>
 </resources>
