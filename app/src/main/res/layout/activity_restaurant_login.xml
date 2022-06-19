@@ -18,12 +18,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:src="@drawable/menu"></ImageView>
+
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/authenticate"
+            android:fontFamily="@font/alata"
             android:textStyle="bold"
             android:textColor="@color/violet"
             android:textAlignment="center"
@@ -86,7 +93,7 @@
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:layout_marginTop="25dp"
-            android:textAllCaps="false"
+            android:textAllCaps="true"
             android:textSize="20sp"
             android:text="@string/validate"></Button>
 

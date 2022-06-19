@@ -134,7 +134,7 @@
     <string name="status">Status</string>
     <string name="distance">Distanța</string>
     <string name="join_our_team">Fă parte din echipa noastra!</string>
-    <string name="enter_given_credentials">Introdu mai sus datele primite de la administrator</string>
+    <string name="enter_given_credentials">Introdu mai sus datele primite de la administrator.</string>
     <string name="authenticate">Autentificare</string>
     <string name="click_here_for_restaurants">Ești furnizor? Dă click aici!</string>
     <string name="products">Produse</string>
@@ -172,4 +172,14 @@
     <string name="new_password">Parolă nouă</string>
     <string name="old_password">Parolă veche</string>
     <string name="select_from_the_saved_addresses">Selectează una din adresele tale</string>
+    <string name="do_you_want_to_deliver_order">Dorești să livrezi comanda selectată?</string>
+    <string name="confirm">Confirmare</string>
+    <string name="my_orders">Comenzile mele</string>
+    <string name="administrator">Administrator</string>
+    <string name="drivers">Livratori</string>
+    <string name="date">Data:</string>
+    <string name="order_number">Număr de comenzi:</string>
+    <string name="driver_name">Nume livrator</string>
+    <string name="admin_account">Contul administratorului</string>
+    <string name="drivers_list">Lista livratorilor</string>
 </resources>

@@ -17,6 +17,7 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
     public TextView restaurantsName;
     public TextView orderStatus;
     public TextView orderAddress;
+    public TextView orderDateAndTime;
     public TextView orderPriceTotal;
     public ImageView restaurantImage;
     public ImageView downArrow;
@@ -24,7 +25,7 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
 
     private ItemClickListener itemClickListener;
 
-    private RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
+    //private RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
 
     public RecyclerView secondRecyclerView;
     public RecyclerView.LayoutManager secondLayoutManager;
@@ -35,6 +36,7 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
         restaurantsName = itemView.findViewById(R.id.restaurants);
         orderStatus = itemView.findViewById(R.id.orderStatus);
         orderAddress = itemView.findViewById(R.id.orderAddress);
+        orderDateAndTime = itemView.findViewById(R.id.orderDateAndTime);
         orderPriceTotal = itemView.findViewById(R.id.orderPriceTotal);
         restaurantImage = itemView.findViewById(R.id.restaurantImage);
         downArrow = itemView.findViewById(R.id.downArrow);

@@ -29,7 +29,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -105,6 +107,9 @@ public class PlaceOrder extends AppCompatActivity {
     String currentAddress;
     Double latitude;
     Double longitude;
+
+    Calendar calendar;
+    SimpleDateFormat simpleDateFormat;
 //
 //    String street;
 //    String number;
@@ -150,6 +155,9 @@ public class PlaceOrder extends AppCompatActivity {
         restaurants = database.getInstance().getReference("restaurants");
         driverOrders = database.getInstance().getReference("driverOrders");
         restaurantOrders = database.getInstance().getReference("restaurantOrders");
+
+        calendar = Calendar.getInstance();
+        simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
         tvAddress = findViewById(R.id.tvPickedAddress);
         tvAddressInfo = findViewById(R.id.tvPickedAddressInfo);
@@ -238,7 +246,7 @@ public class PlaceOrder extends AppCompatActivity {
                                                     if (task.isSuccessful()) {
                                                         Toast.makeText(PlaceOrder.this, "Adresa adaugata", Toast.LENGTH_SHORT).show();
                                                     } else {
-                                                        Toast.makeText(PlaceOrder.this, "Eroare la adaugarea adresei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                                        //Toast.makeText(PlaceOrder.this, "Eroare la adaugarea adresei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                                     }
                                                 }
                                             });
@@ -273,6 +281,7 @@ public class PlaceOrder extends AppCompatActivity {
 
                                 Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, max);
                                 order.setRestaurantAddress(restaurantAddresses);
+                                order.setCurrentDateAndTime(simpleDateFormat.format(calendar.getTime()));
 
                                 listOfTimes = new ArrayList<>();
 
@@ -294,6 +303,7 @@ public class PlaceOrder extends AppCompatActivity {
                                 for (int i = 0; i < restaurantAddresses.size(); i++) {
                                     restaurantFood = new ArrayList<>();
                                     totalForCurrentRestaurant = 0.0;
+                                    preparationTime = 0;
                                     for (int j = 0; j < cartList.size(); j++) {
                                         if (restaurantAddresses.get(i).getId().equals(cartList.get(j).getRestaurantId())) {
                                             restaurantFood.add(cartList.get(j));
@@ -310,6 +320,7 @@ public class PlaceOrder extends AppCompatActivity {
 //                                    }
 //                                }
                                     RestaurantOrder restaurantOrder = new RestaurantOrder(restaurantsId.get(i), restaurantFood, orderId, status, totalForCurrentRestaurant, paymentMethod, userId, currentRestaurant, newAddress, preparationTime);
+                                    restaurantOrder.setCurrentDateAndTime(simpleDateFormat.format(calendar.getTime()));
                                     restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).setValue(restaurantOrder);
                                     restaurantOrders.child(restaurantsId.get(i)).child("id").setValue(restaurantsId.get(i));
                                     restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).child("confirmed").setValue(false);
@@ -321,7 +332,7 @@ public class PlaceOrder extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(PlaceOrder.this, "Comandă plasata", Toast.LENGTH_LONG).show();
 
                                             for (int i = 0; i < restaurantAddresses.size(); i++) {
                                                 orders.child(orderId).child("restaurants").child(restaurantAddresses.get(i).getId()).setValue(restaurantAddresses.get(i));
@@ -343,7 +354,7 @@ public class PlaceOrder extends AppCompatActivity {
                                             }
 
                                         } else {
-                                            Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                            //Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                         }
                                     }
                                 });
@@ -448,6 +459,7 @@ public class PlaceOrder extends AppCompatActivity {
 
                         Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, max);
                         order.setRestaurantAddress(restaurantAddresses);
+                        order.setCurrentDateAndTime(simpleDateFormat.format(calendar.getTime()));
 
                         listOfTimes = new ArrayList<>();
 
@@ -465,6 +477,7 @@ public class PlaceOrder extends AppCompatActivity {
                         int preparationTime = 0;
 
                         for (int i = 0; i < restaurantAddresses.size(); i++) {
+                            preparationTime = 0;
                             restaurantFood = new ArrayList<>();
                             totalForCurrentRestaurant = 0.0;
                             for (int j = 0; j < cartList.size(); j++) {
@@ -483,6 +496,7 @@ public class PlaceOrder extends AppCompatActivity {
 //                                    }
 //                                }
                             RestaurantOrder restaurantOrder = new RestaurantOrder(restaurantsId.get(i), restaurantFood, orderId, status, totalForCurrentRestaurant, paymentMethod, userId, currentRestaurant, newAddress, preparationTime);
+                            restaurantOrder.setCurrentDateAndTime(simpleDateFormat.format(calendar.getTime()));
                             restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).setValue(restaurantOrder);
                             restaurantOrders.child(restaurantsId.get(i)).child("id").setValue(restaurantsId.get(i));
                             restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).child("confirmed").setValue(false);
@@ -620,6 +634,7 @@ public class PlaceOrder extends AppCompatActivity {
 
                         Order order = new Order(orderId, total, userId, paymentMethod, newAddress, cartList, status, max);
                         order.setRestaurantAddress(restaurantAddresses);
+                        order.setCurrentDateAndTime(simpleDateFormat.format(calendar.getTime()));
 
                         listOfTimes = new ArrayList<>();
 
@@ -637,6 +652,7 @@ public class PlaceOrder extends AppCompatActivity {
                         int preparationTime = 0;
 
                         for (int i = 0; i < restaurantAddresses.size(); i++) {
+                            preparationTime = 0;
                             restaurantFood = new ArrayList<>();
                             totalForCurrentRestaurant = 0.0;
                             for (int j = 0; j < cartList.size(); j++) {
@@ -655,6 +671,7 @@ public class PlaceOrder extends AppCompatActivity {
 //                                    }
 //                                }
                             RestaurantOrder restaurantOrder = new RestaurantOrder(restaurantsId.get(i), restaurantFood, orderId, status, totalForCurrentRestaurant, paymentMethod, userId, currentRestaurant, newAddress, preparationTime);
+                            restaurantOrder.setCurrentDateAndTime(simpleDateFormat.format(calendar.getTime()));
                             restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).setValue(restaurantOrder);
                             restaurantOrders.child(restaurantsId.get(i)).child("id").setValue(restaurantsId.get(i));
                             restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).child("confirmed").setValue(false);
@@ -740,6 +757,7 @@ public class PlaceOrder extends AppCompatActivity {
 
                             Order order = new Order(orderId, total, userId, paymentMethod, address, cartList, status, max);
                             order.setRestaurantAddress(restaurantAddresses);
+                            order.setCurrentDateAndTime(simpleDateFormat.format(calendar.getTime()));
 
                             listOfTimes = new ArrayList<>();
 
@@ -776,6 +794,7 @@ public class PlaceOrder extends AppCompatActivity {
 //                                    }
 //                                }
                                 RestaurantOrder restaurantOrder = new RestaurantOrder(restaurantsId.get(i), restaurantFood, orderId, status, totalForCurrentRestaurant, paymentMethod, userId, currentRestaurant, address, preparationTime);
+                                restaurantOrder.setCurrentDateAndTime(simpleDateFormat.format(calendar.getTime()));
                                 restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).setValue(restaurantOrder);
                                 restaurantOrders.child(restaurantsId.get(i)).child("id").setValue(restaurantsId.get(i));
                                 restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).child("confirmed").setValue(false);
@@ -863,7 +882,15 @@ public class PlaceOrder extends AppCompatActivity {
 
                 }
 
+                total = (float)Math.round(total * 100) / 100f;
                 tvTotal.setText(total + " LEI");
+
+                if(tvAddressInfo.getVisibility() == View.GONE) {
+                    btnPlaceOrder.setEnabled(false);
+                } else {
+                    btnPlaceOrder.setEnabled(true);
+                }
+
             }
 
             @Override

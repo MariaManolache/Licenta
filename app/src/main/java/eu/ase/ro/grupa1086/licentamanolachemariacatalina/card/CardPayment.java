@@ -53,11 +53,11 @@ public class CardPayment extends AppCompatActivity {
             public void onClick(View v) {
                 if (cardForm.isValid()) {
                     alertBuilder = new AlertDialog.Builder(new ContextThemeWrapper(CardPayment.this, R.style.AlertDialogStyle));
-                    alertBuilder.setTitle("Confirmare inainte de plata");
-                    alertBuilder.setMessage("Numar card: " + cardForm.getCardNumber() + "\n" +
-                            "Data expirarii: " + cardForm.getExpirationDateEditText().getText().toString() + "\n" +
+                    alertBuilder.setTitle("Confirmare înainte de plată");
+                    alertBuilder.setMessage("Număr card: " + cardForm.getCardNumber() + "\n" +
+                            "Data expirării: " + cardForm.getExpirationDateEditText().getText().toString() + "\n" +
                             "CVV: " + cardForm.getCvv() + "\n" +
-                            "Numar de telefon: " + cardForm.getMobileNumber());
+                            "Număr de telefon: +40" + cardForm.getMobileNumber());
                     alertBuilder.setPositiveButton("Confirmare", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -83,7 +83,7 @@ public class CardPayment extends AppCompatActivity {
                     AlertDialog alertDialog = alertBuilder.create();
                     alertDialog.show();
                 } else {
-                    Toast.makeText(CardPayment.this, "Toate campurile sunt necesare pentru procesarea platii", Toast.LENGTH_LONG).show();
+                    Toast.makeText(CardPayment.this, "Toate câmpurile sunt necesare pentru procesarea plății", Toast.LENGTH_LONG).show();
                 }
             }
         });

@@ -160,8 +160,8 @@ public class RestaurantOrders extends AppCompatActivity {
         restaurantOrders.child(user.getUid()).child("orders").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.getValue() == null) {
-                   noRestaurantOrderFound.setVisibility(View.VISIBLE);
+                if (snapshot.getValue() == null) {
+                    noRestaurantOrderFound.setVisibility(View.VISIBLE);
                 } else {
                     noRestaurantOrderFound.setVisibility(View.GONE);
                 }
@@ -215,6 +215,7 @@ public class RestaurantOrders extends AppCompatActivity {
 
                     holder.orderStatus.setText("Status: " + String.valueOf(model.getStatus()).substring(0, 1).toUpperCase(Locale.ROOT) + String.valueOf(model.getStatus()).replace("_", " ").substring(1));
                     holder.orderAddress.setText("Adresa: " + model.getAddress().getMapsAddress());
+                    holder.orderDateAndTime.setText("Data: " + model.getCurrentDateAndTime());
                     holder.orderPriceTotal.setText("Total: " + Math.round(model.getTotal() * 100.0) / 100.0 + " lei");
 
 
@@ -258,7 +259,7 @@ public class RestaurantOrders extends AppCompatActivity {
                                         holder2.foodName.setText(model.getName());
                                         holder2.foodPrice.setText(String.valueOf(model.getPrice()));
                                         holder2.foodQuantity.setText(String.valueOf(model.getQuantity()));
-                                        holder2.foodTotal.setText(model.getPrice() * model.getQuantity() + " lei");
+                                        holder2.foodTotal.setText((double)Math.round(model.getPrice() * model.getQuantity() * 100) / 100 + " lei");
                                         Picasso.with(getBaseContext()).load(model.getImage())
                                                 .into(holder2.foodImage);
 
@@ -303,7 +304,7 @@ public class RestaurantOrders extends AppCompatActivity {
                                 if (model.getStatus().equals(Status.plasata)) {
 //                                    View viewPopUp = inflater.inflate(R.layout.reset_name_pop_up, null);
                                     acceptOrder.setTitle("Acceptați această comandă?")
-                                            .setPositiveButton("Confirmare", new DialogInterface.OnClickListener() {
+                                            .setPositiveButton("Da", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
 
@@ -391,7 +392,33 @@ public class RestaurantOrders extends AppCompatActivity {
                                                     });
 
                                                 }
-                                            }).setNegativeButton("Respingere", null)
+                                            }).setNegativeButton("Nu", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            model.setStatus(Status.anulata);
+                                            //driverOrders.child(model.getOrderId()).setValue(model);
+                                            restaurantOrders.child(model.getRestaurantId()).child("orders").child(model.getOrderId()).child("status").setValue(Status.anulata);
+                                            orders.child(model.getUserId()).child(model.getOrderId()).child("status").setValue(Status.anulata);
+
+                                            orders.child(model.getUserId()).child(model.getOrderId()).child("restaurants").addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                                        Restaurant cancelledRestaurant = dataSnapshot.getValue(Restaurant.class);
+                                                        restaurantOrders.child(cancelledRestaurant.getId()).child("orders").child(model.getOrderId()).child("status").setValue(Status.anulata);
+                                                        restaurantOrders.child(cancelledRestaurant.getId()).child("orders").child(model.getOrderId()).removeValue();
+
+
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+                                        }
+                                    })
                                             .setNeutralButton("Anulează", null)
                                             .create().show();
 

@@ -10,39 +10,36 @@ import androidx.recyclerview.widget.RecyclerView;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 
-public class RestaurantOrderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+public class DriverViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
-    public TextView orderName;
-    public TextView orderStatus;
-    public TextView orderAddress;
-    public TextView orderDateAndTime;
-    public TextView orderPriceTotal;
+    public TextView driverName;
+    public TextView driverEmail;
+    public TextView driverPhoneNumber;
+    public  TextView driverOrderNumbers;
+
     public ImageView downArrow;
     public ImageView upArrow;
-
     private ItemClickListener itemClickListener;
+
     public RecyclerView secondRecyclerView;
 
+    public void setItemClickListener(ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
 
-    public RestaurantOrderViewHolder(@NonNull View itemView) {
+    public DriverViewHolder(@NonNull View itemView) {
         super(itemView);
 
-        orderName = itemView.findViewById(R.id.orderName);
-        orderStatus = itemView.findViewById(R.id.orderStatus);
-        orderAddress = itemView.findViewById(R.id.orderAddress);
-        orderDateAndTime = itemView.findViewById(R.id.orderDateAndTime);
-        orderPriceTotal = itemView.findViewById(R.id.orderPriceTotal);
+        driverName = (TextView) itemView.findViewById(R.id.driverName);
+        driverEmail = (TextView) itemView.findViewById(R.id.driverEmail);
+        driverPhoneNumber = (TextView) itemView.findViewById(R.id.driverPhoneNumber);
+        driverOrderNumbers = (TextView) itemView.findViewById(R.id.driverNumberOfOrders);
         downArrow = itemView.findViewById(R.id.downArrow);
         upArrow = itemView.findViewById(R.id.upArrow);
 
         secondRecyclerView = itemView.findViewById(R.id.orderDetails);
-
         itemView.setOnClickListener(this);
         itemView.setOnLongClickListener(this);
-    }
-
-    public void setItemClickListener(ItemClickListener itemClickListener) {
-        this.itemClickListener = itemClickListener;
     }
 
     @Override

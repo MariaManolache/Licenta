@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/driverAccounts"
+        android:title="@string/drivers"
+        android:icon="@drawable/ic_baseline_directions_bike_24"></item>
+
+    <item
+        android:id="@+id/restaurantAccounts"
+        android:title="@string/restaurants"
+        android:icon="@drawable/ic_baseline_restaurant_menu_24"></item>
+
+    <item
+        android:id="@+id/topOrders"
+        android:title="@string/orders"
+        android:icon="@drawable/ic_bill"></item>
+</menu>

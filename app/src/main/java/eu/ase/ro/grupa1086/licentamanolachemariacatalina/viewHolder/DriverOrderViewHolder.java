@@ -15,6 +15,7 @@ public class DriverOrderViewHolder extends RecyclerView.ViewHolder implements Vi
     public TextView restaurantsName;
     public TextView orderStatus;
     public TextView orderAddress;
+    public TextView orderDateAndTime;
     public TextView orderPriceTotal;
     public TextView pickUpDistance;
     public TextView deliveryDistance;
@@ -35,6 +36,7 @@ public class DriverOrderViewHolder extends RecyclerView.ViewHolder implements Vi
         restaurantsName = itemView.findViewById(R.id.restaurants);
         orderStatus = itemView.findViewById(R.id.orderStatus);
         orderAddress = itemView.findViewById(R.id.orderAddress);
+        orderDateAndTime = itemView.findViewById(R.id.orderDateAndTime);
         orderPriceTotal = itemView.findViewById(R.id.orderPriceTotal);
         pickUpDistance = itemView.findViewById(R.id.pickUpDistance);
         deliveryDistance = itemView.findViewById(R.id.deliveryDistance);

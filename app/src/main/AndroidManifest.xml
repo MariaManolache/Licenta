@@ -18,9 +18,17 @@
         android:theme="@style/Theme.LicentaManolacheMariaCatalina"
         tools:replace="android:theme">
         <activity
+            android:name=".admin.DriverAccountsList"
+            android:exported="false"
+            android:label="@string/drivers_list"/>
+        <activity
+            android:name=".AdminAccount"
+            android:exported="false"
+            android:label="@string/admin_account"/>
+        <activity
             android:name=".PersonalDriverOrders"
             android:exported="false"
-            android:label="@string/personal_orders"/>
+            android:label="@string/personal_orders" />
         <activity
             android:name=".DriverLogIn"
             android:exported="false"

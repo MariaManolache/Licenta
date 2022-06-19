@@ -1,6 +1,7 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.List;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.rating.Rating;
@@ -18,6 +19,7 @@ public class Order implements Serializable {
     private List<Restaurant> restaurants;
     private int preparationTime;
     private String driverId;
+    private String currentDateAndTime;
 
     public Order() {
 
@@ -142,6 +144,14 @@ public class Order implements Serializable {
 
     public void setDriverId(String driverId) {
         this.driverId = driverId;
+    }
+
+    public String getCurrentDateAndTime() {
+        return currentDateAndTime;
+    }
+
+    public void setCurrentDateAndTime(String currentDateAndTime) {
+        this.currentDateAndTime = currentDateAndTime;
     }
 
     @Override

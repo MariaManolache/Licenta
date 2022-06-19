@@ -8,16 +8,6 @@
     android:background="@color/teal_100"
     tools:context=".principalmenus.DriverMenu">
 
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/teal_100">
-
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/teal_100"
-    tools:context=".principalmenus.DriverMenu">
 
     <TextView
         android:id="@+id/currentLocation"
@@ -51,6 +41,7 @@
         android:textAlignment="center"></TextView>
 
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/ordersList"
         android:background="@color/teal_100"
@@ -63,16 +54,23 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
+    <ImageView
+        android:id="@+id/noDriverOrders"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/no_restaurant_order_found"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/allOrders"></TextView>
+        app:layout_constraintTop_toBottomOf="@+id/currentLocation"></ImageView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
 
-</ScrollView>
+<!--    <TextView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="300dp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/allOrders"></TextView>-->
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

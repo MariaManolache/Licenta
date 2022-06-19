@@ -96,6 +96,7 @@ public class DriverMenu extends AppCompatActivity {
     DatabaseReference food;
     DatabaseReference users;
     DatabaseReference restaurantOrders;
+    DatabaseReference driverOrdersHistory;
     FirebaseUser user;
 
     String restaurantName;
@@ -118,6 +119,7 @@ public class DriverMenu extends AppCompatActivity {
     TextView tvCurrentLocation;
     LayoutInflater inflater;
     LatLng latLngLocation;
+    ImageView noOrdersFound;
 
     TextView myOrders;
     TextView allOrders;
@@ -136,6 +138,7 @@ public class DriverMenu extends AppCompatActivity {
         food = database.getReference().child("food");
         driverOrders = database.getReference().child("driverOrders");
         restaurantOrders = database.getReference().child("restaurantOrders");
+        driverOrdersHistory = database.getReference().child("driverOrdersHistory");
 
         users = database.getReference().child("users");
 
@@ -148,13 +151,13 @@ public class DriverMenu extends AppCompatActivity {
 
 
         tvCurrentLocation = findViewById(R.id.currentLocation);
+        noOrdersFound = findViewById(R.id.noDriverOrders);
 
         inflater = this.getLayoutInflater();
         acceptOrder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
 
         allOrders = findViewById(R.id.allOrders);
 
-        loadOrders();
 
 //        users.addValueEventListener(new ValueEventListener() {
 //            @Override
@@ -173,26 +176,28 @@ public class DriverMenu extends AppCompatActivity {
 //            }
 //        });
 
-        tvCurrentLocation.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                acceptOrder.setTitle("Doresti sa livrezi comanda selectata?")
-                        .setPositiveButton("Confirmare", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                                Toast.makeText(DriverMenu.this, "Mesaj", Toast.LENGTH_LONG).show();
-
-                            }
-                        }).setNegativeButton("Anuleaza", null)
-                        .create().show();
-
-                return true;
-            }
-        });
+//        tvCurrentLocation.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                acceptOrder.setTitle("Doresti sa livrezi comanda selectata?")
+//                        .setPositiveButton("Confirmare", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//
+//                                Toast.makeText(DriverMenu.this, "Mesaj", Toast.LENGTH_LONG).show();
+//
+//                            }
+//                        }).setNegativeButton("Anuleaza", null)
+//                        .create().show();
+//
+//                return true;
+//            }
+//        });
 
         //loadOrders();
         initializeLocation();
+
+        loadOrders();
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.orders);
@@ -350,9 +355,11 @@ public class DriverMenu extends AppCompatActivity {
                 if(!(snapshot.exists())) {
                     allOrders.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.GONE);
+                    noOrdersFound.setVisibility(View.VISIBLE);
                 } else {
                     allOrders.setVisibility(View.VISIBLE);
                     recyclerView.setVisibility(View.VISIBLE);
+                    noOrdersFound.setVisibility(View.GONE);
                 }
             }
 
@@ -384,13 +391,6 @@ public class DriverMenu extends AppCompatActivity {
                                     restaurantName += ", " + restaurant.getName();
                                 }
                             }
-
-                            holder.restaurantsName.setText(restaurantName);
-                            holder.orderStatus.setText("Status: " + String.valueOf(model.getStatus()).substring(0, 1).toUpperCase(Locale.ROOT) + String.valueOf(model.getStatus()).replace("_", " ").substring(1));
-                            holder.orderAddress.setText("Adresa: " + String.valueOf(model.getAddress().getMapsAddress()));
-                            holder.orderPriceTotal.setText("Total: " + model.getTotal() + " lei");
-                            Picasso.with(getBaseContext()).load(restaurantImage)
-                                    .into(holder.restaurantImage);
 
                             float results[] = new float[10];
                             if (latLngLocation != null) {
@@ -430,9 +430,9 @@ public class DriverMenu extends AppCompatActivity {
                                 Double deliveryDistanceKm = SphericalUtil.computeDistanceBetween(sortedLocations.get(sortedLocations.size()-1), clientAddress);
 
 
-                                holder.pickUpDistance.setText("Distanta de preluare: " + String.format("%.2f", totalDistance / 1000) + " km");
-                                holder.deliveryDistance.setText("Distanta de livrare: " + String.format("%.2f", deliveryDistanceKm / 1000) + " km");
-                                holder.totalDistance.setText("Distanta totala: " + String.format("%.2f", (totalDistance + deliveryDistanceKm) / 1000) + " km");
+                                holder.pickUpDistance.setText("Distanța de preluare: " + String.format("%.2f", totalDistance / 1000) + " km");
+                                holder.deliveryDistance.setText("Distanța de livrare: " + String.format("%.2f", deliveryDistanceKm / 1000) + " km");
+                                holder.totalDistance.setText("Distanța totală: " + String.format("%.2f", (totalDistance + deliveryDistanceKm) / 1000) + " km");
 
                                 users.child(model.getUserId()).child("phoneNumber").addValueEventListener(new ValueEventListener() {
                                     @Override
@@ -455,6 +455,15 @@ public class DriverMenu extends AppCompatActivity {
                                     }
                                 });
                             }
+
+                            holder.restaurantsName.setText(restaurantName);
+                            holder.orderStatus.setText("Status: " + String.valueOf(model.getStatus()).substring(0, 1).toUpperCase(Locale.ROOT) + String.valueOf(model.getStatus()).replace("_", " ").substring(1));
+                            holder.orderDateAndTime.setText("Data: " + model.getCurrentDateAndTime());
+                            holder.orderAddress.setText("Adresa: " + String.valueOf(model.getAddress().getMapsAddress()));
+                            holder.orderPriceTotal.setText("Total: " + (double)Math.round(model.getTotal() * 100) / 100 + " lei");
+                            Picasso.with(getBaseContext()).load(restaurantImage)
+                                    .into(holder.restaurantImage);
+
                             String restaurantName2 = restaurantName;
                             String restaurantImage2 = restaurantImage;
                             restaurantName = null;
@@ -511,7 +520,7 @@ public class DriverMenu extends AppCompatActivity {
 
                                                         holder2.foodPrice.setText(String.valueOf(model.getPrice()));
                                                         holder2.foodQuantity.setText(String.valueOf(model.getQuantity()));
-                                                        holder2.foodTotal.setText(model.getPrice() * model.getQuantity() + " lei");
+                                                        holder2.foodTotal.setText((double)Math.round(model.getPrice() * model.getQuantity() * 100) /100  + " lei");
                                                         Picasso.with(getBaseContext()).load(model.getImage())
                                                                 .into(holder2.foodImage);
 
@@ -570,8 +579,8 @@ public class DriverMenu extends AppCompatActivity {
                                     } else if (isLongClick) {
                                         if (model.getStatus().equals(Status.confirmata)) {
 //                                    View viewPopUp = inflater.inflate(R.layout.reset_name_pop_up, null);
-                                            acceptOrder.setTitle("Doresti sa livrezi comanda selectata?")
-                                                    .setPositiveButton("Confirmare", new DialogInterface.OnClickListener() {
+                                            acceptOrder.setTitle(R.string.do_you_want_to_deliver_order)
+                                                    .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                                                         @Override
                                                         public void onClick(DialogInterface dialog, int which) {
 
@@ -581,6 +590,7 @@ public class DriverMenu extends AppCompatActivity {
                                                             driverOrders.child(user.getUid()).child(model.getId()).setValue(model);
                                                             driverOrders.child("orders").child(model.getId()).removeValue();
 
+                                                            //driverOrdersHistory.child(user.getUid()).child("orders").child(model.getId()).setValue(model);
                                                             orders.child(model.getUserId()).child(model.getId()).child("status").setValue(Status.in_curs_de_livrare);
 
                                                             for(int i = 0; i < model.getRestaurantAddress().size(); i++) {

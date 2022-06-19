@@ -26,6 +26,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.order.RestaurantOrders;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.RestaurantAccount;
 
 public class RestaurantLogin extends AppCompatActivity {
@@ -138,7 +139,7 @@ public class RestaurantLogin extends AppCompatActivity {
                         }
                     });
 
-                    startActivity(new Intent(getApplicationContext(), RestaurantAccount.class));
+                    startActivity(new Intent(getApplicationContext(), RestaurantOrders.class));
                     finish();
                 }
 

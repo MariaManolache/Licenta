@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/teal_100"
-    tools:context=".PersonalDriverOrders">
+    tools:context=".principalmenus.DriverMenu">
+
 
     <TextView
-        android:id="@+id/currentLocation"
+        android:id="@+id/driversAccounts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:background="@drawable/address_background"
+        android:textSize="30sp"
+        android:text="Conturile livratorilor:"
         android:textAlignment="center"
         android:fontFamily="@font/alata"
         android:textColor="@color/violet"
@@ -22,41 +24,28 @@
 
     </TextView>
 
-    <TextView
-        android:id="@+id/myOrders"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/currentLocation"
-        android:text="@string/my_orders"
-        android:visibility="gone"
-        android:textSize="30sp"
-        android:textColor="@color/violet"
-        android:fontFamily="@font/alata"
-        android:textAlignment="center"></TextView>
-
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/personalOrderList"
+        android:id="@+id/driversAccountsList"
         android:background="@color/teal_100"
         android:layout_width="match_parent"
         android:scrollbars="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/myOrders"
+        app:layout_constraintTop_toBottomOf="@+id/driversAccounts"
         android:layout_height="500dp">
 
     </androidx.recyclerview.widget.RecyclerView>
 
-    <ImageView
-        android:id="@+id/noDriverOrders"
+    <Button
+        android:id="@+id/btnLogout"
+        android:text="@string/logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/no_restaurant_order_found"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/currentLocation"></ImageView>
+        app:layout_constraintTop_toBottomOf="@+id/driversAccountsList"></Button>
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -71,6 +60,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintVertical_bias="1.0"
-        app:menu="@menu/menu_driver"></com.google.android.material.bottomnavigation.BottomNavigationView>
+        app:menu="@menu/menu_admin"></com.google.android.material.bottomnavigation.BottomNavigationView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -132,6 +132,18 @@
                                     android:textStyle="italic"></TextView>
 
                                 <TextView
+                                    android:id="@+id/orderDateAndTime"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:fontFamily="@font/alata"
+                                    android:gravity="center_vertical|start"
+                                    android:text="@string/date"
+                                    android:textAllCaps="false"
+                                    android:textColor="@color/violet"
+                                    android:textStyle="italic"></TextView>
+
+                                <TextView
                                     android:id="@+id/orderPriceTotal"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"

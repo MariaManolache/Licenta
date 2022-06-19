@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ import com.karumi.dexter.listener.single.PermissionListener;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.SignIn;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.SignUp;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.admin.DriverAccountsList;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.DriverMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.PrincipalMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.RestaurantAccount;
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button btnRestaurantRegister;
     Button btnDriverRegister;
+    ImageView admin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         btnSignIn = findViewById(R.id.btnSignIn);
         btnSignUp = findViewById(R.id.btnSignUp);
         database = FirebaseDatabase.getInstance();
+        admin = findViewById(R.id.adminAccount);
 
         slogan = findViewById(R.id.tvSlogan);
 //        Typeface face = Typeface.createFromAsset(getAssets(), "fonts/RobotoSerif-Black.ttf");
@@ -93,6 +97,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(driverLogin);
             }
         });
+
+        admin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent adminPage = new Intent(getApplicationContext(), AdminAccount.class);
+                startActivity((adminPage));
+            }
+        });
     }
 
     @Override
@@ -122,7 +134,12 @@ public class MainActivity extends AppCompatActivity {
                                         restaurantAccounts.addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                startActivity(new Intent(getApplicationContext(), RestaurantAccount.class));
+                                                if(snapshot.exists()) {
+                                                    startActivity(new Intent(getApplicationContext(), RestaurantAccount.class));
+                                                } else {
+                                                    startActivity(new Intent(getApplicationContext(), DriverAccountsList.class));
+                                                }
+
                                             }
 
                                             @Override

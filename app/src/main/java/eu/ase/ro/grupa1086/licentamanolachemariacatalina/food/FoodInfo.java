@@ -81,6 +81,7 @@ public class FoodInfo extends FragmentActivity {
     LinearLayout linearLayoutComments;
 
     String origin = null;
+    boolean exists = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -265,29 +266,57 @@ public class FoodInfo extends FragmentActivity {
             @Override
             public void onClick(View v) {
 
+                exists = false;
                 String id = user.getUid();
                 cartItem = cart.child(food.getId());
 //                Log.i("cartItem", String.valueOf(cart.child("quantity")));
-                HashMap<String, String> hashMap = new HashMap<>();
-                hashMap.put("id", food.getId());
-                hashMap.put("name", food.getName());
-                hashMap.put("description", food.getDescription());
-                hashMap.put("image", food.getImage());
-                hashMap.put("price", String.valueOf(food.getPrice()));
-                hashMap.put("quantity", quantity.getText().toString());
-                hashMap.put("restaurantId", food.getRestaurantId());
 
-                cartItem.setValue(food).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(), "Produsul a fost adaugat in cos", Toast.LENGTH_SHORT).show();
-                            quantity.setText(String.valueOf(food.getQuantity()));
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Eroare la adaugarea produsului in cos", Toast.LENGTH_SHORT).show();
+//                cart.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//                            Food newAddedFood = dataSnapshot.getValue(Food.class);
+//                            if (newAddedFood != null && food.getId().equals(newAddedFood.getId())) {
+//                                int previousQuantity = newAddedFood.getQuantity();
+//                                int newQuantity = food.getQuantity();
+//                                int totalQuantity = previousQuantity + newQuantity;
+//                                food.setQuantity(totalQuantity);
+//                                cart.child(food.getId()).setValue(food);
+//                                exists = true;
+//                                quantity.setText(String.valueOf(totalQuantity));
+//                            }
+//                        }
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+
+//                HashMap<String, String> hashMap = new HashMap<>();
+//                hashMap.put("id", food.getId());
+//                hashMap.put("name", food.getName());
+//                hashMap.put("description", food.getDescription());
+//                hashMap.put("image", food.getImage());
+//                hashMap.put("price", String.valueOf(food.getPrice()));
+//                hashMap.put("quantity", quantity.getText().toString());
+//                hashMap.put("restaurantId", food.getRestaurantId());
+
+                //if(exists == false) {
+                    cartItem.setValue(food).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(getApplicationContext(), "Produsul a fost adaugat in cos", Toast.LENGTH_SHORT).show();
+                                quantity.setText(String.valueOf(food.getQuantity()));
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Eroare la adaugarea produsului in cos", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+                //}
 
 
             }
