@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/teal_100"
+    tools:context=".order.RestaurantOrders">
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/llTextViews"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvStartDate"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:fontFamily="@font/alata"-->
+<!--            android:textSize="25sp"-->
+<!--            android:text="Data de început"-->
+<!--            android:textColor="@color/violet"></TextView>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvEndDate"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:fontFamily="@font/alata"-->
+<!--            android:textAlignment="viewEnd"-->
+<!--            android:textSize="25sp"-->
+<!--            android:text="Data de sfârșit"-->
+<!--            android:textColor="@color/violet"></TextView>-->
+
+<!--    </LinearLayout>-->
+
+    <LinearLayout
+        android:id="@+id/llImageViews"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    <ImageView
+        android:id="@+id/pickStartDate"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_gravity="start"
+        android:src="@drawable/ic_baseline_calendar_month_24"></ImageView>
+
+        <TextView
+            android:id="@+id/pickedStartDate"
+            android:hint="01.01.2021"
+            android:textSize="20sp"
+            android:fontFamily="@font/alata"
+            android:layout_gravity="center"
+            android:textColor="@color/violet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></TextView>
+
+        <ImageView
+            android:id="@+id/pickEndDate"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="end"
+            android:src="@drawable/ic_baseline_calendar_month_24"></ImageView>
+
+        <TextView
+            android:id="@+id/pickedEndDate"
+            android:hint="02.01.2020"
+            android:textSize="20sp"
+            android:fontFamily="@font/alata"
+            android:layout_gravity="center"
+            android:textColor="@color/violet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></TextView>
+
+        <ImageView
+            android:id="@+id/btnSearch"
+            android:layout_gravity="end"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@drawable/ic_baseline_search_24"></ImageView>
+    </LinearLayout>
+
+
+
+    <TextView
+        android:id="@+id/tvAdminOrders"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/orders_title"
+        android:textSize="30sp"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/alata"
+        android:textColor="@color/violet"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llImageViews"></TextView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/adminOrdersList"
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:background="@color/teal_100"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvAdminOrders">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <ImageView
+        android:id="@+id/noRestaurantOrderFound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/no_restaurant_order_found"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></ImageView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddNewCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/violet"
+        android:src="@drawable/ic_baseline_add_24"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintRight_toRightOf="parent"></com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/teal_800"
+        app:itemBackground="@color/teal_800"
+        app:itemIconTint="@drawable/selector"
+        app:itemTextColor="@drawable/selector"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:menu="@menu/menu_admin"></com.google.android.material.bottomnavigation.BottomNavigationView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

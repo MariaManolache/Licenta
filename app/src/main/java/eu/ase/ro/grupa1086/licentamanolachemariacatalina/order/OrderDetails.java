@@ -161,7 +161,7 @@ public class OrderDetails extends AppCompatActivity {
                         holder.foodPrice.setText(String.valueOf(model.getPrice()));
                         holder.foodQuantity.setText(String.valueOf(model.getQuantity()));
                         holder.foodTotal.setText(model.getPrice() * model.getQuantity() + " lei");
-                        Picasso.with(getBaseContext()).load(model.getImage())
+                        Picasso.with(getBaseContext()).load(model.getImage()).placeholder(R.drawable.loading)
                                 .into(holder.foodImage);
 
                         final Food local = model;

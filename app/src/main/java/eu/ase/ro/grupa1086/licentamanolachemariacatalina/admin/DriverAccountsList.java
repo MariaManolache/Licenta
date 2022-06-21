@@ -56,6 +56,7 @@ import eu.ase.ro.grupa1086.licentamanolachemariacatalina.rating.Rating;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.CommentViewHolder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.DriverOrderViewHolder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.DriverViewHolder;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.OrderAdminViewHolder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.OrderDetailsViewHolder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.OrderViewHolder;
 
@@ -67,7 +68,7 @@ public class DriverAccountsList extends AppCompatActivity {
     public RecyclerView.LayoutManager thirdLayoutManager;
 
     FirebaseRecyclerAdapter<User, DriverViewHolder> adapter;
-    FirebaseRecyclerAdapter<Order, OrderViewHolder> secondAdapter;
+    FirebaseRecyclerAdapter<Order, OrderAdminViewHolder> secondAdapter;
     FirebaseRecyclerAdapter<Food, OrderDetailsViewHolder> thirdAdapter;
 
 
@@ -76,6 +77,7 @@ public class DriverAccountsList extends AppCompatActivity {
     DatabaseReference driverOrdersHistory;
     DatabaseReference restaurantAddresses;
     DatabaseReference cart;
+    DatabaseReference users;
     int driverOrders = 0;
 //    Button btnLogout;
 
@@ -97,6 +99,7 @@ public class DriverAccountsList extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
         driverOrdersHistory = database.getReference("driverOrdersHistory");
+        users = database.getReference("users");
 
         recyclerView = findViewById(R.id.driversAccountsList);
         recyclerView.setHasFixedSize(true);
@@ -131,9 +134,9 @@ public class DriverAccountsList extends AppCompatActivity {
                     case R.id.driverAccounts:
                         return true;
                     case R.id.topOrders:
-//                        startActivity(new Intent(getApplicationContext(), PersonalDriverOrders.class));
-//                        finish();
-//                        overridePendingTransition(0, 0);
+                        startActivity(new Intent(getApplicationContext(), AdminOrders.class));
+                        finish();
+                        overridePendingTransition(0, 0);
                         return true;
                 }
                 return false;
@@ -167,6 +170,7 @@ public class DriverAccountsList extends AppCompatActivity {
         adapter = new FirebaseRecyclerAdapter<User, DriverViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull DriverViewHolder holder, int position, @NonNull User model) {
+
                 driverOrders = 0;
                 holder.driverName.setText(model.getName());
                 holder.driverEmail.setText("Email: " + model.getEmail());
@@ -219,9 +223,9 @@ public class DriverAccountsList extends AppCompatActivity {
                                             .setQuery(query, Order.class)
                                             .build();
 
-                            secondAdapter = new FirebaseRecyclerAdapter<Order, OrderViewHolder>(options) {
+                            secondAdapter = new FirebaseRecyclerAdapter<Order, OrderAdminViewHolder>(options) {
                                 @Override
-                                protected void onBindViewHolder(@NonNull OrderViewHolder holder, int position, @NonNull Order model2) {
+                                protected void onBindViewHolder(@NonNull OrderAdminViewHolder holder, int position, @NonNull Order model2) {
 
                                     //Log.i("ceva", model.toString());
                                     restaurantName = null;
@@ -244,12 +248,25 @@ public class DriverAccountsList extends AppCompatActivity {
                                                 }
                                             }
 
+                                            users.child(model2.getUserId()).addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    User user = snapshot.getValue(User.class);
+                                                    holder.clientName.setText("#" + user.getName());
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+
                                             holder.restaurantsName.setText(restaurantName);
                                             holder.orderStatus.setText(getString(R.string.order_status) + " " + String.valueOf(model2.getStatus()).substring(0, 1).toUpperCase(Locale.ROOT) + String.valueOf(model2.getStatus()).replace("_", " ").substring(1));
                                             holder.orderAddress.setText(getString(R.string.address) + " " + model2.getAddress().getMapsAddress());
                                             holder.orderDateAndTime.setText("Data: " + model2.getCurrentDateAndTime());
                                             holder.orderPriceTotal.setText(getString(R.string.total) + " " + (double) Math.round(model2.getTotal() * 100d) / 100d + " " + getString(R.string.lei));
-                                            Picasso.with(getBaseContext()).load(restaurantImage)
+                                            Picasso.with(getBaseContext()).load(restaurantImage).placeholder(R.drawable.loading)
                                                     .into(holder.restaurantImage);
 
                                             String restaurantName2 = restaurantName;
@@ -309,7 +326,7 @@ public class DriverAccountsList extends AppCompatActivity {
                                                                         holder2.foodPrice.setText(String.valueOf(model.getPrice()));
                                                                         holder2.foodQuantity.setText(String.valueOf(model.getQuantity()));
                                                                         holder2.foodTotal.setText((double) Math.round(model.getPrice() * model.getQuantity() * 100d) / 100d + " lei");
-                                                                        Picasso.with(getBaseContext()).load(model.getImage())
+                                                                        Picasso.with(getBaseContext()).load(model.getImage()).placeholder(R.drawable.loading)
                                                                                 .into(holder2.foodImage);
 
                                                                         final Food local2 = model;
@@ -384,12 +401,12 @@ public class DriverAccountsList extends AppCompatActivity {
 
                                 @NonNull
                                 @Override
-                                public OrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                                public OrderAdminViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                                     View view = LayoutInflater.from(parent.getContext())
-                                            .inflate(R.layout.driver_account_order_layout, parent, false);
+                                            .inflate(R.layout.order_admin_layout, parent, false);
                                     view.setMinimumWidth(parent.getMeasuredWidth());
 
-                                    return new OrderViewHolder(view);
+                                    return new OrderAdminViewHolder(view);
                                 }
                             };
 

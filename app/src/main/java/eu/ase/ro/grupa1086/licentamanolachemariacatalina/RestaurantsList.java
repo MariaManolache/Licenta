@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.util.Log;
 import android.widget.SearchView;
 
@@ -43,6 +44,8 @@ public class RestaurantsList extends AppCompatActivity {
 
     FirebaseRecyclerAdapter<Restaurant, RestaurantViewHolder> adapter;
 
+    //ProgressDialog loader;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,8 @@ public class RestaurantsList extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
 //        searchView = findViewById(R.id.searchView);
+
+       // loader = new ProgressDialog(RestaurantsList.this);
 
         //Intent
         if(getIntent() != null) {
@@ -89,13 +94,21 @@ public class RestaurantsList extends AppCompatActivity {
             adapter = new FirebaseRecyclerAdapter<Restaurant, RestaurantViewHolder>(options) {
                 @Override
                 protected void onBindViewHolder(@NonNull RestaurantViewHolder holder, int position, @NonNull Restaurant model) {
+
+
+//                    loader.setMessage("Adding the attraction to your trip");
+//                    loader.setCanceledOnTouchOutside(false);
+//                    loader.show();
+
                     holder.restaurantName.setText(model.getName());
                     //holder.setIcon(model.getImage());
 //                    Glide.with(getBaseContext()).load(model.getImage()).into(holder.imageView);
                     Log.i("picasso", model.getImage());
-                    Picasso.with(getBaseContext()).load(model.getImage())
+                    Picasso.with(getBaseContext()).load(model.getImage()).placeholder(R.drawable.loading)
                             .into(holder.imageView);
                     //holder.deliveryTime.setText(model.getDeliveryTime());
+
+//                    loader.dismiss();
 
                     final Restaurant local = model;
                     holder.setItemClickListener(new ItemClickListener() {

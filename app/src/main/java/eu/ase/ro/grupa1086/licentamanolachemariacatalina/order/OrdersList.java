@@ -211,7 +211,7 @@ public class OrdersList extends AppCompatActivity {
                         holder.orderAddress.setText(getString(R.string.address) + " " + model.getAddress().getMapsAddress());
                         holder.orderDateAndTime.setText("Data: " + model.getCurrentDateAndTime());
                         holder.orderPriceTotal.setText(getString(R.string.total) + " " + (double)Math.round(model.getTotal() * 100d) / 100d + " " + getString(R.string.lei));
-                        Picasso.with(getBaseContext()).load(restaurantImage)
+                        Picasso.with(getBaseContext()).load(restaurantImage).placeholder(R.drawable.loading)
                                 .into(holder.restaurantImage);
 
                         String restaurantName2 = restaurantName;
@@ -271,7 +271,7 @@ public class OrdersList extends AppCompatActivity {
                                                     holder2.foodPrice.setText(String.valueOf(model.getPrice()));
                                                     holder2.foodQuantity.setText(String.valueOf(model.getQuantity()));
                                                     holder2.foodTotal.setText((double)Math.round(model.getPrice() * model.getQuantity() * 100d) / 100d + " lei");
-                                                    Picasso.with(getBaseContext()).load(model.getImage())
+                                                    Picasso.with(getBaseContext()).load(model.getImage()).placeholder(R.drawable.loading)
                                                             .into(holder2.foodImage);
 
                                                     final Food local2 = model;
@@ -549,7 +549,7 @@ public class OrdersList extends AppCompatActivity {
                         holder.foodPrice.setText(String.valueOf(model.getPrice()));
                         holder.foodQuantity.setText(String.valueOf(model.getQuantity()));
                         holder.foodTotal.setText((double)Math.round(model.getPrice() * model.getQuantity() * 100d) / 100d + " lei");
-                        Picasso.with(getBaseContext()).load(model.getImage())
+                        Picasso.with(getBaseContext()).load(model.getImage()).placeholder(R.drawable.loading)
                                 .into(holder.foodImage);
 
                         final Food local = model;

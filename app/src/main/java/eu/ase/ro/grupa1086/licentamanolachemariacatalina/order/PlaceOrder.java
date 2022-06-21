@@ -85,6 +85,7 @@ public class PlaceOrder extends AppCompatActivity {
     DatabaseReference restaurants;
     DatabaseReference driverOrders;
     DatabaseReference restaurantOrders;
+    DatabaseReference ordersHistory;
 
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
@@ -155,6 +156,7 @@ public class PlaceOrder extends AppCompatActivity {
         restaurants = database.getInstance().getReference("restaurants");
         driverOrders = database.getInstance().getReference("driverOrders");
         restaurantOrders = database.getInstance().getReference("restaurantOrders");
+        ordersHistory = database.getInstance().getReference("ordersHistory");
 
         calendar = Calendar.getInstance();
         simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
@@ -334,6 +336,7 @@ public class PlaceOrder extends AppCompatActivity {
                                         if (task.isSuccessful()) {
                                             Toast.makeText(PlaceOrder.this, "Comandă plasata", Toast.LENGTH_LONG).show();
 
+                                            ordersHistory.child(orderId).setValue(order);
                                             for (int i = 0; i < restaurantAddresses.size(); i++) {
                                                 orders.child(orderId).child("restaurants").child(restaurantAddresses.get(i).getId()).setValue(restaurantAddresses.get(i));
                                             }
@@ -510,7 +513,7 @@ public class PlaceOrder extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
 
-
+                                    ordersHistory.child(orderId).setValue(order);
                                     for (int i = 0; i < restaurantAddresses.size(); i++) {
                                         orders.child(orderId).child("restaurants").child(restaurantAddresses.get(i).getId()).setValue(restaurantAddresses.get(i));
                                     }
@@ -684,7 +687,7 @@ public class PlaceOrder extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
 
-
+                                    ordersHistory.child(orderId).setValue(order);
                                     for (int i = 0; i < restaurantAddresses.size(); i++) {
                                         orders.child(orderId).child("restaurants").child(restaurantAddresses.get(i).getId()).setValue(restaurantAddresses.get(i));
                                     }
@@ -809,7 +812,7 @@ public class PlaceOrder extends AppCompatActivity {
                                         Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
 
 //                                        cart.removeValue();
-
+                                        ordersHistory.child(orderId).setValue(order);
                                         for (int i = 0; i < restaurantAddresses.size(); i++) {
                                             orders.child(orderId).child("restaurants").child(restaurantAddresses.get(i).getId()).setValue(restaurantAddresses.get(i));
                                         }

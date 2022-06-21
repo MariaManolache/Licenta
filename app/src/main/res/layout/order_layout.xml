@@ -12,7 +12,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="8dp"
+        android:layout_margin="10dp"
         app:cardCornerRadius="10dp"
         app:cardElevation="4dp">
 
@@ -38,6 +38,7 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/restaurantImage"
+                        android:layout_marginLeft="10dp"
                         android:layout_width="70dp"
                         android:layout_height="70dp"
                         android:layout_gravity="center_vertical|end"

@@ -18,17 +18,24 @@
         android:theme="@style/Theme.LicentaManolacheMariaCatalina"
         tools:replace="android:theme">
         <activity
+            android:name=".admin.NewCategory"
+            android:exported="false" />
+        <activity
+            android:name=".admin.AdminOrders"
+            android:exported="false"
+            android:label="@string/orders_list" />
+        <activity
             android:name=".admin.NewRestaurantAccount"
             android:exported="false"
-            android:label="@string/new_restaurant"/>
+            android:label="@string/new_restaurant" />
         <activity
             android:name=".admin.RestaurantAccountsList"
             android:exported="false"
-            android:label="@string/restaurants_list_title"/>
+            android:label="@string/restaurants_list_title" />
         <activity
             android:name=".admin.NewDriverAccount"
             android:exported="false"
-            android:label="@string/new_driver"/>
+            android:label="@string/new_driver" />
         <activity
             android:name=".admin.DriverAccountsList"
             android:exported="false"

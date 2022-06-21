@@ -157,7 +157,7 @@ public class RestaurantAccount extends AppCompatActivity {
                         if(restaurant != null) {
                             restaurantName.setText(restaurant.getName());
                             restaurantAddress.setText(restaurant.getAddress());
-                            Picasso.with(getBaseContext()).load(restaurant.getImage()).into(restaurantImage);
+                            Picasso.with(getBaseContext()).load(restaurant.getImage()).placeholder(R.drawable.loading).into(restaurantImage);
 
                             String categoryName = "";
                             for (Map.Entry<String, String> entry : mapCategoryId.entrySet()) {
@@ -328,7 +328,7 @@ public class RestaurantAccount extends AppCompatActivity {
                         if (result.getResultCode() == Activity.RESULT_OK) {
                             // There are no request codes
                             restaurantImageUri = result.getData().getData();
-                            Picasso.with(getApplicationContext()).load(restaurantImageUri).into(restaurantImage);
+                            Picasso.with(getApplicationContext()).load(restaurantImageUri).placeholder(R.drawable.loading).into(restaurantImage);
                             uploadFile();
                         }
                     }

@@ -18,6 +18,7 @@ public class RestaurantAccountViewHolder extends RecyclerView.ViewHolder impleme
     public TextView restaurantOrdersNumber;
     public ImageView downArrow;
     public ImageView upArrow;
+    public ImageView restaurantImage;
 
     private ItemClickListener itemClickListener;
     public RecyclerView secondRecyclerView;
@@ -32,6 +33,7 @@ public class RestaurantAccountViewHolder extends RecyclerView.ViewHolder impleme
         restaurantOrdersNumber = itemView.findViewById(R.id.restaurantOrdersNumber);
         downArrow = itemView.findViewById(R.id.downArrow);
         upArrow = itemView.findViewById(R.id.upArrow);
+        restaurantImage = itemView.findViewById(R.id.restaurantImage);
 
         secondRecyclerView = itemView.findViewById(R.id.restaurantAccountOrders);
 

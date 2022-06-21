@@ -25,6 +25,7 @@
         android:layout_margin="10dp"
         android:background="@drawable/round_background"
         android:elevation="5dp"
+        android:inputType="textCapWords"
         android:iconifiedByDefault="false"
         android:queryHint="Search..."
         app:layout_constraintEnd_toEndOf="parent"

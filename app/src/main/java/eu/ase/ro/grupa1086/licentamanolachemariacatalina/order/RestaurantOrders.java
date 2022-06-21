@@ -74,6 +74,7 @@ public class RestaurantOrders extends AppCompatActivity {
     DatabaseReference restaurantOrders;
     DatabaseReference users;
     DatabaseReference restaurantOrdersHistory;
+    DatabaseReference ordersHistory;
     FirebaseUser user;
 
     AlertDialog.Builder acceptOrder;
@@ -104,7 +105,7 @@ public class RestaurantOrders extends AppCompatActivity {
         orders = database.getReference().child("orders");
         users = database.getReference("users");
         restaurantOrdersHistory = database.getReference("restaurantOrdersHistory");
-
+        ordersHistory = database.getInstance().getReference("ordersHistory");
 
         recyclerView = (RecyclerView) findViewById(R.id.restaurantOrdersList);
         recyclerView.setHasFixedSize(true);
@@ -262,7 +263,7 @@ public class RestaurantOrders extends AppCompatActivity {
                                         holder2.foodPrice.setText(String.valueOf(model.getPrice()));
                                         holder2.foodQuantity.setText(String.valueOf(model.getQuantity()));
                                         holder2.foodTotal.setText((double)Math.round(model.getPrice() * model.getQuantity() * 100) / 100 + " lei");
-                                        Picasso.with(getBaseContext()).load(model.getImage())
+                                        Picasso.with(getBaseContext()).load(model.getImage()).placeholder(R.drawable.loading)
                                                 .into(holder2.foodImage);
 
                                         final Food local2 = model;
@@ -345,6 +346,7 @@ public class RestaurantOrders extends AppCompatActivity {
                                                                                                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                                                                                     Restaurant confirmedRestaurant3 = dataSnapshot.getValue(Restaurant.class);
 
+                                                                                                    ordersHistory.child(model.getOrderId()).child("status").setValue(Status.confirmata);
                                                                                                     if (confirmedRestaurant3 != null) {
                                                                                                         restaurantOrders.child(confirmedRestaurant3.getId()).child("orders").child(model.getOrderId()).addValueEventListener(new ValueEventListener() {
                                                                                                             @Override

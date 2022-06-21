@@ -77,6 +77,7 @@ public class RestaurantAccountsList extends AppCompatActivity {
     DatabaseReference users;
     DatabaseReference restaurantAddresses;
     DatabaseReference cart;
+    DatabaseReference restaurants;
 
     BottomNavigationView bottomNavigationView;
     FloatingActionButton fabAddNewRestaurant;
@@ -93,6 +94,7 @@ public class RestaurantAccountsList extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         restaurantOrdersHistory = database.getReference("restaurantOrdersHistory");
         users = database.getReference("users");
+        restaurants = database.getReference("restaurants");
 
         recyclerView = findViewById(R.id.restaurantsAccountsList);
         recyclerView.setHasFixedSize(true);
@@ -127,9 +129,9 @@ public class RestaurantAccountsList extends AppCompatActivity {
                         overridePendingTransition(0, 0);
                         return true;
                     case R.id.topOrders:
-//                        startActivity(new Intent(getApplicationContext(), PersonalDriverOrders.class));
-//                        finish();
-//                        overridePendingTransition(0, 0);
+                        startActivity(new Intent(getApplicationContext(), AdminOrders.class));
+                        finish();
+                        overridePendingTransition(0, 0);
                         return true;
                 }
                 return false;
@@ -154,6 +156,21 @@ public class RestaurantAccountsList extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull RestaurantAccountViewHolder holder, int position, @NonNull RestaurantAccount model) {
                 restaurantOrders = 0;
+
+                restaurants.child(model.getId()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Restaurant restaurant = snapshot.getValue(Restaurant.class);
+
+                        Picasso.with(getBaseContext()).load(restaurant.getImage()).placeholder(R.drawable.loading)
+                                .into(holder.restaurantImage);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
 
                 holder.name.setText(model.getName());
                 holder.email.setText("Email: " + model.getEmail());
@@ -280,7 +297,7 @@ public class RestaurantAccountsList extends AppCompatActivity {
                                                                 holder3.foodPrice.setText(String.valueOf(model.getPrice()));
                                                                 holder3.foodQuantity.setText(String.valueOf(model.getQuantity()));
                                                                 holder3.foodTotal.setText((double) Math.round(model.getPrice() * model.getQuantity() * 100d) / 100d + " lei");
-                                                                Picasso.with(getBaseContext()).load(model.getImage())
+                                                                Picasso.with(getBaseContext()).load(model.getImage()).placeholder(R.drawable.loading)
                                                                         .into(holder3.foodImage);
 
                                                                 final Food local2 = model;

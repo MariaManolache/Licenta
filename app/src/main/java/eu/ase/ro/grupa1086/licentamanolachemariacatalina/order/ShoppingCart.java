@@ -158,7 +158,7 @@ public class ShoppingCart extends AppCompatActivity {
 
     public List<Food> loadFood() {
 
-        cart.addValueEventListener(new ValueEventListener() {
+        cart.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
@@ -174,6 +174,8 @@ public class ShoppingCart extends AppCompatActivity {
                     cartList.add(food);
                     total += food.getPrice() * food.getQuantity();
                 }
+
+                tvTotalPrice.setText((double)Math.round(total * 100d) / 100d + " LEI");
 
                 if (cartList.size() == 0 || total == 0.0f) {
                     emptyCart.setVisibility(View.VISIBLE);
@@ -236,6 +238,40 @@ public class ShoppingCart extends AppCompatActivity {
 
         Log.i("hello", query.toString());
 
+        cart.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(!snapshot.exists()) {
+                    emptyCart.setVisibility(View.VISIBLE);
+                    tvEmptyCart.setVisibility(View.VISIBLE);
+                    btnStartShopping.setVisibility(View.VISIBLE);
+                    cardView.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.GONE);
+                    btnStartShopping.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent principalMenu = new Intent(ShoppingCart.this, PrincipalMenu.class);
+                            startActivity(principalMenu);
+                            finish();
+                        }
+                    });
+                    btnPlaceOrder.setEnabled(false);
+                } else {
+                    emptyCart.setVisibility(View.GONE);
+                    tvEmptyCart.setVisibility(View.GONE);
+                    btnStartShopping.setVisibility(View.GONE);
+                    cardView.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    btnPlaceOrder.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         FirebaseRecyclerOptions<Food> options =
                 new FirebaseRecyclerOptions.Builder<Food>()
                         .setQuery(query, Food.class)
@@ -251,7 +287,7 @@ public class ShoppingCart extends AppCompatActivity {
 
                 //holder.restaurantName.setText(model.getRestaurantId());
                 holder.tvCartName.setText(model.getName());
-                Picasso.with(getBaseContext()).load(model.getImage())
+                Picasso.with(getBaseContext()).load(model.getImage()).placeholder(R.drawable.loading)
                         .into(holder.imgCartCount);
 
                 holder.tvCartPrice.setText(String.valueOf(model.getPrice()));
@@ -294,9 +330,10 @@ public class ShoppingCart extends AppCompatActivity {
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
                                     total += model.getPrice();
-                                    Toast.makeText(ShoppingCart.this, "Cantitate modificata", Toast.LENGTH_SHORT).show();
+                                    tvTotalPrice.setText((double)Math.round(total * 100d) / 100d + " LEI");
+                                    Toast.makeText(ShoppingCart.this, "Cantitate modificată", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(ShoppingCart.this, "Eroare la modificarea cantitatii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(ShoppingCart.this, "Eroare la modificarea cantității" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                 }
                             }
                         });
@@ -319,14 +356,15 @@ public class ShoppingCart extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
                                         total -= model.getPrice();
-                                        Toast.makeText(ShoppingCart.this, "Cantitate modificata", Toast.LENGTH_SHORT).show();
+                                        tvTotalPrice.setText((double)Math.round(total * 100d) / 100d + " LEI");
+                                        Toast.makeText(ShoppingCart.this, "Cantitate modificată", Toast.LENGTH_SHORT).show();
                                     } else {
-                                        Toast.makeText(ShoppingCart.this, "Eroare la modificarea cantitatii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                        Toast.makeText(ShoppingCart.this, "Eroare la modificarea cantității" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
                         } else {
-                            Toast.makeText(ShoppingCart.this, "Cantitatea nu poate fi mai mica de 1!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ShoppingCart.this, "Cantitatea nu poate fi mai mică de 1!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -335,6 +373,21 @@ public class ShoppingCart extends AppCompatActivity {
                     tvTotalPrice.setText((double)Math.round(total * 100d) / 100d + " LEI");
                 } else {
                     tvTotalPrice.setText("0 LEI");
+
+//                    emptyCart.setVisibility(View.VISIBLE);
+//                    tvEmptyCart.setVisibility(View.VISIBLE);
+//                    btnStartShopping.setVisibility(View.VISIBLE);
+//                    cardView.setVisibility(View.GONE);
+//                    recyclerView.setVisibility(View.GONE);
+//                    btnStartShopping.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            Intent principalMenu = new Intent(ShoppingCart.this, PrincipalMenu.class);
+//                            startActivity(principalMenu);
+//                            finish();
+//                        }
+//                    });
+//                    btnPlaceOrder.setEnabled(false);
                 }
 
                 final Food local = model;

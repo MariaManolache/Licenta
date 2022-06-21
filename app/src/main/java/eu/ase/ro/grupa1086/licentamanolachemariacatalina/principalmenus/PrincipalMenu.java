@@ -205,7 +205,7 @@ public class PrincipalMenu extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull MenuViewHolder holder, int position, @NonNull Category model) {
                 holder.menuName.setText(model.getName());
-                Picasso.with(getBaseContext()).load(model.getImage())
+                Picasso.with(getBaseContext()).load(model.getImage()).placeholder(R.drawable.loading)
                         .into(holder.imageView);
                 Category clickItem = model;
                 holder.setItemClickListener(new ItemClickListener() {
@@ -309,7 +309,7 @@ public class PrincipalMenu extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull RestaurantViewHolder holder, int position, @NonNull Restaurant model) {
                 holder.restaurantName.setText(model.getName());
-                Picasso.with(getBaseContext()).load(model.getImage())
+                Picasso.with(getBaseContext()).load(model.getImage()).placeholder(R.drawable.loading)
                         .into(holder.imageView);
 
                 final Restaurant local = model;

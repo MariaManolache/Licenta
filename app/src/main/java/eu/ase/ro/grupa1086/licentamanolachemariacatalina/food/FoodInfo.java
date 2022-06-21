@@ -95,14 +95,19 @@ public class FoodInfo extends FragmentActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
-        String id = user.getUid();
+        String id = null;
+        if (user != null) {
+            id = user.getUid();
+        }
         cart = database.getReference("carts").child(id).child("foodList");
         users = database.getReference("users");
         users.child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
-                userName = user.getName();
+                if (user != null) {
+                    userName = user.getName();
+                }
             }
 
             @Override
@@ -377,6 +382,7 @@ public class FoodInfo extends FragmentActivity {
                     selectedFood.setQuantity(Integer.parseInt(String.valueOf(quantity.getText())));
 
                     food = selectedFood;
+                    food.setPreparationTime(selectedFood.getPreparationTime());
 
                     ratingValue = 0.0f;
                     nbOfRatings = 0;

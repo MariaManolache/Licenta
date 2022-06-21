@@ -149,7 +149,7 @@ public class RestaurantProducts extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull FoodViewHolder holder, int position, @NonNull Food model) {
                 holder.foodName.setText(model.getName());
-                Picasso.with(getBaseContext()).load(model.getImage())
+                Picasso.with(getBaseContext()).load(model.getImage()).placeholder(R.drawable.loading)
                         .into(holder.imageView);
 
                 listOfFoods.add(model);

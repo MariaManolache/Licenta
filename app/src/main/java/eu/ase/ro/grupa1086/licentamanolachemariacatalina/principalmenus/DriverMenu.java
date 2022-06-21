@@ -97,6 +97,7 @@ public class DriverMenu extends AppCompatActivity {
     DatabaseReference users;
     DatabaseReference restaurantOrders;
     DatabaseReference driverOrdersHistory;
+    DatabaseReference ordersHistory;
     FirebaseUser user;
 
     String restaurantName;
@@ -139,6 +140,7 @@ public class DriverMenu extends AppCompatActivity {
         driverOrders = database.getReference().child("driverOrders");
         restaurantOrders = database.getReference().child("restaurantOrders");
         driverOrdersHistory = database.getReference().child("driverOrdersHistory");
+        ordersHistory = database.getInstance().getReference("ordersHistory");
 
         users = database.getReference().child("users");
 
@@ -461,7 +463,7 @@ public class DriverMenu extends AppCompatActivity {
                             holder.orderDateAndTime.setText("Data: " + model.getCurrentDateAndTime());
                             holder.orderAddress.setText("Adresa: " + String.valueOf(model.getAddress().getMapsAddress()));
                             holder.orderPriceTotal.setText("Total: " + (double)Math.round(model.getTotal() * 100) / 100 + " lei");
-                            Picasso.with(getBaseContext()).load(restaurantImage)
+                            Picasso.with(getBaseContext()).load(restaurantImage).placeholder(R.drawable.loading)
                                     .into(holder.restaurantImage);
 
                             String restaurantName2 = restaurantName;
@@ -521,7 +523,7 @@ public class DriverMenu extends AppCompatActivity {
                                                         holder2.foodPrice.setText(String.valueOf(model.getPrice()));
                                                         holder2.foodQuantity.setText(String.valueOf(model.getQuantity()));
                                                         holder2.foodTotal.setText((double)Math.round(model.getPrice() * model.getQuantity() * 100) /100  + " lei");
-                                                        Picasso.with(getBaseContext()).load(model.getImage())
+                                                        Picasso.with(getBaseContext()).load(model.getImage()).placeholder(R.drawable.loading)
                                                                 .into(holder2.foodImage);
 
                                                         final Food local2 = model;
@@ -589,7 +591,7 @@ public class DriverMenu extends AppCompatActivity {
                                                             //driverOrders.child(model.getId()).child("status").setValue(Status.in_curs_de_livrare);
                                                             driverOrders.child(user.getUid()).child(model.getId()).setValue(model);
                                                             driverOrders.child("orders").child(model.getId()).removeValue();
-
+                                                            ordersHistory.child(model.getId()).child("status").setValue(Status.in_curs_de_livrare);
                                                             //driverOrdersHistory.child(user.getUid()).child("orders").child(model.getId()).setValue(model);
                                                             orders.child(model.getUserId()).child(model.getId()).child("status").setValue(Status.in_curs_de_livrare);
 

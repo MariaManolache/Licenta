@@ -172,7 +172,7 @@ public class CompleteFoodList extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull AllFoodViewHolder holder, int position, @NonNull Food model) {
                 holder.foodName.setText(model.getName());
-                Picasso.with(getBaseContext()).load(model.getImage())
+                Picasso.with(getBaseContext()).load(model.getImage()).placeholder(R.drawable.loading)
                         .into(holder.imageView);
 
 
@@ -328,14 +328,14 @@ public class CompleteFoodList extends AppCompatActivity {
                         Restaurant restaurant = snapshot.getValue(Restaurant.class);
                         holder.restaurantName.setText(restaurant.getName());
 
-                        Query query = FirebaseDatabase.getInstance()
+                        Query query2 = FirebaseDatabase.getInstance()
                                 .getReference()
                                 .child("food")
                                 .child(entry)
                                 .orderByChild("name").startAt(s).endAt(s + "\uf8ff")
                                 .limitToLast(50);
 
-                        query.addValueEventListener(new ValueEventListener() {
+                        query2.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -346,14 +346,14 @@ public class CompleteFoodList extends AppCompatActivity {
 
                                     FirebaseRecyclerOptions<Food> options =
                                             new FirebaseRecyclerOptions.Builder<Food>()
-                                                    .setQuery(query, Food.class)
+                                                    .setQuery(query2, Food.class)
                                                     .build();
 
                                     adapter = new FirebaseRecyclerAdapter<Food, AllFoodViewHolder>(options) {
                                         @Override
                                         protected void onBindViewHolder(@NonNull AllFoodViewHolder holder, int position, @NonNull Food model) {
                                             holder.foodName.setText(model.getName());
-                                            Picasso.with(getBaseContext()).load(model.getImage())
+                                            Picasso.with(getBaseContext()).load(model.getImage()).placeholder(R.drawable.loading)
                                                     .into(holder.imageView);
 
 

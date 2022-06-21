@@ -32,13 +32,13 @@
         android:textSize="30sp"
         android:visibility="gone"
         android:layout_centerHorizontal="true"
-        android:text="Cosul este gol"
+        android:text="Coșul este gol"
         android:layout_marginTop="150dp"
         android:fontFamily="@font/alata"></TextView>
 
     <Button
         android:id="@+id/btnStartShopping"
-        android:text="Incepe cumparaturile"
+        android:text="@string/start_shopping"
         android:visibility="gone"
         android:layout_marginRight="8dp"
         android:layout_marginLeft="8dp"
