@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/teal_100"
+    tools:context=".account.SignUp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/teal_100">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:layout_margin="20dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/alata"
+            android:gravity="center"
+            android:text="@string/add_new_restaurant"
+            android:textAlignment="center"
+            android:textColor="@color/violet"
+            android:textSize="30dp"></TextView>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_margin="10dp"
+            android:outlineAmbientShadowColor="@android:color/darker_gray"
+            android:outlineSpotShadowColor="@color/violet"
+            android:splitMotionEvents="false"
+            android:textColorHint="@color/violet"
+            app:boxBackgroundColor="@color/white"
+            app:boxCornerRadiusBottomEnd="20dp"
+            app:boxCornerRadiusBottomStart="20dp"
+            app:boxCornerRadiusTopEnd="20dp"
+            app:boxCornerRadiusTopStart="20dp"
+            app:boxStrokeColor="@color/violet"
+            app:counterTextColor="@color/violet"
+            app:hintTextColor="@color/violet"
+            tools:targetApi="p">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etRestaurantName"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/alata"
+                android:hint="@string/name"
+                android:inputType="textCapWords"
+                android:textColor="@color/violet"
+                android:textSize="20dp"
+                android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_margin="10dp"
+            android:outlineAmbientShadowColor="@android:color/darker_gray"
+            android:outlineSpotShadowColor="@color/violet"
+            android:splitMotionEvents="false"
+            android:textColorHint="@color/violet"
+            app:boxBackgroundColor="@color/white"
+            app:boxCornerRadiusBottomEnd="20dp"
+            app:boxCornerRadiusBottomStart="20dp"
+            app:boxCornerRadiusTopEnd="20dp"
+            app:boxCornerRadiusTopStart="20dp"
+            app:boxStrokeColor="@color/violet"
+            app:counterTextColor="@color/violet"
+            app:hintTextColor="@color/violet"
+            tools:targetApi="p">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etRestaurantEmail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/alata"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/violet"
+                android:textSize="20dp"
+                android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_margin="10dp"
+            android:outlineAmbientShadowColor="@android:color/darker_gray"
+            android:outlineSpotShadowColor="@color/violet"
+            android:splitMotionEvents="false"
+            android:textColorHint="@color/violet"
+            app:boxBackgroundColor="@color/white"
+            app:boxCornerRadiusBottomEnd="20dp"
+            app:boxCornerRadiusBottomStart="20dp"
+            app:boxCornerRadiusTopEnd="20dp"
+            app:boxCornerRadiusTopStart="20dp"
+            app:boxStrokeColor="@color/violet"
+            app:counterTextColor="@color/violet"
+            app:hintTextColor="@color/violet"
+            app:prefixText="+40"
+            app:prefixTextAppearance="@style/prefixText"
+            app:prefixTextColor="@color/violet"
+            tools:targetApi="p">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etRestaurantPhoneNumber"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/alata"
+                android:hint="@string/phone"
+                android:inputType="phone"
+                android:textColor="@color/violet"
+                android:textSize="20dp"
+                android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_margin="10dp"
+            android:outlineAmbientShadowColor="@android:color/darker_gray"
+            android:outlineSpotShadowColor="@color/violet"
+            android:splitMotionEvents="false"
+            android:textColorHint="@color/violet"
+            app:boxBackgroundColor="@color/white"
+            app:boxCornerRadiusBottomEnd="20dp"
+            app:boxCornerRadiusBottomStart="20dp"
+            app:boxCornerRadiusTopEnd="20dp"
+            app:boxCornerRadiusTopStart="20dp"
+            app:boxStrokeColor="@color/violet"
+            app:counterTextColor="@color/violet"
+            app:hintTextColor="@color/violet"
+            tools:targetApi="p">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etRestaurantAddress"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="@color/white"
+                android:fontFamily="@font/alata"
+                android:hint="@string/address_word"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/violet"
+                android:textSize="20dp"
+                android:textStyle="bold"></com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <TextView
+            android:id="@+id/tvCategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:fontFamily="@font/alata"
+            android:text="@string/category"
+            android:textAlignment="center"
+            android:textColor="@color/violet"
+            android:textSize="25sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/restaurantDetailsLayout"></TextView>
+
+
+        <Spinner
+            android:id="@+id/categorySpinner"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:spinnerMode="dropdown"
+            android:textAlignment="center"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvCategories"></Spinner>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:fontFamily="@font/alata"
+            android:text="@string/restaurant_image"
+            android:textAlignment="center"
+            android:textColor="@color/violet"
+            android:textSize="25sp"></TextView>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/restaurantImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:background="@drawable/circle_background"
+            android:scaleType="centerCrop"
+            android:src="@drawable/pizza_example"></de.hdodenhof.circleimageview.CircleImageView>
+
+        <!--    <EditText-->
+        <!--        android:id="@+id/etEmail"-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_marginTop="25dp"-->
+        <!--        android:textSize="25dp"-->
+        <!--        android:inputType="textEmailAddress"-->
+        <!--        android:maxLength="30"-->
+        <!--        android:hint="Email"></EditText>-->
+
+
+        <Button
+            android:id="@+id/btnAddNewRestaurant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginRight="50dp"
+            android:fontFamily="@font/alata"
+            android:gravity="center"
+            android:text="@string/add"
+            android:textAlignment="center"
+            android:textStyle="bold"></Button>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
+
+    </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

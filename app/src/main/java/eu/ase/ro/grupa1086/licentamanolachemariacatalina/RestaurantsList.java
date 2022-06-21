@@ -1,6 +1,7 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
@@ -94,7 +95,7 @@ public class RestaurantsList extends AppCompatActivity {
                     Log.i("picasso", model.getImage());
                     Picasso.with(getBaseContext()).load(model.getImage())
                             .into(holder.imageView);
-                    holder.deliveryTime.setText(model.getDeliveryTime());
+                    //holder.deliveryTime.setText(model.getDeliveryTime());
 
                     final Restaurant local = model;
                     holder.setItemClickListener(new ItemClickListener() {

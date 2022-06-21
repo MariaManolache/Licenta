@@ -101,7 +101,7 @@ public class SignIn extends AppCompatActivity {
                                 //validarea adresei de email
                                 EditText email = view.findViewById(R.id.etResetEmailPasswordPopUp);
                                 if (email.getText().toString().isEmpty()) {
-                                    email.setError("Camp necesar pentru resetarea parolei");
+                                    email.setError("Câmp necesar pentru resetarea parolei");
                                     return;
                                 }
 //                                else {
@@ -190,7 +190,7 @@ public class SignIn extends AppCompatActivity {
                 }
 
                 if (password.length() < 6) {
-                    etPassword.setError("Parola trebuie sa aiba cel putin 4 caractere");
+                    etPassword.setError("Parola trebuie să aibă cel puțin 4 caractere");
                     return;
                 }
 
@@ -206,7 +206,7 @@ public class SignIn extends AppCompatActivity {
 
 
                         } else {
-                            Toast.makeText(SignIn.this, "Eroare la autentificare" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(SignIn.this, "Eroare la autentificare", Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
                         }
                     }

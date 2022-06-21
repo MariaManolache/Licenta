@@ -182,4 +182,13 @@
     <string name="driver_name">Nume livrator</string>
     <string name="admin_account">Contul administratorului</string>
     <string name="drivers_list">Lista livratorilor</string>
+    <string name="add_new_driver_account">Adăugare cont de livrator</string>
+    <string name="add">Adaugă</string>
+    <string name="new_driver_name">Numele livratorului:</string>
+    <string name="restaurant_accounts">Conturile restaurantelor:</string>
+    <string name="add_new_restaurant">Adaugă un nou restaurant:</string>
+    <string name="new_restaurant">Restaurant nou</string>
+    <string name="new_driver">Livrator nou</string>
+    <string name="address_word">Adresa</string>
+    <string name="restaurant_image">Imaginea restaurantului:</string>
 </resources>

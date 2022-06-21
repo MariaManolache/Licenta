@@ -73,6 +73,7 @@ public class RestaurantOrders extends AppCompatActivity {
     DatabaseReference driverOrders;
     DatabaseReference restaurantOrders;
     DatabaseReference users;
+    DatabaseReference restaurantOrdersHistory;
     FirebaseUser user;
 
     AlertDialog.Builder acceptOrder;
@@ -102,6 +103,7 @@ public class RestaurantOrders extends AppCompatActivity {
         restaurantOrders = database.getReference().child("restaurantOrders");
         orders = database.getReference().child("orders");
         users = database.getReference("users");
+        restaurantOrdersHistory = database.getReference("restaurantOrdersHistory");
 
 
         recyclerView = (RecyclerView) findViewById(R.id.restaurantOrdersList);
@@ -336,6 +338,38 @@ public class RestaurantOrders extends AppCompatActivity {
                                                                                     }
 
                                                                                     if (allRestaurantsConfirmed == true) {
+
+                                                                                        orders.child(model.getUserId()).child(model.getOrderId()).child("restaurants").addValueEventListener(new ValueEventListener() {
+                                                                                            @Override
+                                                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                                                                                    Restaurant confirmedRestaurant3 = dataSnapshot.getValue(Restaurant.class);
+
+                                                                                                    if (confirmedRestaurant3 != null) {
+                                                                                                        restaurantOrders.child(confirmedRestaurant3.getId()).child("orders").child(model.getOrderId()).addValueEventListener(new ValueEventListener() {
+                                                                                                            @Override
+                                                                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                                                                RestaurantOrder restaurantOrder = snapshot.getValue(RestaurantOrder.class);
+                                                                                                                restaurantOrdersHistory.child(confirmedRestaurant3.getId()).child("orders").child(model.getOrderId()).setValue(restaurantOrder);
+                                                                                                            }
+
+                                                                                                            @Override
+                                                                                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                                                            }
+                                                                                                        });
+                                                                                                    }
+
+
+                                                                                                }
+                                                                                            }
+
+                                                                                            @Override
+                                                                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                                            }
+                                                                                        });
+
                                                                                         orders.child(model.getUserId()).child(model.getOrderId()).child("status").setValue(Status.confirmata).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                                             @Override
                                                                                             public void onComplete(@NonNull Task<Void> task) {

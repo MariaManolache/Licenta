@@ -21,14 +21,13 @@ public class Restaurant implements Serializable {
     public Restaurant() {
     }
 
-    public Restaurant(String id, String name, String image, String categoryId, String address, String deliveryTime) {
+    public Restaurant(String id, String name, String image, String categoryId, String address) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.categoryId = categoryId;
         this.categoryIdName = categoryId + name;
         this.address = address;
-        this.deliveryTime = deliveryTime;
     }
 
     public String getId() {

@@ -99,7 +99,7 @@ public class DriverLogIn extends AppCompatActivity {
 
 
                         } else {
-                            Toast.makeText(DriverLogIn.this, "Eroare la autentificare" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(DriverLogIn.this, "Eroare la autentificare", Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
                         }
                     }

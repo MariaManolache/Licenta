@@ -1,14 +1,18 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina.admin;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +22,7 @@ import android.widget.Toast;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -59,15 +64,20 @@ public class DriverAccountsList extends AppCompatActivity {
     public RecyclerView recyclerView;
     public RecyclerView.LayoutManager layoutManager;
     public RecyclerView.LayoutManager secondLayoutManager;
+    public RecyclerView.LayoutManager thirdLayoutManager;
 
     FirebaseRecyclerAdapter<User, DriverViewHolder> adapter;
     FirebaseRecyclerAdapter<Order, OrderViewHolder> secondAdapter;
+    FirebaseRecyclerAdapter<Food, OrderDetailsViewHolder> thirdAdapter;
+
 
     FirebaseDatabase database;
     FirebaseUser user;
     DatabaseReference driverOrdersHistory;
+    DatabaseReference restaurantAddresses;
+    DatabaseReference cart;
     int driverOrders = 0;
-    Button btnLogout;
+//    Button btnLogout;
 
     String restaurantName;
     String restaurantImage;
@@ -75,6 +85,9 @@ public class DriverAccountsList extends AppCompatActivity {
     List<Order> orderList = new ArrayList<Order>();
 
     BottomNavigationView bottomNavigationView;
+    FloatingActionButton fabAddNewDriver;
+
+    AlertDialog.Builder signOutAlert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,20 +103,30 @@ public class DriverAccountsList extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+        signOutAlert = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
+
         driverOrders = 0;
         loadDriverAccounts();
 
+        fabAddNewDriver = findViewById(R.id.fabAddNewDriver);
+        fabAddNewDriver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), NewDriverAccount.class));
+            }
+        });
+
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.orders);
+        bottomNavigationView.setSelectedItemId(R.id.driverAccounts);
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.restaurantAccounts:
-//                        startActivity(new Intent(getApplicationContext(), DriverAccount.class));
-//                        finish();
-//                        overridePendingTransition(0, 0);
+                        startActivity(new Intent(getApplicationContext(), RestaurantAccountsList.class));
+                        finish();
+                        overridePendingTransition(0, 0);
                         return true;
                     case R.id.driverAccounts:
                         return true;
@@ -117,15 +140,15 @@ public class DriverAccountsList extends AppCompatActivity {
             }
         });
 
-        btnLogout = findViewById(R.id.btnLogout);
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                finish();
-            }
-        });
+//        btnLogout = findViewById(R.id.btnLogout);
+//        btnLogout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FirebaseAuth.getInstance().signOut();
+//                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//                finish();
+//            }
+//        });
     }
 
     private void loadDriverAccounts() {
@@ -144,16 +167,18 @@ public class DriverAccountsList extends AppCompatActivity {
         adapter = new FirebaseRecyclerAdapter<User, DriverViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull DriverViewHolder holder, int position, @NonNull User model) {
+                driverOrders = 0;
                 holder.driverName.setText(model.getName());
                 holder.driverEmail.setText("Email: " + model.getEmail());
                 holder.driverPhoneNumber.setText("Telefon: " + model.getPhoneNumber());
                 driverOrdersHistory.child(model.getId()).child("orders").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             driverOrders++;
                         }
                         holder.driverOrderNumbers.setText("Comenzi livrate: " + String.valueOf(driverOrders));
+                        driverOrders = 0;
                     }
 
                     @Override
@@ -167,15 +192,15 @@ public class DriverAccountsList extends AppCompatActivity {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
 
-                        Toast.makeText(DriverAccountsList.this, model.getId(), Toast.LENGTH_LONG).show();
-                        if(!isLongClick) {
-                            if(holder.downArrow.getVisibility() == View.VISIBLE) {
+                        //Toast.makeText(DriverAccountsList.this, model.getId(), Toast.LENGTH_LONG).show();
+                        if (!isLongClick) {
+                            if (holder.downArrow.getVisibility() == View.VISIBLE) {
                                 holder.downArrow.setVisibility(View.GONE);
                             } else {
                                 holder.downArrow.setVisibility(View.VISIBLE);
                             }
 
-                            if(holder.upArrow.getVisibility() == View.VISIBLE) {
+                            if (holder.upArrow.getVisibility() == View.VISIBLE) {
                                 holder.upArrow.setVisibility(View.GONE);
                             } else {
                                 holder.upArrow.setVisibility(View.VISIBLE);
@@ -196,22 +221,22 @@ public class DriverAccountsList extends AppCompatActivity {
 
                             secondAdapter = new FirebaseRecyclerAdapter<Order, OrderViewHolder>(options) {
                                 @Override
-                                protected void onBindViewHolder(@NonNull OrderViewHolder holder, int position, @NonNull Order model) {
+                                protected void onBindViewHolder(@NonNull OrderViewHolder holder, int position, @NonNull Order model2) {
 
-                                    Log.i("ceva", model.toString());
+                                    //Log.i("ceva", model.toString());
                                     restaurantName = null;
                                     restaurantImage = null;
-                                    orderList.add(model);
+                                    orderList.add(model2);
                                     Log.i("ceva", orderList.toString());
-                                    orderId = model.getId();
+                                    orderId = model2.getId();
 
-                                    driverOrdersHistory.child(local.getId()).child("orders").child(model.getId()).child("restaurantAddress").addValueEventListener(new ValueEventListener() {
+                                    driverOrdersHistory.child(local.getId()).child("orders").child(model2.getId()).child("restaurantAddress").addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                                             for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                                 Log.i("ceva", dataSnapshot.toString());
                                                 Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
-                                                if(restaurantName == null) {
+                                                if (restaurantName == null) {
                                                     restaurantName = restaurant.getName();
                                                     restaurantImage = restaurant.getImage();
                                                 } else {
@@ -220,10 +245,10 @@ public class DriverAccountsList extends AppCompatActivity {
                                             }
 
                                             holder.restaurantsName.setText(restaurantName);
-                                            holder.orderStatus.setText(getString(R.string.order_status) + " " + String.valueOf(model.getStatus()).substring(0, 1).toUpperCase(Locale.ROOT) + String.valueOf(model.getStatus()).replace("_", " ").substring(1));
-                                            holder.orderAddress.setText(getString(R.string.address) + " " + model.getAddress().getMapsAddress());
-                                            holder.orderDateAndTime.setText("Data: " + model.getCurrentDateAndTime());
-                                            holder.orderPriceTotal.setText(getString(R.string.total) + " " + (double)Math.round(model.getTotal() * 100d) / 100d + " " + getString(R.string.lei));
+                                            holder.orderStatus.setText(getString(R.string.order_status) + " " + String.valueOf(model2.getStatus()).substring(0, 1).toUpperCase(Locale.ROOT) + String.valueOf(model2.getStatus()).replace("_", " ").substring(1));
+                                            holder.orderAddress.setText(getString(R.string.address) + " " + model2.getAddress().getMapsAddress());
+                                            holder.orderDateAndTime.setText("Data: " + model2.getCurrentDateAndTime());
+                                            holder.orderPriceTotal.setText(getString(R.string.total) + " " + (double) Math.round(model2.getTotal() * 100d) / 100d + " " + getString(R.string.lei));
                                             Picasso.with(getBaseContext()).load(restaurantImage)
                                                     .into(holder.restaurantImage);
 
@@ -232,12 +257,116 @@ public class DriverAccountsList extends AppCompatActivity {
                                             restaurantName = null;
                                             restaurantImage = null;
 
-                                            final Order local = model;
+                                            //final Order local = model;
                                             holder.setItemClickListener(new ItemClickListener() {
                                                 @Override
                                                 public void onClick(View view, int position, boolean isLongClick) {
 
+                                                    if (!isLongClick) {
+                                                        //Toast.makeText(OrdersList.this, model.getCart().toString(), Toast.LENGTH_LONG).show();
+//                                    loadOrderDetails(model.getId());
 
+                                                        if (holder.downArrow.getVisibility() == View.VISIBLE) {
+                                                            holder.downArrow.setVisibility(View.GONE);
+                                                        } else {
+                                                            holder.downArrow.setVisibility(View.VISIBLE);
+                                                        }
+
+                                                        if (holder.upArrow.getVisibility() == View.VISIBLE) {
+                                                            holder.upArrow.setVisibility(View.GONE);
+                                                        } else {
+                                                            holder.upArrow.setVisibility(View.VISIBLE);
+                                                        }
+
+                                                        cart = database.getReference().child("driverOrdersHistory").child(local.getId()).child("orders").child(model2.getId()).child("cart");
+                                                        restaurantAddresses = database.getReference().child("driverOrdersHistory").child(local.getId()).child("orders").child(model2.getId()).child("restaurantAddress");
+
+                                                        Query query = cart
+                                                                .orderByChild("id")
+                                                                .limitToLast(50);
+
+                                                        FirebaseRecyclerOptions<Food> options =
+                                                                new FirebaseRecyclerOptions.Builder<Food>()
+                                                                        .setQuery(query, Food.class)
+                                                                        .build();
+
+                                                        thirdAdapter = new FirebaseRecyclerAdapter<Food, OrderDetailsViewHolder>(options) {
+                                                            @Override
+                                                            protected void onBindViewHolder(@NonNull OrderDetailsViewHolder holder2, int position, @NonNull Food model) {
+
+                                                                holder2.foodName.setText(model.getName());
+
+                                                                restaurantAddresses.addValueEventListener(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                                                            Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+                                                                            if (model.getRestaurantId().equals(restaurant.getId())) {
+                                                                                holder2.restaurantName.setText(restaurant.getName() + " : ");
+                                                                            }
+                                                                        }
+
+                                                                        holder2.foodPrice.setText(String.valueOf(model.getPrice()));
+                                                                        holder2.foodQuantity.setText(String.valueOf(model.getQuantity()));
+                                                                        holder2.foodTotal.setText((double) Math.round(model.getPrice() * model.getQuantity() * 100d) / 100d + " lei");
+                                                                        Picasso.with(getBaseContext()).load(model.getImage())
+                                                                                .into(holder2.foodImage);
+
+                                                                        final Food local2 = model;
+                                                                        holder2.setItemClickListener(new ItemClickListener() {
+                                                                            @Override
+                                                                            public void onClick(View view, int position, boolean isLongClick) {
+
+                                                                                Toast.makeText(DriverAccountsList.this, model.getName(), Toast.LENGTH_LONG).show();
+//                                                            showRatingDialog(model.getId());
+
+                                                                                Intent foodInfo = new Intent(DriverAccountsList.this, FoodInfo.class);
+                                                                                foodInfo.putExtra("origin", "ordersList");
+                                                                                foodInfo.putExtra("orderId", model.getId());
+                                                                                foodInfo.putExtra("quantity", local2.getQuantity());
+                                                                                foodInfo.putExtra("foodId", local2.getId());
+                                                                                foodInfo.putExtra("restaurantId", model.getRestaurantId());
+                                                                                startActivity(foodInfo);
+
+                                                                            }
+                                                                        });
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                    }
+                                                                });
+
+
+                                                            }
+
+
+                                                            @NonNull
+                                                            @Override
+                                                            public OrderDetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                                                                View view = LayoutInflater.from(parent.getContext())
+                                                                        .inflate(R.layout.order_detail_layout, parent, false);
+                                                                view.setMinimumWidth(parent.getMeasuredWidth());
+
+                                                                return new OrderDetailsViewHolder(view);
+                                                            }
+                                                        };
+
+//                                    secondRecyclerView.setAdapter(secondAdapter);
+//                                    secondAdapter.startListening();
+                                                        if (holder.secondRecyclerView.getVisibility() == View.GONE) {
+                                                            holder.secondRecyclerView.setVisibility(View.VISIBLE);
+                                                        } else {
+                                                            holder.secondRecyclerView.setVisibility(View.GONE);
+                                                        }
+                                                        thirdLayoutManager = new LinearLayoutManager(getApplicationContext());
+                                                        //holder.secondRecyclerView.setHasFixedSize(true);
+                                                        holder.secondRecyclerView.setLayoutManager(thirdLayoutManager);
+                                                        holder.secondRecyclerView.setAdapter(thirdAdapter);
+                                                        thirdAdapter.startListening();
+
+                                                    }
 
                                                 }
                                             });
@@ -251,21 +380,20 @@ public class DriverAccountsList extends AppCompatActivity {
                                     });
 
 
-
                                 }
 
                                 @NonNull
                                 @Override
                                 public OrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                                     View view = LayoutInflater.from(parent.getContext())
-                                            .inflate(R.layout.order_layout, parent, false);
+                                            .inflate(R.layout.driver_account_order_layout, parent, false);
                                     view.setMinimumWidth(parent.getMeasuredWidth());
 
                                     return new OrderViewHolder(view);
                                 }
                             };
 
-                            if(holder.secondRecyclerView.getVisibility() == View.GONE) {
+                            if (holder.secondRecyclerView.getVisibility() == View.GONE) {
                                 holder.secondRecyclerView.setVisibility(View.VISIBLE);
                             } else {
                                 holder.secondRecyclerView.setVisibility(View.GONE);
@@ -276,11 +404,13 @@ public class DriverAccountsList extends AppCompatActivity {
                             holder.secondRecyclerView.setAdapter(secondAdapter);
                             secondAdapter.startListening();
 
+
                         }
                     }
                 });
 
 
+                driverOrders = 0;
             }
 
             @NonNull
@@ -301,5 +431,32 @@ public class DriverAccountsList extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         adapter.startListening();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.sign_out_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.logout) {
+            signOutAlert.setTitle("Ieșire din cont")
+                    .setMessage("Ești sigur că dorești să ieși din cont?")
+                    .setPositiveButton("Da", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            FirebaseAuth.getInstance().signOut();
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            finish();
+
+                        }
+                    }).setNegativeButton("Nu", null)
+                    .create().show();
+        }
+        return false;
     }
 }

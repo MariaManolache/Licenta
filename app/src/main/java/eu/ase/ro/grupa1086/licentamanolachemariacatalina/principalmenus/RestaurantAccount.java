@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -54,6 +55,9 @@ import java.util.Map;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.MainActivity;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.RestaurantProducts;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.DriverAccount;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.ResetPassword;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.SignIn;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Category;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Order;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
@@ -531,5 +535,22 @@ public class RestaurantAccount extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         alreadyDisplayed = false;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.reset_only_password, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.resetPassword) {
+            Intent changePassword = new Intent(getApplicationContext(), ResetPassword.class);
+            changePassword.putExtra("origin", "restaurant");
+            startActivity(changePassword);
+        }
+        return false;
     }
 }

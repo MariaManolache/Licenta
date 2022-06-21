@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -21,9 +22,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -41,6 +45,7 @@ public class RestaurantProducts extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
     RecyclerView recyclerView;
+    ImageView noProductsFound;
 
     RecyclerView.LayoutManager layoutManager;
 
@@ -68,6 +73,8 @@ public class RestaurantProducts extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
+        noProductsFound = findViewById(R.id.noProductFound);
 
         loadFoodList(user.getUid());
 
@@ -116,6 +123,22 @@ public class RestaurantProducts extends AppCompatActivity {
                 .limitToLast(50);
 
         Log.i("queryyy", String.valueOf(query.getRef()));
+
+        database.getReference("food").child(userId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(!snapshot.exists()) {
+                    noProductsFound.setVisibility(View.VISIBLE);
+                } else {
+                    noProductsFound.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         FirebaseRecyclerOptions<Food> options =
                 new FirebaseRecyclerOptions.Builder<Food>()

@@ -83,9 +83,9 @@
         <item name="android:textSize">20sp</item>
         <item name="textFillColor">@color/violet</item>
         <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginBottom">10dp</item>
-        <item name="android:gravity">center</item>
     </style>
 
     <style name="customMenu" parent="ThemeOverlay.AppCompat.Light">

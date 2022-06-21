@@ -100,9 +100,11 @@ public class DriverAccount extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User currentUser = snapshot.getValue(User.class);
-                tvDriverName.setText(currentUser.getName());
-                tvDriverEmail.setText(currentUser.getEmail());
-                tvDriverPhoneNumber.setText(currentUser.getPhoneNumber());
+                if(currentUser != null) {
+                    tvDriverName.setText(currentUser.getName());
+                    tvDriverEmail.setText(currentUser.getEmail());
+                    tvDriverPhoneNumber.setText(currentUser.getPhoneNumber());
+                }
             }
 
             @Override
@@ -124,7 +126,7 @@ public class DriverAccount extends AppCompatActivity {
 
                                 EditText name = view.findViewById(R.id.etName);
                                 if (name.getText().toString().isEmpty()) {
-                                    name.setError("Campul este necesar pentru modificarea numelui");
+                                    name.setError("Câmpul este necesar pentru modificarea numelui");
                                     return;
                                 }
 
@@ -141,21 +143,21 @@ public class DriverAccount extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 View view = inflater.inflate(R.layout.reset_phone_number_pop_up, null);
-                resetDriverPhoneNumber.setTitle("Modificarea numarului de telefon")
+                resetDriverPhoneNumber.setTitle("Modificarea numărului de telefon")
                         .setPositiveButton("Confirmare", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
                                 EditText phoneNumber = view.findViewById(R.id.etPhoneNumber);
                                 if (phoneNumber.getText().toString().isEmpty()) {
-                                    phoneNumber.setError("Campul este necesar pentru modificarea numarului de telefon");
+                                    phoneNumber.setError("Câmpul este necesar pentru modificarea numărului de telefon");
                                     return;
                                 }
 
                                 users.child(user.getUid()).child("phoneNumber").setValue(phoneNumber.getText().toString());
 
                             }
-                        }).setNegativeButton("Anuleaza", null)
+                        }).setNegativeButton("Anulează", null)
                         .setView(view)
                         .create().show();
             }
@@ -172,14 +174,14 @@ public class DriverAccount extends AppCompatActivity {
 
                                 EditText email = view.findViewById(R.id.etEmail);
                                 if (email.getText().toString().isEmpty()) {
-                                    email.setError("Campul este necesar pentru modificarea adresei de email");
+                                    email.setError("Câmpul este necesar pentru modificarea adresei de email");
                                     return;
                                 }
 
                                 user.updateEmail(email.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void unused) {
-                                        Toast.makeText(DriverAccount.this, "Adresa de email a fost modificata", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(DriverAccount.this, "Adresa de email a fost modificată", Toast.LENGTH_LONG).show();
                                         users.child(user.getUid()).child("email").setValue(email.getText().toString());
 
                                     }
@@ -236,8 +238,8 @@ public class DriverAccount extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(), ResetPassword.class));
         }
         if (item.getItemId() == R.id.deleteAccount) {
-            deleteAlert.setTitle("Doresti sa iti stergi contul?")
-                    .setMessage("Esti sigur? Actiunea nu este reversibila.")
+            deleteAlert.setTitle("Dorești să iți ștergi contul?")
+                    .setMessage("Ești sigur? Acțiunea nu este reversibilă.")
                     .setPositiveButton("Da", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -252,7 +254,7 @@ public class DriverAccount extends AppCompatActivity {
                             user.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
-                                    Toast.makeText(DriverAccount.this, "Cont sters", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(DriverAccount.this, "Cont șters", Toast.LENGTH_LONG).show();
                                     databaseReference.removeValue();
                                     FirebaseAuth.getInstance().signOut();
                                     startActivity(new Intent(getApplicationContext(), SignIn.class));
