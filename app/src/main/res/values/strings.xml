@@ -198,4 +198,5 @@
     <string name="category_image">Imaginea categoriei:</string>
     <string name="add_new_category">Adaugă o nouă categorie:</string>
     <string name="category_name_text">Denumire</string>
+    <string name="new_category">Categorie nouă</string>
 </resources>

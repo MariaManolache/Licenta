@@ -70,6 +70,7 @@
                                 android:textStyle="bold"></TextView>
 
                             <RelativeLayout
+                                android:layout_marginRight="10dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
 
@@ -193,13 +194,29 @@
 
                             </LinearLayout>
 
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginRight="10dp"
+                                android:orientation="vertical">
+
                             <ImageView
                                 android:id="@+id/callButton"
+                                android:layout_marginBottom="20dp"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
                                 android:layout_gravity="center"
-                                android:src="@drawable/ic_baseline_phone_in_talk_24"></ImageView>
+                                android:src="@drawable/phone_call"></ImageView>
 
+                            <ImageView
+                                android:id="@+id/mapsButton"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/google_maps_logo"></ImageView>
+
+                            </LinearLayout>
                         </LinearLayout>
 
                     </LinearLayout>

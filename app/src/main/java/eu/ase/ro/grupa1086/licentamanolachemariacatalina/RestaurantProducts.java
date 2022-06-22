@@ -1,19 +1,23 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -40,6 +44,7 @@ import eu.ase.ro.grupa1086.licentamanolachemariacatalina.food.FoodList;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.order.RestaurantOrders;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.RestaurantAccount;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.FoodViewHolder;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.RestaurantFoodViewHolder;
 
 public class RestaurantProducts extends AppCompatActivity {
 
@@ -54,9 +59,10 @@ public class RestaurantProducts extends AppCompatActivity {
     FirebaseUser user;
     List<Food> listOfFoods = new ArrayList<>();
 
-    FirebaseRecyclerAdapter<Food, FoodViewHolder> adapter;
+    FirebaseRecyclerAdapter<Food, RestaurantFoodViewHolder> adapter;
 
     FloatingActionButton fabAddProduct;
+    AlertDialog.Builder deleteAlert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +79,8 @@ public class RestaurantProducts extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
+        deleteAlert = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
 
         noProductsFound = findViewById(R.id.noProductFound);
 
@@ -145,15 +153,36 @@ public class RestaurantProducts extends AppCompatActivity {
                         .setQuery(query, Food.class)
                         .build();
 
-        adapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(options) {
+        adapter = new FirebaseRecyclerAdapter<Food, RestaurantFoodViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull FoodViewHolder holder, int position, @NonNull Food model) {
+            protected void onBindViewHolder(@NonNull RestaurantFoodViewHolder holder, int position, @NonNull Food model) {
                 holder.foodName.setText(model.getName());
                 Picasso.with(getBaseContext()).load(model.getImage()).placeholder(R.drawable.loading)
                         .into(holder.imageView);
 
                 listOfFoods.add(model);
                 Log.i("model", listOfFoods.toString());
+
+                holder.fabRemoveProduct.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                       deleteAlert.setTitle("Ștergere produs")
+                                .setMessage("Ești sigur că dorești să ștergi produsul din lista de produse?")
+                                .setPositiveButton("Da", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                        database.getReference("food").child(userId).child(model.getId()).removeValue();
+                                        Toast.makeText(getApplicationContext(), "Produsul a fost eliminat", Toast.LENGTH_LONG).show();
+
+                                    }
+                                }).setNegativeButton("Nu", null)
+                                .create().show();
+
+
+                    }
+                });
 
                 final Food local = model;
                 holder.setItemClickListener(new ItemClickListener() {
@@ -171,12 +200,12 @@ public class RestaurantProducts extends AppCompatActivity {
 
             @NonNull
             @Override
-            public FoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public RestaurantFoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.food_item, parent, false);
+                        .inflate(R.layout.restaurant_food_item, parent, false);
                 view.setMinimumWidth(parent.getMeasuredWidth());
 
-                return new FoodViewHolder(view);
+                return new RestaurantFoodViewHolder(view);
             }
         };
 

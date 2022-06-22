@@ -105,11 +105,13 @@ public class NewCategory extends AppCompatActivity {
 
                 if (TextUtils.isEmpty(name)) {
                     etCategoryName.setError("Numele categoriei este necesar pentru crearea contului");
+                    progressBar.setVisibility(View.GONE);
                     return;
                 }
 
                 if (categoryImageUri == null) {
                     Toast.makeText(getApplicationContext(), "Trebuie selectată o imagine", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
                     return;
                 }
 

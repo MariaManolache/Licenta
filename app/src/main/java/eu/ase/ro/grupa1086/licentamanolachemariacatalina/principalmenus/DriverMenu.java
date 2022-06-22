@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -100,6 +102,8 @@ public class DriverMenu extends AppCompatActivity {
     DatabaseReference ordersHistory;
     FirebaseUser user;
 
+    //ProgressBar pb_vertical;
+
     String restaurantName;
     String restaurantImage;
     String orderId;
@@ -125,10 +129,16 @@ public class DriverMenu extends AppCompatActivity {
     TextView myOrders;
     TextView allOrders;
 
+    //ProgressDialog mProgressDialog;
+    ImageView loadingImage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_menu);
+
+        //pb_vertical = findViewById(R.id.pb_vertical);
+        //pb_vertical.setVisibility(View.VISIBLE);
 
         database = FirebaseDatabase.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -151,14 +161,20 @@ public class DriverMenu extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+        recyclerView.setVisibility(View.GONE);
 
         tvCurrentLocation = findViewById(R.id.currentLocation);
         noOrdersFound = findViewById(R.id.noDriverOrders);
+        loadingImage = findViewById(R.id.loadindImage);
+
 
         inflater = this.getLayoutInflater();
         acceptOrder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
 
         allOrders = findViewById(R.id.allOrders);
+
+        //mProgressDialog = new ProgressDialog(getApplicationContext());
+        //mProgressDialog.show();
 
 
 //        users.addValueEventListener(new ValueEventListener() {
@@ -200,6 +216,7 @@ public class DriverMenu extends AppCompatActivity {
         initializeLocation();
 
         loadOrders();
+
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.orders);
@@ -338,6 +355,14 @@ public class DriverMenu extends AppCompatActivity {
     }
 
     private void loadOrders() {
+        //mProgressDialog.show();
+        //setupProgress();
+
+        //pb_vertical.setVisibility(View.VISIBLE);
+
+        //pb_vertical.setVisibility(View.GONE);
+
+        loadingImage.setVisibility(View.VISIBLE);
 
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
@@ -358,10 +383,12 @@ public class DriverMenu extends AppCompatActivity {
                     allOrders.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.GONE);
                     noOrdersFound.setVisibility(View.VISIBLE);
+                    loadingImage.setVisibility(View.GONE);
                 } else {
                     allOrders.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.VISIBLE);
+                    //recyclerView.setVisibility(View.VISIBLE);
                     noOrdersFound.setVisibility(View.GONE);
+                    //loadingImage.setVisibility(View.GONE);
                 }
             }
 
@@ -370,6 +397,7 @@ public class DriverMenu extends AppCompatActivity {
 
             }
         });
+
 
         adapter = new FirebaseRecyclerAdapter<Order, DriverOrderViewHolder>(options) {
             @Override
@@ -421,6 +449,9 @@ public class DriverMenu extends AppCompatActivity {
                                     sortedLocations.add(entry2.getKey());
                                 }
 
+                                LatLng clientAddress = getLocationFromAddress(String.valueOf(model.getAddress().getMapsAddress()));
+
+
                                 if(sortedLocations.size() > 1) {
                                     for(int i = 0; i < sortedLocations.size() - 1; i++) {
                                         totalDistance += SphericalUtil.computeDistanceBetween(sortedLocations.get(i), sortedLocations.get(i+1));
@@ -428,7 +459,6 @@ public class DriverMenu extends AppCompatActivity {
                                     }
                                 }
 
-                                LatLng clientAddress = getLocationFromAddress(String.valueOf(model.getAddress().getMapsAddress()));
                                 Double deliveryDistanceKm = SphericalUtil.computeDistanceBetween(sortedLocations.get(sortedLocations.size()-1), clientAddress);
 
 
@@ -456,6 +486,25 @@ public class DriverMenu extends AppCompatActivity {
 
                                     }
                                 });
+
+                                holder.mapsButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        String uriGoogle = "https://www.google.co.in/maps/dir/";
+                                        uriGoogle += latLngLocation.latitude + "," + latLngLocation.longitude;
+                                        for(int i = 0; i < sortedLocations.size(); i++) {
+                                            uriGoogle += "/" + sortedLocations.get(i).latitude + "," + sortedLocations.get(i).longitude;
+                                        }
+                                        uriGoogle += "/" + clientAddress.latitude + "," + clientAddress.longitude;
+
+                                        Intent intentGoogleNav = new Intent(Intent.ACTION_VIEW, Uri.parse(uriGoogle));
+                                        intentGoogleNav.setPackage("com.google.android.apps.maps");
+
+                                        startActivity(intentGoogleNav);
+                                        finish();
+                                    }
+                                });
+
                             }
 
                             holder.restaurantsName.setText(restaurantName);
@@ -470,6 +519,7 @@ public class DriverMenu extends AppCompatActivity {
                             String restaurantImage2 = restaurantImage;
                             restaurantName = null;
                             restaurantImage = null;
+
 
                             final Order local = model;
                             holder.setItemClickListener(new ItemClickListener() {
@@ -687,12 +737,26 @@ public class DriverMenu extends AppCompatActivity {
                         .inflate(R.layout.driver_order_layout, parent, false);
                 view.setMinimumWidth(parent.getMeasuredWidth());
 
+
                 return new DriverOrderViewHolder(view);
             }
+
+//            @Override
+//            public void onDataChanged() {
+//                if (mProgressDialog != null && mProgressDialog.isShowing()) {
+//                    mProgressDialog.dismiss();
+//                }
+//            }
         };
 
 
+
         recyclerView.setAdapter(adapter);
+
+        recyclerView.setVisibility(View.VISIBLE);
+        loadingImage.setVisibility(View.GONE);
+        //adapter.notifyDataSetChanged();
+        //pb_vertical.setVisibility(View.GONE);
         adapter.startListening();
     }
 
@@ -700,7 +764,21 @@ public class DriverMenu extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //adapter.startListening();
+        //mProgressDialog.show();
     }
+
+//    private void setupProgress() {
+//        mProgressDialog.show();
+//        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+//
+//            @Override
+//            public void onItemRangeInserted(int positionStart, int itemCount) {
+//                super.onItemRangeInserted(positionStart, itemCount);
+//                mProgressDialog.hide();
+//                adapter.unregisterAdapterDataObserver(this);
+//            }
+//        });
+//    }
 
 
 }

@@ -24,6 +24,7 @@ public class DriverOrderViewHolder extends RecyclerView.ViewHolder implements Vi
     public ImageView downArrow;
     public ImageView upArrow;
     public ImageView callButton;
+    public ImageView mapsButton;
 
     private ItemClickListener itemClickListener;
 
@@ -45,6 +46,7 @@ public class DriverOrderViewHolder extends RecyclerView.ViewHolder implements Vi
         downArrow = itemView.findViewById(R.id.downArrow);
         upArrow = itemView.findViewById(R.id.upArrow);
         callButton = itemView.findViewById(R.id.callButton);
+        mapsButton = itemView.findViewById(R.id.mapsButton);
 
         secondRecyclerView = itemView.findViewById(R.id.orderDetails);
         //secondRecyclerView.setHasFixedSize(true);

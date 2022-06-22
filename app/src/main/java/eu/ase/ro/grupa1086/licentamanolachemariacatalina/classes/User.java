@@ -25,6 +25,16 @@ public class User implements Serializable {
         this.isDriver = isDriver;
     }
 
+    public User(String id, String email, String name, String password, String phoneNumber, int isDriver, int isRestaurant) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.isDriver = isDriver;
+        this.isRestaurant = isRestaurant;
+    }
+
     public String getId() {
         return id;
     }
@@ -80,6 +90,7 @@ public class User implements Serializable {
     public void setIsRestaurant(int isRestaurant) {
         this.isRestaurant = isRestaurant;
     }
+
 
     @Override
     public String toString() {

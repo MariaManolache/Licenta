@@ -93,6 +93,7 @@ public class RestaurantAccount extends AppCompatActivity {
     AlertDialog.Builder resetName;
     AlertDialog.Builder resetPhoneNumber;
     AlertDialog.Builder resetEmail;
+    AlertDialog.Builder resetAddress;
     AlertDialog.Builder changeCategory;
     LayoutInflater inflater;
 
@@ -117,6 +118,7 @@ public class RestaurantAccount extends AppCompatActivity {
         resetName = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
         resetPhoneNumber = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
         resetEmail = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
+        resetAddress = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
         changeCategory = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
 
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -221,7 +223,7 @@ public class RestaurantAccount extends AppCompatActivity {
                                     alreadyDisplayed = false;
 
                                 }
-                            }).setNegativeButton("Anuleaza", null)
+                            }).setNegativeButton("Anulează", null)
                             .create().show();
                     alreadyDisplayed = false;
                 }
@@ -261,7 +263,7 @@ public class RestaurantAccount extends AppCompatActivity {
 
                                 EditText name = view.findViewById(R.id.etName);
                                 if (name.getText().toString().isEmpty()) {
-                                    name.setError("Campul este necesar pentru modificarea denumirii");
+                                    name.setError("Câmpul este necesar pentru modificarea denumirii");
                                     return;
                                 }
 
@@ -281,7 +283,7 @@ public class RestaurantAccount extends AppCompatActivity {
                                 restaurantAccounts.child(user.getUid()).child("name").setValue(name.getText().toString());
 
                             }
-                        }).setNegativeButton("Anuleaza", null)
+                        }).setNegativeButton("Anulează", null)
                         .setView(view)
                         .create().show();
             }
@@ -292,25 +294,63 @@ public class RestaurantAccount extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 View view = inflater.inflate(R.layout.reset_phone_number_pop_up, null);
-                resetPhoneNumber.setTitle("Modificarea numarului de telefon")
+                resetPhoneNumber.setTitle("Modificarea numărului de telefon")
                         .setPositiveButton("Confirmare", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
                                 EditText phoneNumber = view.findViewById(R.id.etPhoneNumber);
                                 if (phoneNumber.getText().toString().isEmpty()) {
-                                    phoneNumber.setError("Campul este necesar pentru modificarea numarului de telefon");
+                                    phoneNumber.setError("Câmpul este necesar pentru modificarea numărului de telefon");
                                     return;
                                 }
 
                                 restaurantAccounts.child(user.getUid()).child("phoneNumber").setValue(phoneNumber.getText().toString());
 
                             }
-                        }).setNegativeButton("Anuleaza", null)
+                        }).setNegativeButton("Anulează", null)
                         .setView(view)
                         .create().show();
             }
 
+        });
+
+        editRestaurantAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View view = inflater.inflate(R.layout.reset_address_pop_up, null);
+                resetPhoneNumber.setTitle("Modificarea adresei")
+                        .setPositiveButton("Confirmare", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                EditText address = view.findViewById(R.id.etAddress);
+                                if (address.getText().toString().isEmpty()) {
+                                    address.setError("Câmpul este necesar pentru modificarea adresei");
+                                    return;
+                                }
+
+                                restaurants.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        Restaurant restaurant = snapshot.getValue(Restaurant.class);
+                                        restaurant.setAddress(address.getText().toString());
+                                        restaurants.child(user.getUid()).setValue(restaurant);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+                                restaurantAccounts.child(user.getUid()).child("address").setValue(address.getText().toString());
+
+                            }
+                        }).setNegativeButton("Anuleaza", null)
+                        .setView(view)
+                        .create().show();
+            }
         });
 
         editRestaurantImage.setOnClickListener(new View.OnClickListener() {

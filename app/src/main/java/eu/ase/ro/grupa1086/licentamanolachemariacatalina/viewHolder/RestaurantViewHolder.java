@@ -19,7 +19,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
 
     public TextView restaurantName;
     public ImageView imageView;
-    public TextView deliveryTime;
+    //public TextView deliveryTime;
 
     private ItemClickListener itemClickListener;
 
@@ -36,7 +36,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements Vie
 
         restaurantName = (TextView) itemView.findViewById(R.id.restaurantName);
         imageView = (ImageView) itemView.findViewById(R.id.restaurantImage);
-        deliveryTime = (TextView) itemView.findViewById(R.id.deliveryTime);
+        //deliveryTime = (TextView) itemView.findViewById(R.id.deliveryTime);
 
         itemView.setOnClickListener(this);
     }

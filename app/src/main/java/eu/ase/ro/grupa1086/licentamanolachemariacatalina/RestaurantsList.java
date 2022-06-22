@@ -194,7 +194,7 @@ public class RestaurantsList extends AppCompatActivity {
                 holder.restaurantName.setText(model.getName());
                 Picasso.with(getBaseContext()).load(model.getImage())
                         .into(holder.imageView);
-                holder.deliveryTime.setText(model.getDeliveryTime());
+                //holder.deliveryTime.setText(model.getDeliveryTime());
 
                 final Restaurant local = model;
                 holder.setItemClickListener(new ItemClickListener() {

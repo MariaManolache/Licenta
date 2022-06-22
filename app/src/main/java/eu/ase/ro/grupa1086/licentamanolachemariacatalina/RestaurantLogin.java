@@ -100,7 +100,7 @@ public class RestaurantLogin extends AppCompatActivity {
 
 
                         } else {
-                            Toast.makeText(RestaurantLogin.this, "Eroare la autentificare" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(RestaurantLogin.this, "Eroare la autentificare", Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
                         }
                     }

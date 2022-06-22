@@ -19,7 +19,8 @@
         tools:replace="android:theme">
         <activity
             android:name=".admin.NewCategory"
-            android:exported="false" />
+            android:exported="false"
+            android:label="@string/new_category"/>
         <activity
             android:name=".admin.AdminOrders"
             android:exported="false"

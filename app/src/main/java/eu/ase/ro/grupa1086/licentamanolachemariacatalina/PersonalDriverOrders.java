@@ -279,6 +279,9 @@ public class PersonalDriverOrders extends AppCompatActivity {
                                     sortedLocations.add(entry2.getKey());
                                 }
 
+                                LatLng clientAddress = getLocationFromAddress(String.valueOf(model.getAddress().getMapsAddress()));
+
+
                                 if(sortedLocations.size() > 1) {
                                     for(int i = 0; i < sortedLocations.size() - 1; i++) {
                                         totalDistance += SphericalUtil.computeDistanceBetween(sortedLocations.get(i), sortedLocations.get(i+1));
@@ -286,7 +289,6 @@ public class PersonalDriverOrders extends AppCompatActivity {
                                     }
                                 }
 
-                                LatLng clientAddress = getLocationFromAddress(String.valueOf(model.getAddress().getMapsAddress()));
                                 Double deliveryDistanceKm = SphericalUtil.computeDistanceBetween(sortedLocations.get(sortedLocations.size()-1), clientAddress);
 
 
@@ -312,6 +314,24 @@ public class PersonalDriverOrders extends AppCompatActivity {
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {
 
+                                    }
+                                });
+
+                                holder.mapsButton.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        String uriGoogle = "https://www.google.co.in/maps/dir/";
+                                        uriGoogle += latLngLocation.latitude + "," + latLngLocation.longitude;
+                                        for(int i = 0; i < sortedLocations.size(); i++) {
+                                            uriGoogle += "/" + sortedLocations.get(i).latitude + "," + sortedLocations.get(i).longitude;
+                                        }
+                                        uriGoogle += "/" + clientAddress.latitude + "," + clientAddress.longitude;
+
+                                        Intent intentGoogleNav = new Intent(Intent.ACTION_VIEW, Uri.parse(uriGoogle));
+                                        intentGoogleNav.setPackage("com.google.android.apps.maps");
+
+                                        startActivity(intentGoogleNav);
+                                        finish();
                                     }
                                 });
                             }

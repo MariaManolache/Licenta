@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -42,10 +43,30 @@ public class AdminAccount extends AppCompatActivity {
     DatabaseReference admin;
     LayoutInflater inflater;
 
+    private String adminEmail = "deliveritrightapp@gmail.com";
+    private String adminPassword;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_account);
+
+//        admin = FirebaseDatabase.getInstance().getReference("admin").child("0v6tcZ9EJjPiYRxDL9lICQyhKyt1");
+//        admin.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                User adminAccount = snapshot.getValue(User.class);
+//                adminEmail = adminAccount.getEmail();
+//                adminPassword = adminAccount.getPassword();
+//
+//                Log.i("adminAccount", adminEmail + adminPassword);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
 
         initialiseComponents();
     }
@@ -65,6 +86,8 @@ public class AdminAccount extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
 
+        admin = database.getReference("admin");
+
         btnConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,22 +106,27 @@ public class AdminAccount extends AppCompatActivity {
 
                 progressBar.setVisibility(View.VISIBLE);
 
-
-                firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            onAuthSuccess(task.getResult().getUser());
-                            Toast.makeText(AdminAccount.this, "Autentificare realizată cu succes", Toast.LENGTH_LONG).show();
+                if(email.equals(adminEmail)) {
+                    firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                onAuthSuccess(task.getResult().getUser());
+                                Toast.makeText(AdminAccount.this, "Autentificare realizată cu succes", Toast.LENGTH_LONG).show();
 //                            startActivity(new Intent(getApplicationContext(), MainMenu.class));
 
 
-                        } else {
-                            Toast.makeText(AdminAccount.this, "Eroare la autentificare" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                            progressBar.setVisibility(View.GONE);
+                            } else {
+                                Toast.makeText(AdminAccount.this, "Eroare la autentificare", Toast.LENGTH_LONG).show();
+                                progressBar.setVisibility(View.GONE);
+                            }
                         }
-                    }
-                });
+                    });
+                } else {
+                    Toast.makeText(AdminAccount.this, "Contul nu există", Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.GONE);
+                }
+
             }
         });
 
