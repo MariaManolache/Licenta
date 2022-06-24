@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +43,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.card.CardPayment;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
@@ -145,6 +148,10 @@ public class PlaceOrder extends AppCompatActivity {
 
     double totalDistance = 0.0;
 
+    TextView tvTransportFee;
+    ImageView imgBike;
+    ProgressBar pbTransport;
+
 //    ImageButton mapButton;
 
     @Override
@@ -175,15 +182,18 @@ public class PlaceOrder extends AppCompatActivity {
         restaurantOrders = database.getReference("restaurantOrders");
         ordersHistory = database.getReference("ordersHistory");
 
-        cartListForTransportFee = new HashMap<>();
+        cartListForTransportFee = new TreeMap<>();
         restaurantAddressesList = new ArrayList<>();
         restaurantCoordinates = new ArrayList<>();
 
         transportFee = findViewById(R.id.transportFee);
+        tvTransportFee = findViewById(R.id.tvTransportFee);
+        imgBike = findViewById(R.id.imgBike);
+        pbTransport = findViewById(R.id.pbTransportFee);
 
 
         calendar = Calendar.getInstance();
-        simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.ROOT);
 
         tvAddress = findViewById(R.id.tvPickedAddress);
         tvAddressInfo = findViewById(R.id.tvPickedAddressInfo);
@@ -1568,9 +1578,12 @@ public class PlaceOrder extends AppCompatActivity {
 //        }
 
 
+        tvTransportFee.setVisibility(View.VISIBLE);
+        imgBike.setVisibility(View.VISIBLE);
+        pbTransport.setVisibility(View.VISIBLE);
         Map<LatLng, Double> distances = new LinkedHashMap<>();
         LatLng latLngClient = getLocationFromAddress(userAddress);
-
+        totalDistance = 0;
 
         cart.addValueEventListener(new ValueEventListener() {
             @Override
@@ -1583,27 +1596,35 @@ public class PlaceOrder extends AppCompatActivity {
                     }
                 }
 
+                String lastKey1 = ((TreeMap<String, String>) cartListForTransportFee).lastKey();
+
                 for (Map.Entry<String, String> entry : cartListForTransportFee.entrySet()) {
                     restaurants.child(entry.getKey()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             Restaurant restaurant = snapshot.getValue(Restaurant.class);
-                            restaurantAddressesList.add(restaurant.getAddress());
-                            restaurantCoordinates.add(getLocationFromAddress(restaurant.getAddress()));
-                            Log.i("distancesCheck", getLocationFromAddress(restaurant.getAddress()).toString());
+                            if (restaurant != null) {
+                                restaurantAddressesList.add(restaurant.getAddress());
 
-                            Double distance = SphericalUtil.computeDistanceBetween(latLngClient, getLocationFromAddress(restaurant.getAddress()));
-                            Log.i("distancesCheck", distance.toString());
-                            distances.put(getLocationFromAddress(restaurant.getAddress()), distance);
+                                restaurantCoordinates.add(getLocationFromAddress(restaurant.getAddress()));
+                                Log.i("distancesCheck", getLocationFromAddress(restaurant.getAddress()).toString());
 
-                            totalDistance += distance;
+                                Double distance = SphericalUtil.computeDistanceBetween(latLngClient, getLocationFromAddress(restaurant.getAddress()));
+                                Log.i("distancesCheck", distance.toString());
+                                distances.put(getLocationFromAddress(restaurant.getAddress()), distance);
 
-                            transportFee.setVisibility(View.VISIBLE);
-                            transportFee.setText("Taxa pentru transport este: " + (int)Math.round(totalDistance / 1000) + " RON.");
+                                totalDistance += distance;
 
+                                transportFee.setVisibility(View.VISIBLE);
+                                transportFee.setText((int) Math.round(totalDistance / 1000) + " RON.");
 
-                            total += (int)Math.round(totalDistance / 1000);
-                            tvTotal.setText(total + " LEI");
+                                pbTransport.setVisibility(View.GONE);
+
+                                if(entry.getKey().equals(lastKey1)) {
+                                    total += (int) Math.round(totalDistance / 1000);
+                                    tvTotal.setText(total + " LEI");
+                                }
+                            }
 
 
                         }
@@ -1615,7 +1636,6 @@ public class PlaceOrder extends AppCompatActivity {
                     });
 
                 }
-
 
 
                 //}

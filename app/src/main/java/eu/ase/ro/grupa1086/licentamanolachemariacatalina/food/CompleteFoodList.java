@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
@@ -66,6 +67,10 @@ public class CompleteFoodList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complete_food_list);
 
+        Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_24);// set drawable icon
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
         //Firebase
         database = FirebaseDatabase.getInstance();
         foodList = database.getReference("food");
@@ -84,6 +89,19 @@ public class CompleteFoodList extends AppCompatActivity {
         String emptyString = null;
         loadAllRestaurantsName();
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 
     private void loadAllRestaurantsName() {

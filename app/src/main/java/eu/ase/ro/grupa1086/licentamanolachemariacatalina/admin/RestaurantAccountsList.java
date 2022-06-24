@@ -162,8 +162,10 @@ public class RestaurantAccountsList extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Restaurant restaurant = snapshot.getValue(Restaurant.class);
 
-                        Picasso.with(getBaseContext()).load(restaurant.getImage()).placeholder(R.drawable.loading)
-                                .into(holder.restaurantImage);
+                        if (restaurant != null) {
+                            Picasso.with(getBaseContext()).load(restaurant.getImage()).placeholder(R.drawable.loading)
+                                    .into(holder.restaurantImage);
+                        }
                     }
 
                     @Override

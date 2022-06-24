@@ -121,20 +121,23 @@ public class MainActivity extends AppCompatActivity {
                             users.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    if(snapshot.exists()) {
+                                    if (snapshot.exists()) {
                                         int isDriver = snapshot.getValue(Integer.class);
-                                        if (isDriver == 1) {
-                                            startActivity(new Intent(getApplicationContext(), DriverMenu.class));
-                                        } else {
-                                            startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
+                                        if(snapshot.getValue(Integer.class) != null) {
+                                            if (isDriver == 1) {
+                                                startActivity(new Intent(getApplicationContext(), DriverMenu.class));
+                                            } else if (isDriver == 0) {
+                                                startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
+                                            }
+                                            finish();
                                         }
-                                        finish();
+
                                     } else {
                                         restaurantAccounts = database.getReference("restaurantAccounts").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
                                         restaurantAccounts.addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                if(snapshot.exists()) {
+                                                if (snapshot.exists()) {
                                                     startActivity(new Intent(getApplicationContext(), RestaurantAccount.class));
                                                 } else {
                                                     startActivity(new Intent(getApplicationContext(), DriverAccountsList.class));

@@ -47,6 +47,18 @@
         <item name="android:textColor">@color/violet</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textStyle">normal</item>
+        <item name="android:colorAccent">@color/violet</item>
+        <item name="android:textAppearanceSmall">@style/textAppearanceSmall</item>
+        <item name="android:textAppearanceMedium">@style/textAppearanceSmall</item>
+    </style>
+
+    <style name="AlertDialogStyle2">
+        <item name="android:fontFamily">@font/alata</item>
+        <item name="android:textColor">@color/violet</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:colorAccent">@color/violet</item>
         <item name="android:textAppearanceSmall">@style/textAppearanceSmall</item>
         <item name="android:textAppearanceMedium">@style/textAppearanceSmall</item>
     </style>

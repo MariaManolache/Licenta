@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.util.Log;
 import android.widget.SearchView;
@@ -26,6 +27,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
+
+import java.util.Objects;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
@@ -53,6 +56,9 @@ public class RestaurantsList extends AppCompatActivity {
         setContentView(R.layout.activity_restaurants_list);
 
 
+        Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_24);// set drawable icon
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         //Firebase
         database = FirebaseDatabase.getInstance();
         restaurantsList = database.getReference("restaurants");
@@ -74,15 +80,29 @@ public class RestaurantsList extends AppCompatActivity {
             loadRestaurantsList(categoryId);
         }
 
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 
     private void loadRestaurantsList(String categoryId) {
 
             Query query = FirebaseDatabase.getInstance()
                     .getReference()
-                    .child("restaurants")
-                    .orderByChild("categoryId").equalTo(categoryId)
+                    .child("restaurantsByCategories")
+                    .child(categoryId)
+                    .orderByChild("id")
+//                    .orderByChild("categoryId").equalTo(categoryId)
                     .limitToLast(50);
 
 
@@ -172,14 +192,17 @@ public class RestaurantsList extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+
     private void searchProcess(String s) {
         String categoryIdName = categoryId + s;
         Log.i("category", categoryIdName);
 
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
-                .child("restaurants")
-                .orderByChild("categoryIdName").startAt(categoryIdName).endAt(categoryIdName+"\uf8ff")
+                .child("restaurantsByCategories")
+                .child(categoryId)
+                .orderByChild("name").startAt(s).endAt(s+"\uf8ff")
+//                .orderByChild("categoryIdName").startAt(categoryIdName).endAt(categoryIdName+"\uf8ff")
                 .limitToLast(50);
 
 

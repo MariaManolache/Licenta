@@ -30,8 +30,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
@@ -48,6 +50,7 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +61,7 @@ import eu.ase.ro.grupa1086.licentamanolachemariacatalina.RestaurantProducts;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.DriverAccount;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.ResetPassword;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.SignIn;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.admin.NewRestaurantAccount;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Category;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Order;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
@@ -84,9 +88,10 @@ public class RestaurantAccount extends AppCompatActivity {
     private DatabaseReference orders;
     private DatabaseReference restaurantAccounts;
     private DatabaseReference categories;
+    private DatabaseReference restaurantsByCategories;
     private FirebaseUser user;
 
-    private Spinner categorySpinner;
+    //private Spinner categorySpinner;
 
     private Boolean alreadyDisplayed = false;
 
@@ -100,6 +105,18 @@ public class RestaurantAccount extends AppCompatActivity {
     ArrayAdapter<String> departsAdapter;
     Map<String, String> mapCategoryId = new HashMap<>();
     List<String> listCategoryId = new ArrayList<>();
+
+    String[] categoriesArray;
+
+    TextView chooseCategory;
+    boolean[] selectedCategory;
+
+    List<String> oldCategories = new ArrayList<>();
+    String oldCategoryId;
+
+    List<String> chosenCategoriesList = new ArrayList<>();
+    List<Integer> selectedCategoriesList = new ArrayList<>();
+    List<String> chosenCategoriesIdList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,10 +144,13 @@ public class RestaurantAccount extends AppCompatActivity {
         orders = FirebaseDatabase.getInstance().getReference("orders");
         restaurantAccounts = FirebaseDatabase.getInstance().getReference("restaurantAccounts");
         categories = FirebaseDatabase.getInstance().getReference("categories");
+        restaurantsByCategories = FirebaseDatabase.getInstance().getReference("restaurantsByCategories");
+
+        chooseCategory = findViewById(R.id.chooseCategory);
 
         inflater = this.getLayoutInflater();
 
-        categorySpinner = findViewById(R.id.categorySpinner);
+        // categorySpinner = findViewById(R.id.categorySpinner);
 //        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.categoryType,
 //                R.layout.spinner_layout);
 //        categorySpinner.setAdapter(adapter);
@@ -148,28 +168,52 @@ public class RestaurantAccount extends AppCompatActivity {
 
                 }
 
-                departsAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_layout, listCategoryId);
+                categoriesArray = new String[listCategoryId.size()];
+                listCategoryId.toArray(categoriesArray);
+
+                selectedCategory = new boolean[listCategoryId.size()];
+
+                //departsAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_layout, listCategoryId);
 //                departsAdapter.setDropDownViewResource(R.layout.spinner_layout);
-                categorySpinner.setAdapter(departsAdapter);
+                //categorySpinner.setAdapter(departsAdapter);
 
                 restaurants.child(user.getUid()).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Restaurant restaurant = snapshot.getValue(Restaurant.class);
-                        if(restaurant != null) {
+                        if (restaurant != null) {
+                            selectedCategory = new boolean[listCategoryId.size()];
+                            selectedCategoriesList = new ArrayList<>();
+
                             restaurantName.setText(restaurant.getName());
                             restaurantAddress.setText(restaurant.getAddress());
                             Picasso.with(getBaseContext()).load(restaurant.getImage()).placeholder(R.drawable.loading).into(restaurantImage);
 
+//                            oldCategoryId = restaurant.getCategoryId();
                             String categoryName = "";
                             for (Map.Entry<String, String> entry : mapCategoryId.entrySet()) {
-                                if (restaurant.getCategoryId().equals(entry.getKey())) {
-                                    categoryName = entry.getValue();
-                                    Log.i("categoryName", categoryName);
-                                    int spinnerPosition = departsAdapter.getPosition(categoryName);
-                                    categorySpinner.setSelection(spinnerPosition);
+                                for (int i = 0; i < restaurant.getCategories().size(); i++) {
+                                    if (restaurant.getCategories().get(i).equals(entry.getKey())) {
+                                        categoryName += entry.getValue() + "; ";
+                                        Log.i("categoryName", categoryName);
+//                                        oldCategories = restaurant.getCategories();
+                                        for (int j = 0; j < listCategoryId.size(); j++) {
+                                            if (entry.getValue().equals(listCategoryId.get(j))) {
+                                                selectedCategory[j] = true;
+                                                selectedCategoriesList.add(j);
+                                                Log.i("verificare2", String.valueOf(j));
+                                            }
+                                        }
+
+                                        //int spinnerPosition = departsAdapter.getPosition(categoryName);
+                                        // categorySpinner.setSelection(spinnerPosition);
+                                    }
                                 }
                             }
+
+                            chooseCategory.setText(categoryName);
+
+
                         }
 
                     }
@@ -179,6 +223,162 @@ public class RestaurantAccount extends AppCompatActivity {
 
                     }
                 });
+
+
+                chooseCategory.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(RestaurantAccount.this, R.style.AlertDialogStyle2));
+                        builder.setTitle("Alege categoriile");
+                        builder.setCancelable(false);
+
+
+                        builder.setMultiChoiceItems(categoriesArray, selectedCategory, new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                if (isChecked) {
+                                    if (!selectedCategoriesList.contains(which)) {
+                                    selectedCategoriesList.add(which);
+                                    Collections.sort(selectedCategoriesList);
+
+                                    chosenCategoriesList.add(categoriesArray[which]);
+
+//                                    for (Map.Entry<String, String> entry : mapCategoryId.entrySet()) {
+//                                        Log.i("verificare", entry.getKey());
+//                                        if (categoriesArray[which].equals(entry.getValue())) {
+//                                            Log.i("verificare", entry.getKey());
+//                                            chosenCategoriesIdList.add(entry.getKey());
+//                                            restaurantsByCategories.child(entry.getKey()).child(user.getUid()).removeValue();
+//                                        }
+//
+//                                    }
+                                    }
+                                } else {
+                                    if (selectedCategoriesList.contains(which)) {
+                                    selectedCategoriesList.remove(Integer.valueOf(which));
+                                    }
+
+                                    for (Map.Entry<String, String> entry : mapCategoryId.entrySet()) {
+                                        if (categoriesArray[which].equals(entry.getValue())) {
+                                            chosenCategoriesIdList.add(entry.getKey());
+                                            restaurantsByCategories.child(entry.getKey()).child(user.getUid()).removeValue();
+                                        }
+
+                                    }
+                                }
+
+                                chosenCategoriesIdList = new ArrayList<>();
+                                chosenCategoriesList = new ArrayList<>();
+
+                                for (Map.Entry<String, String> entry : mapCategoryId.entrySet()) {
+                                    for (int i = 0; i < oldCategories.size(); i++) {
+                                        Log.i("categories", oldCategories.get(i).toString());
+                                        if (oldCategories.get(i).equals(entry.getValue())) {
+                                            restaurantsByCategories.child(entry.getKey()).child(user.getUid()).removeValue();
+                                        }
+                                    }
+
+                                }
+                            }
+                        });
+
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+//                                for (Map.Entry<String, String> entry : mapCategoryId.entrySet()) {
+//                                    for (int i = 0; i < oldCategories.size(); i++) {
+//                                        Log.i("categories", oldCategories.get(i).toString());
+//                                        if (oldCategories.get(i).equals(entry.getValue())) {
+//                                            restaurantsByCategories.child(entry.getKey()).child(user.getUid()).removeValue();
+//                                        }
+//                                    }
+//
+//                                }
+
+
+                                StringBuilder stringBuilder = new StringBuilder();
+
+                                for (int j = 0; j < selectedCategoriesList.size(); j++) {
+                                    chosenCategoriesList.add(categoriesArray[selectedCategoriesList.get(j)]);
+                                    stringBuilder.append(categoriesArray[selectedCategoriesList.get(j)]);
+                                    if (j != selectedCategoriesList.size() - 1) {
+                                        stringBuilder.append(", ");
+                                    }
+                                }
+                                chooseCategory.setText(stringBuilder.toString());
+
+                                for (Map.Entry<String, String> entry : mapCategoryId.entrySet()) {
+                                    for (int i = 0; i < chosenCategoriesList.size(); i++) {
+                                        if (chosenCategoriesList.get(i).equals(entry.getValue())) {
+                                            chosenCategoriesIdList.add(entry.getKey());
+                                        }
+                                    }
+
+                                }
+
+                                restaurants.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        Restaurant restaurant1 = snapshot.getValue(Restaurant.class);
+                                        if (restaurant1 != null) {
+                                            restaurant1.setCategories(chosenCategoriesIdList);
+                                            restaurant1.setCategoryId(chosenCategoriesIdList.get(0));
+
+                                            restaurants.child(user.getUid()).setValue(restaurant1).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+
+                                                    restaurants.child(user.getUid()).child("categories").setValue(chosenCategoriesIdList);
+
+                                                    for (int i = 0; i < chosenCategoriesIdList.size(); i++) {
+                                                        restaurant1.setCategoryId(chosenCategoriesIdList.get(i));
+
+                                                        restaurantsByCategories.child(chosenCategoriesIdList.get(i)).child(user.getUid()).setValue(restaurant1).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+                            }
+                        });
+
+                        builder.setNegativeButton("Anulează", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+//                        builder.setNeutralButton("Debifează toate opțiunile", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                for (int j = 0; j < selectedCategory.length; j++) {
+//                                    selectedCategory[j] = false;
+//                                    selectedCategoriesList.clear();
+//                                    chooseCategory.setText("");
+//                                }
+//                            }
+//                        });
+
+                        builder.show();
+
+                    }
+                });
+
+
             }
 
             @Override
@@ -186,62 +386,62 @@ public class RestaurantAccount extends AppCompatActivity {
             }
         });
 
-        alreadyDisplayed = false;
-        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (!alreadyDisplayed) {
-                    alreadyDisplayed = true;
-                } else {
-                    changeCategory.setTitle("Modificarea categoriei restaurantului")
-                            .setMessage("Sunteti sigur ca doriti sa realizati aceasta modificare?")
-                            .setPositiveButton("Confirmare", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    restaurants.child(user.getUid()).addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            Restaurant restaurant = snapshot.getValue(Restaurant.class);
-                                            String categoryName = (String) categorySpinner.getSelectedItem();
-                                            for (Map.Entry<String, String> entry : mapCategoryId.entrySet()) {
-                                                if (categoryName.equals(entry.getValue())) {
-                                                    String categoryId = entry.getKey();
-                                                    restaurant.setCategoryId(categoryId);
-                                                    restaurants.child(user.getUid()).setValue(restaurant);
-                                                }
-                                            }
-
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-
-                                        }
-                                    });
-
-                                    alreadyDisplayed = false;
-
-                                }
-                            }).setNegativeButton("Anulează", null)
-                            .create().show();
-                    alreadyDisplayed = false;
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+//        alreadyDisplayed = false;
+//        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                if (!alreadyDisplayed) {
+//                    alreadyDisplayed = true;
+//                } else {
+//                    changeCategory.setTitle("Modificarea categoriei restaurantului")
+//                            .setMessage("Sunteti sigur ca doriti sa realizati aceasta modificare?")
+//                            .setPositiveButton("Confirmare", new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//
+//                                    restaurants.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+//                                        @Override
+//                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                            Restaurant restaurant = snapshot.getValue(Restaurant.class);
+//                                            String categoryName = (String) categorySpinner.getSelectedItem();
+//                                            for (Map.Entry<String, String> entry : mapCategoryId.entrySet()) {
+//                                                if (categoryName.equals(entry.getValue())) {
+//                                                    String categoryId = entry.getKey();
+//                                                    restaurant.setCategoryId(categoryId);
+//                                                    restaurants.child(user.getUid()).setValue(restaurant);
+//                                                }
+//                                            }
+//
+//                                        }
+//
+//                                        @Override
+//                                        public void onCancelled(@NonNull DatabaseError error) {
+//
+//                                        }
+//                                    });
+//
+//                                    alreadyDisplayed = false;
+//
+//                                }
+//                            }).setNegativeButton("Anulează", null)
+//                            .create().show();
+//                    alreadyDisplayed = false;
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
 
 
         restaurantAccounts.child(user.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User restaurantUser = snapshot.getValue(User.class);
-                if(restaurantUser != null) {
+                if (restaurantUser != null) {
                     restaurantPhoneNumber.setText(restaurantUser.getPhoneNumber());
                 }
             }

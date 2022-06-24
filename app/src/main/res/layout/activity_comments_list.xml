@@ -4,12 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/teal_100"
     tools:context=".RestaurantsList">
+
+    <ImageView
+        android:id="@+id/closeActivity"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_baseline_close_24"></ImageView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerComments"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="500dp"
+        android:layout_marginTop="50dp"
         android:scrollbars="vertical"></androidx.recyclerview.widget.RecyclerView>
 
 
@@ -23,5 +31,5 @@
         android:textAlignment="center"
         android:gravity="center"
         android:textSize="30sp"
-        android:text="Nu exista pareri pentru acest produs. Comanda-l si fii primul care isi spune parerea!"></TextView>
+        android:text="Nu există păreri pentru acest produs. Comandă-l și fii primul care își spune părerea!"></TextView>
 </RelativeLayout>

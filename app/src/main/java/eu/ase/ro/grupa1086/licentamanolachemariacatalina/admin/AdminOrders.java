@@ -171,7 +171,7 @@ public class AdminOrders extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year, int month, int day) {
                         month = month + 1;
                         String shownDate = day + "." + month + "." + year;
-                        String date = day + "." + month + "." + year + " 23:59:59";
+                        String date = day + "." + month + "." + year + " 00:00:01";
                         try {
                             firstDate2 = sdf.parse(date);
 

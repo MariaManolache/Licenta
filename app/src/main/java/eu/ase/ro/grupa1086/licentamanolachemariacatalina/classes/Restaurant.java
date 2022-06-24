@@ -15,6 +15,7 @@ public class Restaurant implements Serializable {
     private String address;
     private String deliveryTime;
     private List<Rating> ratingsList;
+    private List<String> categories;
 
     private boolean confirmed;
 
@@ -102,6 +103,14 @@ public class Restaurant implements Serializable {
 
     public void setConfirmed(boolean confirmed) {
         this.confirmed = confirmed;
+    }
+
+    public List<String> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<String> categories) {
+        this.categories = categories;
     }
 
     @Override

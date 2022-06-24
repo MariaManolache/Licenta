@@ -5,15 +5,18 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
@@ -22,6 +25,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -42,9 +46,11 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
@@ -65,6 +71,7 @@ public class NewRestaurantAccount extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private DatabaseReference restaurants;
     private StorageReference storageReference;
+    private DatabaseReference restaurantsByCategories;
 
     private Uri restaurantImageUri;
     ActivityResultLauncher<Intent> someActivityResultLauncher;
@@ -72,19 +79,29 @@ public class NewRestaurantAccount extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private ProgressBar progressBar;
 
-    private String subject = "Vi s-a creat un cont de restaurant în aplicatia Deliver It Right!";
+    private String subject = "Vi s-a creat un cont de restaurant în aplicația Deliver It Right!";
     private String message = "";
     private String password;
 
-    private Spinner categorySpinner;
+    //private Spinner categorySpinner;
     private ImageView restaurantImage;
     ArrayAdapter<String> departsAdapter;
     private DatabaseReference categories;
 
     List<String> listCategoryId = new ArrayList<>();
+    String[] categoriesArray;
     Map<String, String> mapCategoryId = new HashMap<>();
     String categoryId;
     private String restaurantImageString;
+
+    List<Integer> selectedCategoriesList = new ArrayList<>();
+
+    TextView chooseCategory;
+    boolean[] selectedCategory;
+
+    List<String> chosenCategoriesList = new ArrayList<>();
+    List<String> chosenCategoriesIdList = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,12 +118,15 @@ public class NewRestaurantAccount extends AppCompatActivity {
         etRestaurantPhoneNumber = findViewById(R.id.etRestaurantPhoneNumber);
         etRestaurantAddress = findViewById(R.id.etRestaurantAddress);
         restaurantImage = findViewById(R.id.restaurantImage);
-        categorySpinner = findViewById(R.id.categorySpinner);
+        //categorySpinner = findViewById(R.id.categorySpinner);
         categories = FirebaseDatabase.getInstance().getReference("categories");
 
         storageReference = FirebaseStorage.getInstance().getReference("restaurantsImages");
         restaurants = FirebaseDatabase.getInstance().getReference("restaurants");
+        restaurantsByCategories = FirebaseDatabase.getInstance().getReference("restaurantsByCategories");
         restaurantImage = findViewById(R.id.restaurantImage);
+
+        chooseCategory = findViewById(R.id.chooseCategory);
 
 
         categories.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -122,9 +142,73 @@ public class NewRestaurantAccount extends AppCompatActivity {
 
                 }
 
+                categoriesArray = new String[listCategoryId.size()];
+                listCategoryId.toArray(categoriesArray);
+
+                selectedCategory = new boolean[listCategoryId.size()];
+
+                chooseCategory.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(NewRestaurantAccount.this, R.style.AlertDialogStyle2));
+                        builder.setTitle("Alege categoriile");
+                        builder.setCancelable(false);
+
+                        builder.setMultiChoiceItems(categoriesArray, selectedCategory, new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                if (isChecked) {
+                                    selectedCategoriesList.add(which);
+                                    Collections.sort(selectedCategoriesList);
+                                } else {
+                                    selectedCategoriesList.remove(Integer.valueOf(which));
+                                }
+                            }
+                        });
+
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                StringBuilder stringBuilder = new StringBuilder();
+
+                                for (int j = 0; j < selectedCategoriesList.size(); j++) {
+                                    chosenCategoriesList.add(categoriesArray[selectedCategoriesList.get(j)]);
+                                    stringBuilder.append(categoriesArray[selectedCategoriesList.get(j)]);
+                                    if (j != selectedCategoriesList.size() - 1) {
+                                        stringBuilder.append(", ");
+                                    }
+                                }
+                                chooseCategory.setText(stringBuilder.toString());
+
+                            }
+                        });
+
+                        builder.setNegativeButton("Anulează", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        builder.setNeutralButton("Debifează toate opțiunile", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                for (int j = 0; j < selectedCategory.length; j++) {
+                                    selectedCategory[j] = false;
+                                    selectedCategoriesList.clear();
+                                    chooseCategory.setText("");
+                                }
+                            }
+                        });
+
+                        builder.show();
+
+                    }
+                });
+
                 departsAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_layout, listCategoryId);
 //                departsAdapter.setDropDownViewResource(R.layout.spinner_layout);
-                categorySpinner.setAdapter(departsAdapter);
+                //categorySpinner.setAdapter(departsAdapter);
             }
 
             @Override
@@ -158,7 +242,6 @@ public class NewRestaurantAccount extends AppCompatActivity {
                 });
 
 
-
         btnAddNewRestaurant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,16 +270,20 @@ public class NewRestaurantAccount extends AppCompatActivity {
                     return;
                 }
 
-                if(restaurantImageUri == null) {
+                if (restaurantImageUri == null) {
                     Toast.makeText(getApplicationContext(), "Trebuie selectată o imagine", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                String categoryName = (String) categorySpinner.getSelectedItem();
+
+                //String categoryName = (String) categorySpinner.getSelectedItem();
                 for (Map.Entry<String, String> entry : mapCategoryId.entrySet()) {
-                    if (categoryName.equals(entry.getValue())) {
-                        categoryId = entry.getKey();
+                    for (int i = 0; i < chosenCategoriesList.size(); i++) {
+                        if (chosenCategoriesList.get(i).equals(entry.getValue())) {
+                            chosenCategoriesIdList.add(entry.getKey());
+                        }
                     }
+
                 }
 
                 ThreadLocalRandom random = ThreadLocalRandom.current();
@@ -209,11 +296,7 @@ public class NewRestaurantAccount extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-
-                            int isDriver = 1;
-//                                                FirebaseUser user = firebaseAuth.getCurrentUser();
-//                                                String id = user.getUid();
-                            String id = task.getResult().getUser().getUid();
+                            String id = Objects.requireNonNull(task.getResult().getUser()).getUid();
 
                             if (restaurantImageUri != null) {
                                 StorageReference fileReference = storageReference.child(id + "." + getFileExtension(restaurantImageUri));
@@ -233,7 +316,8 @@ public class NewRestaurantAccount extends AppCompatActivity {
 
                                                         RestaurantAccount restaurantAccount = new RestaurantAccount(id, name, email, phoneNumber, address, password, 1);
 
-                                                        Restaurant restaurant = new Restaurant(id, name, restaurantImageString , categoryId, address);
+                                                        Restaurant restaurant = new Restaurant(id, name, restaurantImageString, chosenCategoriesIdList.get(0), address);
+                                                        restaurant.setCategories(chosenCategoriesIdList);
 
                                                         message = "Bine ai venit în echipa Deliver It Right, " + name + "!" + '\n' + '\n' + "Folosește următoarele date pentru a te conecta în aplicație:" + '\n' + '\n' +
                                                                 "Adresa de email: " + email + '\n' + "Parola: " + password;
@@ -243,20 +327,32 @@ public class NewRestaurantAccount extends AppCompatActivity {
                                                             public void onComplete(@NonNull Task<Void> task) {
                                                                 if (task.isSuccessful()) {
 
+                                                                    for(int i = 0; i < chosenCategoriesIdList.size(); i++) {
+                                                                        Restaurant restaurantByCategory = new Restaurant(id, name, restaurantImageString, chosenCategoriesIdList.get(i), address);
+                                                                        restaurantByCategory.setCategories(chosenCategoriesIdList);
+
+                                                                        restaurantsByCategories.child(chosenCategoriesIdList.get(i)).child(id).setValue(restaurantByCategory);
+                                                                    }
+
                                                                     restaurants.child(id).setValue(restaurant).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                         @Override
                                                                         public void onSuccess(Void unused) {
-                                                                            Toast.makeText(NewRestaurantAccount.this, "Livrator adăugat", Toast.LENGTH_SHORT).show();
-                                                                            Intent sendEmail = new Intent(Intent.ACTION_SEND);
-                                                                            sendEmail.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
-                                                                            sendEmail.putExtra(Intent.EXTRA_SUBJECT, subject);
-                                                                            sendEmail.putExtra(Intent.EXTRA_TEXT, message);
+                                                                            restaurants.child(id).child("categories").setValue(chosenCategoriesIdList).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                @Override
+                                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                                    Toast.makeText(NewRestaurantAccount.this, "Restaurant adăugat", Toast.LENGTH_SHORT).show();
+                                                                                    Intent sendEmail = new Intent(Intent.ACTION_SEND);
+                                                                                    sendEmail.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
+                                                                                    sendEmail.putExtra(Intent.EXTRA_SUBJECT, subject);
+                                                                                    sendEmail.putExtra(Intent.EXTRA_TEXT, message);
 
-                                                                            sendEmail.setType("message/rfc822");
+                                                                                    sendEmail.setType("message/rfc822");
 
-                                                                            startActivity(Intent.createChooser(sendEmail, "Alege email-ul:"));
+                                                                                    startActivity(Intent.createChooser(sendEmail, "Alege email-ul:"));
 
-                                                                            finish();
+                                                                                    finish();
+                                                                                }
+                                                                            });
                                                                         }
                                                                     });
 
@@ -283,9 +379,9 @@ public class NewRestaurantAccount extends AppCompatActivity {
                             //uploadFile(id);
 
 
-
                         } else {
                             Toast.makeText(NewRestaurantAccount.this, "Eroare la crearea contului" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            progressBar.setVisibility(View.GONE);
                         }
 
 

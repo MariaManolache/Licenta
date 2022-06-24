@@ -80,6 +80,8 @@ public class FoodInfo extends FragmentActivity {
     TextView comments;
     LinearLayout linearLayoutComments;
 
+    ImageView close;
+
     String origin = null;
     boolean exists = false;
 
@@ -138,8 +140,17 @@ public class FoodInfo extends FragmentActivity {
         collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExtendedAppbar);
         collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppbar);
 
+        close = findViewById(R.id.closeActivity);
         //foodId from Intent
         if (getIntent() != null && getIntent().getExtras() != null) {
+
+            close.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+
             origin = getIntent().getExtras().getString("origin");
             if (origin != null && origin.equals("activityFoodList")) {
                 foodId = getIntent().getStringExtra("id");

@@ -2,6 +2,7 @@ package eu.ase.ro.grupa1086.licentamanolachemariacatalina.order;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
@@ -12,6 +13,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -93,6 +97,11 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
     List<LatLng> latLngRestaurantAddresses = new ArrayList<LatLng>();
 
     Button btnReturnToMainMenu;
+    ProgressBar pbDistance;
+    ProgressBar pbPreparationTime;
+    View map;
+
+    LinearLayout llProgressBar;
 
     private List<Polyline> polylines;
     private static final int[] COLORS = new int[]{androidx.navigation.ui.R.color.design_default_color_primary_dark, com.google.android.material.R.color.design_default_color_primary_variant, androidx.navigation.ui.R.color.design_default_color_primary};
@@ -113,6 +122,8 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
         tvTime = findViewById(R.id.tvTime);
 
         btnReturnToMainMenu = findViewById(R.id.btnReturnToMainMenu);
+        llProgressBar = findViewById(R.id.llProgressBar);
+        llProgressBar.setVisibility(View.VISIBLE);
 
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
@@ -121,6 +132,10 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
         cart = database.getInstance().getReference("carts").child(userId).child("foodList");
         ratings = database.getInstance().getReference("ratings");
         driverOrders = database.getInstance().getReference("driverOrders");
+
+        pbDistance = findViewById(R.id.pbDistance);
+        pbPreparationTime = findViewById(R.id.pbPreparationTime);
+        map = findViewById(R.id.map);
 
         cart.removeValue();
 
@@ -154,7 +169,10 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
 //            }
 //        });
 
+
         if (getIntent() != null && getIntent().getExtras() != null) {
+            pbPreparationTime.setVisibility(View.VISIBLE);
+            pbDistance.setVisibility(View.VISIBLE);
             String origin = getIntent().getExtras().getString("origin");
             if (origin != null && (origin.equals("currentAddress") || origin.equals("mapsLocation") || origin.equals("savedAddress") || origin.equals("cardPayment"))) {
                 orderId = getIntent().getStringExtra("orderId");
@@ -172,6 +190,7 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Order order = snapshot.getValue(Order.class);
+                        pbPreparationTime.setVisibility(View.GONE);
                         tvTime.setText(order.getPreparationTime() + " de minute");
                     }
 
@@ -209,54 +228,57 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
 
 
                                 float results[] = new float[10];
-                                    Map<LatLng, Double> distances = new LinkedHashMap<>();
-                                    for (int i = 0; i < restaurantCoordinates.size(); i++) {
-                                        LatLng latLngClient = getLocationFromAddress(mapsAddress);
-                                        Double distance = SphericalUtil.computeDistanceBetween(latLngClient, restaurantCoordinates.get(i));
-                                        Log.i("distancesCheck", distance.toString());
-                                        distances.put(restaurantCoordinates.get(i), distance);
-                                        Location.distanceBetween(latLngClient.latitude, latLngClient.longitude, restaurantCoordinates.get(i).latitude, restaurantCoordinates.get(i).longitude, results);
-                                    }
-
-                                    UserComparator comparator = new UserComparator(distances);
-                                    Map<LatLng, Double> sortedDistances = new TreeMap<>(comparator);
-                                    sortedDistances.putAll(distances);
-
-
-                                    Map.Entry<LatLng, Double> entry = sortedDistances.entrySet().iterator().next();
-                                    LatLng key = entry.getKey();
-                                    Double minimumDistance = entry.getValue();
-                                    Double totalDistance = minimumDistance;
-                                    Log.i("distancesCheck", totalDistance.toString() + "...");
-
-                                    List<LatLng> sortedLocations = new ArrayList<>();
-                                    for (Map.Entry<LatLng, Double> entry2 : sortedDistances.entrySet()) {
-                                        sortedLocations.add(entry2.getKey());
-                                    }
-
-                                    if (sortedLocations.size() > 1) {
-                                        for (int i = 0; i < sortedLocations.size() - 1; i++) {
-                                            totalDistance += SphericalUtil.computeDistanceBetween(sortedLocations.get(i), sortedLocations.get(i + 1));
-                                            Log.i("distancesCheck", totalDistance.toString() + "...");
-                                        }
-                                    }
-
+                                Map<LatLng, Double> distances = new LinkedHashMap<>();
+                                for (int i = 0; i < restaurantCoordinates.size(); i++) {
                                     LatLng latLngClient = getLocationFromAddress(mapsAddress);
-                                    Double deliveryDistanceKm = SphericalUtil.computeDistanceBetween(sortedLocations.get(sortedLocations.size() - 1), clientAddress);
+                                    Double distance = SphericalUtil.computeDistanceBetween(latLngClient, restaurantCoordinates.get(i));
+                                    Log.i("distancesCheck", distance.toString());
+                                    distances.put(restaurantCoordinates.get(i), distance);
+                                    Location.distanceBetween(latLngClient.latitude, latLngClient.longitude, restaurantCoordinates.get(i).latitude, restaurantCoordinates.get(i).longitude, results);
+                                }
+
+                                UserComparator comparator = new UserComparator(distances);
+                                Map<LatLng, Double> sortedDistances = new TreeMap<>(comparator);
+                                sortedDistances.putAll(distances);
 
 
-                                    tvDistance.setText(String.format("%.2f", (totalDistance + deliveryDistanceKm) / 1000) + " km");
+                                Map.Entry<LatLng, Double> entry = sortedDistances.entrySet().iterator().next();
+                                LatLng key = entry.getKey();
+                                Double minimumDistance = entry.getValue();
+                                Double totalDistance = minimumDistance;
+                                Log.i("distancesCheck", totalDistance.toString() + "...");
+
+                                List<LatLng> sortedLocations = new ArrayList<>();
+                                for (Map.Entry<LatLng, Double> entry2 : sortedDistances.entrySet()) {
+                                    sortedLocations.add(entry2.getKey());
+                                }
+
+                                if (sortedLocations.size() > 1) {
+                                    for (int i = 0; i < sortedLocations.size() - 1; i++) {
+                                        totalDistance += SphericalUtil.computeDistanceBetween(sortedLocations.get(i), sortedLocations.get(i + 1));
+                                        Log.i("distancesCheck", totalDistance.toString() + "...");
+                                    }
+                                }
+
+                                LatLng latLngClient = getLocationFromAddress(mapsAddress);
+                                Double deliveryDistanceKm = SphericalUtil.computeDistanceBetween(sortedLocations.get(sortedLocations.size() - 1), clientAddress);
+
+
+                                pbDistance.setVisibility(View.GONE);
+                                tvDistance.setText(String.format("%.2f", (totalDistance + deliveryDistanceKm) / 1000) + " km");
 //                                    holder.pickUpDistance.setText("Distanta de preluare: " + String.format("%.2f", totalDistance / 1000) + " km");
 //                                    holder.deliveryDistance.setText("Distanta de livrare: " + String.format("%.2f", deliveryDistanceKm / 1000) + " km");
 //                                    holder.totalDistance.setText("Distanta totala: " + String.format("%.2f", (totalDistance + deliveryDistanceKm) / 1000) + " km");
 
-                                    getDestinationInfo(restaurantCoordinates.get(0));
+                                getDestinationInfo(restaurantCoordinates.get(0));
 
-                                    SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                                            .findFragmentById(R.id.map);
-                                    assert mapFragment != null;
-                                    mapFragment.getMapAsync(ConfirmationOrder.this);
+                                SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                                        .findFragmentById(R.id.map);
+                                assert mapFragment != null;
+                                mapFragment.getMapAsync(ConfirmationOrder.this);
 
+//                                map.setVisibility(View.VISIBLE);
+//                                btnReturnToMainMenu.setVisibility(View.VISIBLE);
 
                             }
 
@@ -284,6 +306,7 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Order order = snapshot.getValue(Order.class);
+                        pbPreparationTime.setVisibility(View.GONE);
                         tvTime.setText(order.getPreparationTime() + " de minute");
                     }
 
@@ -365,6 +388,7 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
                                 Double deliveryDistanceKm = SphericalUtil.computeDistanceBetween(sortedLocations.get(sortedLocations.size() - 1), clientAddress);
 
 
+                                pbDistance.setVisibility(View.GONE);
                                 tvDistance.setText(String.format("%.2f", (totalDistance + deliveryDistanceKm) / 1000) + " km");
 
                                 getDestinationInfo(restaurantCoordinates.get(0));
@@ -373,6 +397,9 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
                                         .findFragmentById(R.id.map);
                                 assert mapFragment != null;
                                 mapFragment.getMapAsync(ConfirmationOrder.this);
+
+//                                map.setVisibility(View.VISIBLE);
+//                                btnReturnToMainMenu.setVisibility(View.VISIBLE);
                             }
 
                             @Override
@@ -444,6 +471,7 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
 
         }
 
+
         mMap.addMarker(new MarkerOptions().position(latLngUserAddress).title("Marker adresa utilizator"));
 
 //        for(int i = 0; i < latLngRestaurantAddresses.size(); i++) {
@@ -451,6 +479,8 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
 //        }
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngUserAddress, 15));
 
+        map.setVisibility(View.VISIBLE);
+        btnReturnToMainMenu.setVisibility(View.VISIBLE);
 
 //        LatLng barcelona = new LatLng(41.385064,2.173403);
 //        mMap.addMarker(new MarkerOptions().position(barcelona).title("Marker in Barcelona"));

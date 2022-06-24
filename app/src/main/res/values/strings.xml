@@ -199,4 +199,5 @@
     <string name="add_new_category">Adaugă o nouă categorie:</string>
     <string name="category_name_text">Denumire</string>
     <string name="new_category">Categorie nouă</string>
+    <string name="pick_category_or_categories">Alege categoria/categoriile</string>
 </resources>

@@ -501,21 +501,60 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvPickedAddressInfo"></TextView>
 
-            <TextView
-                android:visibility="gone"
-                android:id="@+id/transportFee"
-                android:text="Taxa de livrare este: "
-                android:fontFamily="@font/alata"
-                android:textColor="@color/violet"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginTop="20dp"
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvCurrentAddress"></TextView>
+                app:layout_constraintTop_toBottomOf="@+id/tvCurrentAddress">
 
+                <ImageView
+                    android:id="@+id/imgBike"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_baseline_directions_bike_24"
+                    android:visibility="gone"></ImageView>
+
+
+                <TextView
+                    android:id="@+id/tvTransportFee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/alata"
+                    android:text="Taxa de livrare este: "
+                    android:textColor="@color/violet"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"></TextView>
+
+                <ProgressBar
+                    android:id="@+id/pbTransportFee"
+                    android:visibility="gone"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"></ProgressBar>
+
+                <TextView
+                    android:id="@+id/transportFee"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/alata"
+                    android:textColor="@color/violet"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"></TextView>
+
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
@@ -523,9 +562,9 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="109dp"
-        android:layout_margin="16dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
         app:cardBackgroundColor="@color/teal_700">
 
         <RelativeLayout

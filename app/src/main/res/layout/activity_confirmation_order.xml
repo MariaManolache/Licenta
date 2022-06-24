@@ -37,12 +37,19 @@
             android:textColor="@color/violet"
             android:textSize="20sp"></TextView>
 
+        <ProgressBar
+            android:id="@+id/pbDistance"
+            android:visibility="gone"
+            android:layout_width="100dp"
+            android:layout_gravity="center"
+            android:layout_height="30dp"></ProgressBar>
+
         <TextView
             android:id="@+id/tvDistance"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
+            android:layout_marginLeft="10dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/alata"
-            android:text="2000m"
             android:textColor="@color/violet"
             android:textSize="20sp"></TextView>
 
@@ -65,22 +72,50 @@
             android:textColor="@color/violet"
             android:textSize="20sp"></TextView>
 
+        <ProgressBar
+            android:id="@+id/pbPreparationTime"
+            android:visibility="gone"
+            android:layout_width="100dp"
+            android:layout_height="30dp"></ProgressBar>
+
+
         <TextView
             android:id="@+id/tvTime"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/alata"
-            android:text="@string/estimated_arrival_time"
             android:textColor="@color/violet"
             android:textSize="20sp"></TextView>
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/llProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llTime">
+
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:foregroundGravity="center"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/llTime"></ProgressBar>
+
+    </LinearLayout>
+
     <fragment
         android:id="@+id/map"
+        android:visibility="gone"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="550dp"
+        android:layout_height="500dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/llTime" />
@@ -93,6 +128,7 @@
         android:backgroundTint="@color/teal_700"
         android:fontFamily="@font/alata"
         android:textStyle="bold"
+        android:visibility="gone"
         android:text="@string/return_to_main_menu"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
