@@ -93,7 +93,7 @@ public class SignIn extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 View view = inflater.inflate(R.layout.reset_password_pop_up, null);
-                resetAlert.setTitle("Resetare parola").setMessage("Introdu adresa de email pentru resetarea parolei")
+                resetAlert.setTitle("Resetare parolă").setMessage("Introdu adresa de email pentru resetarea parolei")
                         .setPositiveButton("Resetare", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -147,7 +147,7 @@ public class SignIn extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
                                         if (task.getResult().getSignInMethods().isEmpty()) {
-                                            Toast.makeText(SignIn.this, "Acestui email nu ii este asociat un cont", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(SignIn.this, "Acestui email nu îi este asociat un cont", Toast.LENGTH_LONG).show();
                                         } else {
                                             //trimiterea linkului de resetare
                                             firebaseAuth.sendPasswordResetEmail(email.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -185,7 +185,7 @@ public class SignIn extends AppCompatActivity {
                 }
 
                 if (TextUtils.isEmpty(password)) {
-                    etPassword.setError("O parola este necesara pentru autentificare");
+                    etPassword.setError("O parolă este necesară pentru autentificare");
                     return;
                 }
 
@@ -232,11 +232,11 @@ public class SignIn extends AppCompatActivity {
                     if (snapshot.exists()) {
                         int isDriver = snapshot.getValue(Integer.class);
                         if (isDriver == 0) {
-                            Toast.makeText(SignIn.this, "Autentificare realizata cu succes", Toast.LENGTH_LONG).show();
+                            Toast.makeText(SignIn.this, "Autentificare realizată cu succes", Toast.LENGTH_LONG).show();
                             startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
                             finish();
                         } else {
-                           Toast.makeText(getApplicationContext(), "Utilizatorul introdus nu se afla in baza de date", Toast.LENGTH_SHORT).show();
+                           Toast.makeText(getApplicationContext(), "Utilizatorul introdus nu se află în baza de date", Toast.LENGTH_SHORT).show();
                             progressBar.setVisibility(View.GONE);
                         }
                     }

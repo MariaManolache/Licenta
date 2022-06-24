@@ -274,6 +274,7 @@ public class FoodInfo extends FragmentActivity {
                 exists = false;
                 String id = user.getUid();
                 cartItem = cart.child(food.getId());
+
 //                Log.i("cartItem", String.valueOf(cart.child("quantity")));
 
 //                cart.addValueEventListener(new ValueEventListener() {
@@ -314,10 +315,10 @@ public class FoodInfo extends FragmentActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(getApplicationContext(), "Produsul a fost adaugat in cos", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Produsul a fost adăugat în coș", Toast.LENGTH_SHORT).show();
                                 quantity.setText(String.valueOf(food.getQuantity()));
                             } else {
-                                Toast.makeText(getApplicationContext(), "Eroare la adaugarea produsului in cos", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Eroare la adăugarea produsului în coș", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

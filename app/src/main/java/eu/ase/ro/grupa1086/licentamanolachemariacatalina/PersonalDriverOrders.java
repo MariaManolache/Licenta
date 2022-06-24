@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -114,6 +115,8 @@ public class PersonalDriverOrders extends AppCompatActivity {
 
     TextView myOrders;
     ImageView noOrdersFound;
+    ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,6 +143,9 @@ public class PersonalDriverOrders extends AppCompatActivity {
         layoutManagerMyOrders = new LinearLayoutManager(this);
         recyclerViewMyOrders.setLayoutManager(layoutManagerMyOrders);
 
+        recyclerViewMyOrders.setVisibility(View.GONE);
+
+
         tvCurrentLocation = findViewById(R.id.currentLocation);
         noOrdersFound = findViewById(R.id.noDriverOrders);
 
@@ -147,6 +153,7 @@ public class PersonalDriverOrders extends AppCompatActivity {
         acceptOrder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
 
         myOrders = findViewById(R.id.myOrders);
+        progressBar = findViewById(R.id.progressBar);
 
 
 //        tvCurrentLocation.setOnLongClickListener(new View.OnLongClickListener() {
@@ -169,7 +176,6 @@ public class PersonalDriverOrders extends AppCompatActivity {
 
         //loadOrders();
         initializeLocation();
-        loadMyOrders();
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.personalOrders);
@@ -218,7 +224,7 @@ public class PersonalDriverOrders extends AppCompatActivity {
                     noOrdersFound.setVisibility(View.VISIBLE);
                 } else {
                     myOrders.setVisibility(View.VISIBLE);
-                    recyclerViewMyOrders.setVisibility(View.VISIBLE);
+                    //recyclerViewMyOrders.setVisibility(View.VISIBLE);
                     noOrdersFound.setVisibility(View.GONE);
                 }
             }
@@ -568,6 +574,7 @@ public class PersonalDriverOrders extends AppCompatActivity {
 
 
         recyclerViewMyOrders.setAdapter(adapterMyOrders);
+        recyclerViewMyOrders.setVisibility(View.VISIBLE);
         adapterMyOrders.startListening();
     }
 
@@ -586,6 +593,7 @@ public class PersonalDriverOrders extends AppCompatActivity {
             return;
         }
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+
     }
 
     private void buildLocationCallback() {
@@ -597,6 +605,7 @@ public class PersonalDriverOrders extends AppCompatActivity {
                 String sCurrentLocation = getAddressFromLatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                 tvCurrentLocation.setText(sCurrentLocation);
                 latLngLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                loadMyOrders();
             }
         };
     }

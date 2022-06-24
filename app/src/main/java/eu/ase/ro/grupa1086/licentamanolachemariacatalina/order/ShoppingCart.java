@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,10 +33,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.maps.android.SphericalUtil;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
@@ -42,6 +51,7 @@ import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.food.FoodInfo;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.PrincipalMenu;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.UserComparator;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.CartViewHolder;
 
 public class ShoppingCart extends AppCompatActivity {
@@ -53,6 +63,8 @@ public class ShoppingCart extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference cart;
     DatabaseReference restaurants;
+
+
 
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
@@ -70,6 +82,7 @@ public class ShoppingCart extends AppCompatActivity {
 
     FirebaseRecyclerAdapter<Food, CartViewHolder> adapter;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +95,7 @@ public class ShoppingCart extends AppCompatActivity {
         user = firebaseAuth.getCurrentUser();
         id = user.getUid();
         cart = database.getInstance().getReference("carts").child(id).child("foodList");
+
 
         emptyCart = findViewById(R.id.emptyCart);
         tvEmptyCart = findViewById(R.id.tvEmptyCart);
@@ -101,6 +115,8 @@ public class ShoppingCart extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
+
 
         SwipeHelper swipeHelper = new SwipeHelper(getApplicationContext(), recyclerView, 200) {
             @Override
@@ -323,7 +339,7 @@ public class ShoppingCart extends AppCompatActivity {
                         model.setQuantity(quantity);
 
                         Food updatedFood = new Food(model.getId(), model.getName(), model.getPrice(), model.getDescription(),
-                                model.getQuantity(), model.getImage(), model.getRestaurantId());
+                                model.getQuantity(), model.getImage(), model.getRestaurantId(), model.getPreparationTime());
 
                         cart.child(model.getId()).setValue(updatedFood).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -333,7 +349,7 @@ public class ShoppingCart extends AppCompatActivity {
                                     tvTotalPrice.setText((double)Math.round(total * 100d) / 100d + " LEI");
                                     Toast.makeText(ShoppingCart.this, "Cantitate modificată", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(ShoppingCart.this, "Eroare la modificarea cantității" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(ShoppingCart.this, "Eroare la modificarea cantității", Toast.LENGTH_LONG).show();
                                 }
                             }
                         });
@@ -349,7 +365,7 @@ public class ShoppingCart extends AppCompatActivity {
                             model.setQuantity(quantity);
 
                             Food updatedFood = new Food(model.getId(), model.getName(), model.getPrice(), model.getDescription(),
-                                    model.getQuantity(), model.getImage(), model.getRestaurantId());
+                                    model.getQuantity(), model.getImage(), model.getRestaurantId(), model.getPreparationTime());
 
                             cart.child(model.getId()).setValue(updatedFood).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -359,7 +375,7 @@ public class ShoppingCart extends AppCompatActivity {
                                         tvTotalPrice.setText((double)Math.round(total * 100d) / 100d + " LEI");
                                         Toast.makeText(ShoppingCart.this, "Cantitate modificată", Toast.LENGTH_SHORT).show();
                                     } else {
-                                        Toast.makeText(ShoppingCart.this, "Eroare la modificarea cantității" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                        Toast.makeText(ShoppingCart.this, "Eroare la modificarea cantității", Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
@@ -428,5 +444,29 @@ public class ShoppingCart extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        loadFood();
+    }
+
+    public LatLng getLocationFromAddress(String strAddress) {
+
+        Geocoder coder = new Geocoder(getApplicationContext());
+        List<android.location.Address> address;
+        LatLng coordinates = null;
+
+        try {
+            address = coder.getFromLocationName(strAddress, 5);
+            if (address == null) {
+                return null;
+            }
+
+            android.location.Address location = address.get(0);
+            coordinates = new LatLng(location.getLatitude(), location.getLongitude());
+
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+        }
+
+        return coordinates;
     }
 }

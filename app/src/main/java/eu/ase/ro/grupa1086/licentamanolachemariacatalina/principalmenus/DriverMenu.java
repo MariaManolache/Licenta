@@ -130,7 +130,9 @@ public class DriverMenu extends AppCompatActivity {
     TextView allOrders;
 
     //ProgressDialog mProgressDialog;
-    ImageView loadingImage;
+    //ImageView loadingImage;
+
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,7 +167,9 @@ public class DriverMenu extends AppCompatActivity {
 
         tvCurrentLocation = findViewById(R.id.currentLocation);
         noOrdersFound = findViewById(R.id.noDriverOrders);
-        loadingImage = findViewById(R.id.loadindImage);
+        //loadingImage = findViewById(R.id.loadindImage);
+
+        progressBar = findViewById(R.id.progressBar);
 
 
         inflater = this.getLayoutInflater();
@@ -215,7 +219,6 @@ public class DriverMenu extends AppCompatActivity {
         //loadOrders();
         initializeLocation();
 
-        loadOrders();
 
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -259,6 +262,7 @@ public class DriverMenu extends AppCompatActivity {
             return;
         }
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+
     }
 
     private void buildLocationCallback() {
@@ -270,6 +274,8 @@ public class DriverMenu extends AppCompatActivity {
                 String sCurrentLocation = getAddressFromLatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                 tvCurrentLocation.setText(sCurrentLocation);
                 latLngLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+
+                loadOrders();
             }
         };
     }
@@ -362,7 +368,7 @@ public class DriverMenu extends AppCompatActivity {
 
         //pb_vertical.setVisibility(View.GONE);
 
-        loadingImage.setVisibility(View.VISIBLE);
+        //loadingImage.setVisibility(View.VISIBLE);
 
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
@@ -383,7 +389,7 @@ public class DriverMenu extends AppCompatActivity {
                     allOrders.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.GONE);
                     noOrdersFound.setVisibility(View.VISIBLE);
-                    loadingImage.setVisibility(View.GONE);
+                    //loadingImage.setVisibility(View.GONE);
                 } else {
                     allOrders.setVisibility(View.VISIBLE);
                     //recyclerView.setVisibility(View.VISIBLE);
@@ -636,11 +642,11 @@ public class DriverMenu extends AppCompatActivity {
                                                         @Override
                                                         public void onClick(DialogInterface dialog, int which) {
 
+                                                            progressBar.setVisibility(View.VISIBLE);
+
                                                             model.setStatus(Status.in_curs_de_livrare);
                                                             model.setDriverId(user.getUid());
-                                                            //driverOrders.child(model.getId()).child("status").setValue(Status.in_curs_de_livrare);
-                                                            driverOrders.child(user.getUid()).child(model.getId()).setValue(model);
-                                                            driverOrders.child("orders").child(model.getId()).removeValue();
+
                                                             ordersHistory.child(model.getId()).child("status").setValue(Status.in_curs_de_livrare);
                                                             //driverOrdersHistory.child(user.getUid()).child("orders").child(model.getId()).setValue(model);
                                                             orders.child(model.getUserId()).child(model.getId()).child("status").setValue(Status.in_curs_de_livrare);
@@ -648,6 +654,14 @@ public class DriverMenu extends AppCompatActivity {
                                                             for(int i = 0; i < model.getRestaurantAddress().size(); i++) {
                                                                 restaurantOrders.child(model.getRestaurantAddress().get(i).getId()).child("orders").child(model.getId()).child("status").setValue(Status.in_curs_de_livrare);
                                                             }
+                                                            //driverOrders.child(model.getId()).child("status").setValue(Status.in_curs_de_livrare);
+                                                            driverOrders.child(user.getUid()).child(model.getId()).setValue(model);
+                                                            driverOrders.child("orders").child(model.getId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                    progressBar.setVisibility(View.GONE);
+                                                                }
+                                                            });
 
 //                                                            driverOrders.child(model.getId()).child("userId").addValueEventListener(new ValueEventListener() {
 //                                                                @Override
@@ -754,7 +768,7 @@ public class DriverMenu extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         recyclerView.setVisibility(View.VISIBLE);
-        loadingImage.setVisibility(View.GONE);
+        //loadingImage.setVisibility(View.GONE);
         //adapter.notifyDataSetChanged();
         //pb_vertical.setVisibility(View.GONE);
         adapter.startListening();

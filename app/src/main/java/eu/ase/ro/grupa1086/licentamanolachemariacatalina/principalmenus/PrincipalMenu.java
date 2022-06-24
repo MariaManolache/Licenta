@@ -102,7 +102,9 @@ public class PrincipalMenu extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Food food = dataSnapshot.getValue(Food.class);
-                    count += food.getQuantity();
+                    if (food != null) {
+                        count += food.getQuantity();
+                    }
                 }
                 shoppingCart.setCount(count);
                 count = 0;

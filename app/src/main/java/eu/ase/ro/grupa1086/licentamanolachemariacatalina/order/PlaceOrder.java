@@ -7,6 +7,7 @@ import androidx.core.app.NotificationCompat;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,14 +28,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.maps.android.SphericalUtil;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.card.CardPayment;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
@@ -47,6 +53,7 @@ import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.PaymentMethod;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.RestaurantOrder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Status;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.UserComparator;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.observers.DisposableSingleObserver;
@@ -91,6 +98,8 @@ public class PlaceOrder extends AppCompatActivity {
     FirebaseUser user;
     String userId;
 
+    TextView transportFee;
+
     List<Food> cartList = new ArrayList<Food>();
 
 //    LocationRequest locationRequest;
@@ -130,6 +139,12 @@ public class PlaceOrder extends AppCompatActivity {
 
     String anotherAddress;
 
+    List<String> restaurantAddressesList;
+    List<LatLng> restaurantCoordinates;
+    Map<String, String> cartListForTransportFee;
+
+    double totalDistance = 0.0;
+
 //    ImageButton mapButton;
 
     @Override
@@ -149,14 +164,23 @@ public class PlaceOrder extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
-        userId = user.getUid();
-        cart = database.getInstance().getReference("carts").child(userId).child("foodList");
-        addresses = database.getInstance().getReference("addresses").child(userId).child("addresses");
-        orders = database.getInstance().getReference("orders").child(userId);
-        restaurants = database.getInstance().getReference("restaurants");
-        driverOrders = database.getInstance().getReference("driverOrders");
-        restaurantOrders = database.getInstance().getReference("restaurantOrders");
-        ordersHistory = database.getInstance().getReference("ordersHistory");
+        if (user != null) {
+            userId = user.getUid();
+        }
+        cart = database.getReference("carts").child(userId).child("foodList");
+        addresses = database.getReference("addresses").child(userId).child("addresses");
+        orders = database.getReference("orders").child(userId);
+        restaurants = database.getReference("restaurants");
+        driverOrders = database.getReference("driverOrders");
+        restaurantOrders = database.getReference("restaurantOrders");
+        ordersHistory = database.getReference("ordersHistory");
+
+        cartListForTransportFee = new HashMap<>();
+        restaurantAddressesList = new ArrayList<>();
+        restaurantCoordinates = new ArrayList<>();
+
+        transportFee = findViewById(R.id.transportFee);
+
 
         calendar = Calendar.getInstance();
         simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
@@ -169,6 +193,7 @@ public class PlaceOrder extends AppCompatActivity {
 
         tvSavedAddresses = findViewById(R.id.tvSavedAddresses);
         tvNewAddress = findViewById(R.id.tvAddress);
+
 
         secondFrameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,6 +239,9 @@ public class PlaceOrder extends AppCompatActivity {
                         tvAddressInfo.setText(s);
                         tvAddressInfo.setVisibility(View.VISIBLE);
                         tvAddress.setVisibility(View.VISIBLE);
+
+
+                        loadTransportFee(s);
 
                         btnPlaceOrder.setEnabled(true);
 
@@ -274,7 +302,7 @@ public class PlaceOrder extends AppCompatActivity {
                                 List<Integer> listOfTimes = new ArrayList<>();
 
                                 int totalPreparationTime = 0;
-                                for(int i = 0; i < cartList.size(); i++) {
+                                for (int i = 0; i < cartList.size(); i++) {
                                     totalPreparationTime += cartList.get(i).getPreparationTime() * cartList.get(i).getQuantity();
                                     listOfTimes.add(cartList.get(i).getPreparationTime() * cartList.get(i).getQuantity());
                                 }
@@ -399,6 +427,48 @@ public class PlaceOrder extends AppCompatActivity {
                 //tvAddress.setVisibility(View.VISIBLE);
                 tvAddressInfo.setText(currentAddress);
 
+                loadTransportFee(currentAddress);
+
+
+//                float results[] = new float[10];
+//                //Map<LatLng, Double> distances = new LinkedHashMap<>();
+//                for (int i = 0; i < restaurantAddressesList.size(); i++) {
+//                    Log.i("distancesCheck", latLngClient.toString());
+////            LatLng thisRestaurantDistance = getLocationFromAddress(restaurantAddresses.get(i).getAddress());
+//                    Double distance = SphericalUtil.computeDistanceBetween(latLngClient, getLocationFromAddress(restaurantAddressesList.get(i)));
+//                    Log.i("distancesCheck", distance.toString());
+//                    distances.put(getLocationFromAddress(restaurantAddressesList.get(i)), distance);
+//                    Location.distanceBetween(latLngClient.latitude, latLngClient.longitude, getLocationFromAddress(restaurantAddressesList.get(i)).latitude, getLocationFromAddress(restaurantAddressesList.get(i)).longitude, results);
+//
+//                    transportFee.setVisibility(View.VISIBLE);
+//                    transportFee.setText("Taxa pentru transport este: " + distance + " RON.");
+//                }
+//
+//                UserComparator comparator = new UserComparator(distances);
+//                Map<LatLng, Double> sortedDistances = new TreeMap<>(comparator);
+//                sortedDistances.putAll(distances);
+//
+//                //Map.Entry<LatLng, Double> entry = null;
+////                                if (sortedDistances.entrySet().iterator().hasNext()) {
+//                //entry = sortedDistances.entrySet().iterator().next();
+//                //LatLng key = entry.getKey();
+//
+//                //Double minimumDistance = entry.getValue();
+//
+//                List<LatLng> sortedLocations = new ArrayList<>();
+//                for (Map.Entry<LatLng, Double> entry2 : sortedDistances.entrySet()) {
+//                    sortedLocations.add(entry2.getKey());
+//                }
+//
+//
+//                if (sortedLocations.size() > 1) {
+//                    for (int i = 0; i < sortedLocations.size() - 1; i++) {
+//                        totalDistance += SphericalUtil.computeDistanceBetween(sortedLocations.get(i), sortedLocations.get(i + 1));
+//                        Log.i("distancesCheck", totalDistance.toString() + "...");
+//                    }
+//                }
+
+
                 btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
                     @SuppressLint("MissingPermission")
                     @Override
@@ -453,7 +523,7 @@ public class PlaceOrder extends AppCompatActivity {
                         List<Integer> listOfTimes = new ArrayList<>();
 
                         int totalPreparationTime = 0;
-                        for(int i = 0; i < cartList.size(); i++) {
+                        for (int i = 0; i < cartList.size(); i++) {
                             totalPreparationTime += cartList.get(i).getPreparationTime() * cartList.get(i).getQuantity();
                             listOfTimes.add(cartList.get(i).getPreparationTime() * cartList.get(i).getQuantity());
                         }
@@ -575,6 +645,8 @@ public class PlaceOrder extends AppCompatActivity {
                 tvAddress.setVisibility(View.VISIBLE);
                 tvAddressInfo.setText(address);
 
+                loadTransportFee(coordinatesString);
+
                 btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -628,7 +700,7 @@ public class PlaceOrder extends AppCompatActivity {
                         List<Integer> listOfTimes = new ArrayList<>();
 
                         int totalPreparationTime = 0;
-                        for(int i = 0; i < cartList.size(); i++) {
+                        for (int i = 0; i < cartList.size(); i++) {
                             totalPreparationTime += cartList.get(i).getPreparationTime() * cartList.get(i).getQuantity();
                             listOfTimes.add(cartList.get(i).getPreparationTime() * cartList.get(i).getQuantity());
                         }
@@ -726,7 +798,10 @@ public class PlaceOrder extends AppCompatActivity {
                     Address address = snapshot.getValue(Address.class);
                     tvAddressInfo.setVisibility(View.VISIBLE);
                     tvAddress.setVisibility(View.VISIBLE);
+//                    if (address != null) {
                     tvAddressInfo.setText(address.getMapsAddress());
+                    loadTransportFee(address.getMapsAddress());
+                    //}
 
                     if (tvAddress.getVisibility() == View.GONE) {
                         btnPlaceOrder.setEnabled(false);
@@ -751,7 +826,7 @@ public class PlaceOrder extends AppCompatActivity {
                             List<Integer> listOfTimes = new ArrayList<>();
 
                             int totalPreparationTime = 0;
-                            for(int i = 0; i < cartList.size(); i++) {
+                            for (int i = 0; i < cartList.size(); i++) {
                                 totalPreparationTime += cartList.get(i).getPreparationTime() * cartList.get(i).getQuantity();
                                 listOfTimes.add(cartList.get(i).getPreparationTime() * cartList.get(i).getQuantity());
                             }
@@ -885,10 +960,17 @@ public class PlaceOrder extends AppCompatActivity {
 
                 }
 
-                total = (float)Math.round(total * 100) / 100f;
+                total = (float) Math.round(total * 100) / 100f;
+
+
+//                if(totalDistance != 0.0) {
+//                    int intTotal = Integer.parseInt(String.valueOf(totalDistance));
+//                    total += intTotal;
+//                }
+
                 tvTotal.setText(total + " LEI");
 
-                if(tvAddressInfo.getVisibility() == View.GONE) {
+                if (tvAddressInfo.getVisibility() == View.GONE) {
                     btnPlaceOrder.setEnabled(false);
                 } else {
                     btnPlaceOrder.setEnabled(true);
@@ -1438,6 +1520,115 @@ public class PlaceOrder extends AppCompatActivity {
         }
 
         return coordinates;
+    }
+
+    private void loadTransportFee(String userAddress) {
+
+
+//        float results[] = new float[10];
+//        Map<LatLng, Double> distances = new LinkedHashMap<>();
+//        for (int i = 0; i < restaurantCoordinates.size(); i++) {
+//            LatLng latLngClient = getLocationFromAddress(userAddress);
+//            Log.i("distancesCheck", latLngClient.toString());
+////            LatLng thisRestaurantDistance = getLocationFromAddress(restaurantAddresses.get(i).getAddress());
+//            Double distance = SphericalUtil.computeDistanceBetween(latLngClient, restaurantCoordinates.get(i));
+//            Log.i("distancesCheck", distance.toString());
+//            distances.put(restaurantCoordinates.get(i), distance);
+//            Location.distanceBetween(latLngClient.latitude, latLngClient.longitude, restaurantCoordinates.get(i).latitude, restaurantCoordinates.get(i).longitude, results);
+//        }
+//
+//        UserComparator comparator = new UserComparator(distances);
+//        Map<LatLng, Double> sortedDistances = new TreeMap<>(comparator);
+//        sortedDistances.putAll(distances);
+//
+//        Map.Entry<LatLng, Double> entry = null;
+//        if (sortedDistances.entrySet().iterator().hasNext()) {
+//            entry = sortedDistances.entrySet().iterator().next();
+//            LatLng key = entry.getKey();
+//
+//            Double minimumDistance = entry.getValue();
+//            Double totalDistance = minimumDistance;
+//
+//            List<LatLng> sortedLocations = new ArrayList<>();
+//            for (Map.Entry<LatLng, Double> entry2 : sortedDistances.entrySet()) {
+//                sortedLocations.add(entry2.getKey());
+//            }
+//
+//
+//            if (sortedLocations.size() > 1) {
+//                for (int i = 0; i < sortedLocations.size() - 1; i++) {
+//                    totalDistance += SphericalUtil.computeDistanceBetween(sortedLocations.get(i), sortedLocations.get(i + 1));
+//                    Log.i("distancesCheck", totalDistance.toString() + "...");
+//                }
+//            }
+//
+//            transportFee.setVisibility(View.VISIBLE);
+//            transportFee.setText("Taxa pentru transport este: " + totalDistance / 10 + " RON.");
+//
+//        }
+
+
+        Map<LatLng, Double> distances = new LinkedHashMap<>();
+        LatLng latLngClient = getLocationFromAddress(userAddress);
+
+
+        cart.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Food cartFood = dataSnapshot.getValue(Food.class);
+                    if (cartFood != null) {
+                        cartListForTransportFee.put(cartFood.getRestaurantId(), cartFood.getName());
+                        Log.i("distancesCheck", cartFood.getRestaurantId());
+                    }
+                }
+
+                for (Map.Entry<String, String> entry : cartListForTransportFee.entrySet()) {
+                    restaurants.child(entry.getKey()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            Restaurant restaurant = snapshot.getValue(Restaurant.class);
+                            restaurantAddressesList.add(restaurant.getAddress());
+                            restaurantCoordinates.add(getLocationFromAddress(restaurant.getAddress()));
+                            Log.i("distancesCheck", getLocationFromAddress(restaurant.getAddress()).toString());
+
+                            Double distance = SphericalUtil.computeDistanceBetween(latLngClient, getLocationFromAddress(restaurant.getAddress()));
+                            Log.i("distancesCheck", distance.toString());
+                            distances.put(getLocationFromAddress(restaurant.getAddress()), distance);
+
+                            totalDistance += distance;
+
+                            transportFee.setVisibility(View.VISIBLE);
+                            transportFee.setText("Taxa pentru transport este: " + (int)Math.round(totalDistance / 1000) + " RON.");
+
+
+                            total += (int)Math.round(totalDistance / 1000);
+                            tvTotal.setText(total + " LEI");
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                }
+
+
+
+                //}
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
     }
 //
 //    private void initializeLocation() {
