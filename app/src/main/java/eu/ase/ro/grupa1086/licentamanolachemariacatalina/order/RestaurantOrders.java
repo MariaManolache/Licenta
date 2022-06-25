@@ -126,20 +126,34 @@ public class RestaurantOrders extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.account:
-                        startActivity(new Intent(getApplicationContext(), RestaurantAccount.class));
-                        finish();
-                        //overridePendingTransition(0, 0);
-                        return true;
-                    case R.id.products:
-                        startActivity(new Intent(getApplicationContext(), RestaurantProducts.class));
-                        finish();
-                        //overridePendingTransition(0, 0);
-                        return true;
-                    case R.id.orders:
-                        return true;
+                int id = item.getItemId();
+                if(id == R.id.account) {
+                    startActivity(new Intent(getApplicationContext(), RestaurantAccount.class));
+                    overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
+                    finish();
+                    return true;
+                } else if(id == R.id.products) {
+                    startActivity(new Intent(getApplicationContext(), RestaurantProducts.class));
+                    overridePendingTransition(R.anim.slide_right, R.anim.slide_left);
+                    finish();
+                    return true;
+                } else if(id == R.id.orders) {
+                    return true;
                 }
+//                switch (item.getItemId()) {
+//                    case R.id.account:
+//                        startActivity(new Intent(getApplicationContext(), RestaurantAccount.class));
+//                        finish();
+//                        overridePendingTransition(0, 0);
+//                        return true;
+//                    case R.id.products:
+//                        startActivity(new Intent(getApplicationContext(), RestaurantProducts.class));
+//                        finish();
+//                        overridePendingTransition(0, 0);
+//                        return true;
+//                    case R.id.orders:
+//                        return true;
+//                }
                 return false;
             }
         });

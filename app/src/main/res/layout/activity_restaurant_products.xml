@@ -11,8 +11,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerFood"
         android:layout_width="match_parent"
-        android:layout_height="600dp"
-        android:layout_marginBottom="60dp"
+        android:layout_height="617dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"></androidx.recyclerview.widget.RecyclerView>

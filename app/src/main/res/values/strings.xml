@@ -160,7 +160,7 @@
     <string name="new_product">Produs nou</string>
     <string name="driver_click_here">Ești livrator? Dă click aici!</string>
     <string name="auth_driver">Autentificare livrator</string>
-    <string name="preparation_duration">Durata de preparare:</string>
+    <string name="preparation_duration">Durata de preparare: (în minute)</string>
     <string name="pick_up_distance">Distanța de preluare:</string>
     <string name="delivery_distance">Distanța de livrare</string>
     <string name="total_distance">Distanța totală:</string>

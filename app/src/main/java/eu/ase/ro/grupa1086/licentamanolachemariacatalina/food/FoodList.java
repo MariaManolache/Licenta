@@ -73,6 +73,7 @@ public class FoodList extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                overridePendingTransition(R.anim.slide_right, R.anim.slide_left);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -113,6 +114,7 @@ public class FoodList extends AppCompatActivity {
                         foodInfo.putExtra("origin", "activityFoodList");
                         //Log.i("foodid", adapter.getRef(position).getKey());
                         startActivity(foodInfo);
+                        overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
                     }
                 });
             }
@@ -196,6 +198,7 @@ public class FoodList extends AppCompatActivity {
                         foodInfo.putExtra("origin", "activityFoodList");
                         //Log.i("foodid", adapter.getRef(position).getKey());
                         startActivity(foodInfo);
+                        overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
                     }
                 });
             }

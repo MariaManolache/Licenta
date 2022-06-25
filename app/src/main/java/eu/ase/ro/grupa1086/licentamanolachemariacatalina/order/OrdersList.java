@@ -112,20 +112,34 @@ public class OrdersList extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.account:
-                        startActivity(new Intent(getApplicationContext(), Account.class));
-                        finish();
-                        overridePendingTransition(0, 0);
-                        return true;
-                    case R.id.restaurantsMenu:
-                        startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
-                        finish();
-                        overridePendingTransition(0, 0);
-                        return true;
-                    case R.id.orders:
-                        return true;
+                int id = item.getItemId();
+                if(id == R.id.account) {
+                    startActivity(new Intent(getApplicationContext(), Account.class));
+                    overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
+                    finish();
+                    return true;
+                } else if(id == R.id.restaurantsMenu) {
+                    startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
+                    overridePendingTransition(R.anim.slide_right, R.anim.slide_left);
+                    finish();
+                    return true;
+                } else if(id == R.id.orders) {
+                    return true;
                 }
+//                switch (item.getItemId()) {
+//                    case R.id.account:
+//                        startActivity(new Intent(getApplicationContext(), Account.class));
+//                        overridePendingTransition(0, 0);
+//                        finish();
+//                        return true;
+//                    case R.id.restaurantsMenu:
+//                        startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
+//                        overridePendingTransition(0, 0);
+//                        finish();
+//                        return true;
+//                    case R.id.orders:
+//                        return true;
+//                }
                 return false;
             }
         });
@@ -145,7 +159,7 @@ public class OrdersList extends AppCompatActivity {
         orders.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.getValue() == null) {
+                if (snapshot.getValue() == null) {
                     imgNoOrderFound.setVisibility(View.VISIBLE);
                     tvNoOrderFound.setVisibility(View.VISIBLE);
 
@@ -198,7 +212,7 @@ public class OrdersList extends AppCompatActivity {
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             Log.i("ceva", dataSnapshot.toString());
                             Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
-                            if(restaurantName == null) {
+                            if (restaurantName == null) {
                                 restaurantName = restaurant.getName();
                                 restaurantImage = restaurant.getImage();
                             } else {
@@ -210,7 +224,7 @@ public class OrdersList extends AppCompatActivity {
                         holder.orderStatus.setText(getString(R.string.order_status) + " " + String.valueOf(model.getStatus()).substring(0, 1).toUpperCase(Locale.ROOT) + String.valueOf(model.getStatus()).replace("_", " ").substring(1));
                         holder.orderAddress.setText(getString(R.string.address) + " " + model.getAddress().getMapsAddress());
                         holder.orderDateAndTime.setText("Data: " + model.getCurrentDateAndTime());
-                        holder.orderPriceTotal.setText(getString(R.string.total) + " " + (double)Math.round(model.getTotal() * 100d) / 100d + " " + getString(R.string.lei));
+                        holder.orderPriceTotal.setText(getString(R.string.total) + " " + (double) Math.round(model.getTotal() * 100d) / 100d + " " + getString(R.string.lei));
                         Picasso.with(getBaseContext()).load(restaurantImage).placeholder(R.drawable.loading)
                                 .into(holder.restaurantImage);
 
@@ -224,17 +238,17 @@ public class OrdersList extends AppCompatActivity {
                             @Override
                             public void onClick(View view, int position, boolean isLongClick) {
 
-                                if(!isLongClick) {
+                                if (!isLongClick) {
                                     //Toast.makeText(OrdersList.this, model.getCart().toString(), Toast.LENGTH_LONG).show();
 //                                    loadOrderDetails(model.getId());
 
-                                    if(holder.downArrow.getVisibility() == View.VISIBLE) {
+                                    if (holder.downArrow.getVisibility() == View.VISIBLE) {
                                         holder.downArrow.setVisibility(View.GONE);
                                     } else {
                                         holder.downArrow.setVisibility(View.VISIBLE);
                                     }
 
-                                    if(holder.upArrow.getVisibility() == View.VISIBLE) {
+                                    if (holder.upArrow.getVisibility() == View.VISIBLE) {
                                         holder.upArrow.setVisibility(View.GONE);
                                     } else {
                                         holder.upArrow.setVisibility(View.VISIBLE);
@@ -263,14 +277,14 @@ public class OrdersList extends AppCompatActivity {
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                                         Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
-                                                        if(model.getRestaurantId().equals(restaurant.getId())) {
+                                                        if (model.getRestaurantId().equals(restaurant.getId())) {
                                                             holder2.restaurantName.setText(restaurant.getName() + " : ");
                                                         }
                                                     }
 
                                                     holder2.foodPrice.setText(String.valueOf(model.getPrice()));
                                                     holder2.foodQuantity.setText(String.valueOf(model.getQuantity()));
-                                                    holder2.foodTotal.setText((double)Math.round(model.getPrice() * model.getQuantity() * 100d) / 100d + " lei");
+                                                    holder2.foodTotal.setText((double) Math.round(model.getPrice() * model.getQuantity() * 100d) / 100d + " lei");
                                                     Picasso.with(getBaseContext()).load(model.getImage()).placeholder(R.drawable.loading)
                                                             .into(holder2.foodImage);
 
@@ -282,13 +296,13 @@ public class OrdersList extends AppCompatActivity {
                                                             Toast.makeText(OrdersList.this, model.getName(), Toast.LENGTH_LONG).show();
 //                                                            showRatingDialog(model.getId());
 
-                                                                Intent foodInfo = new Intent(OrdersList.this, FoodInfo.class);
-                                                                foodInfo.putExtra("origin", "ordersList");
-                                                                foodInfo.putExtra("orderId", model.getId());
-                                                                foodInfo.putExtra("quantity", local2.getQuantity());
-                                                                foodInfo.putExtra("foodId", local2.getId());
-                                                                foodInfo.putExtra("restaurantId", model.getRestaurantId());
-                                                                startActivity(foodInfo);
+                                                            Intent foodInfo = new Intent(OrdersList.this, FoodInfo.class);
+                                                            foodInfo.putExtra("origin", "ordersList");
+                                                            foodInfo.putExtra("orderId", model.getId());
+                                                            foodInfo.putExtra("quantity", local2.getQuantity());
+                                                            foodInfo.putExtra("foodId", local2.getId());
+                                                            foodInfo.putExtra("restaurantId", model.getRestaurantId());
+                                                            startActivity(foodInfo);
 
                                                         }
                                                     });
@@ -330,7 +344,7 @@ public class OrdersList extends AppCompatActivity {
 
 //                                    secondRecyclerView.setAdapter(secondAdapter);
 //                                    secondAdapter.startListening();
-                                    if(holder.secondRecyclerView.getVisibility() == View.GONE) {
+                                    if (holder.secondRecyclerView.getVisibility() == View.GONE) {
                                         holder.secondRecyclerView.setVisibility(View.VISIBLE);
                                     } else {
                                         holder.secondRecyclerView.setVisibility(View.GONE);
@@ -483,7 +497,7 @@ public class OrdersList extends AppCompatActivity {
 //
 //                }
 
-                if(orderList.size() == 0) {
+                if (orderList.size() == 0) {
                     Log.i("ordersList", String.valueOf(orderList.size()));
                     imgNoOrderFound.setVisibility(View.VISIBLE);
                     tvNoOrderFound.setVisibility(View.VISIBLE);
@@ -541,14 +555,14 @@ public class OrdersList extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
-                            if(model.getRestaurantId().equals(restaurant.getId())) {
+                            if (model.getRestaurantId().equals(restaurant.getId())) {
                                 holder.restaurantName.setText(restaurant.getName() + " : ");
                             }
                         }
 
                         holder.foodPrice.setText(String.valueOf(model.getPrice()));
                         holder.foodQuantity.setText(String.valueOf(model.getQuantity()));
-                        holder.foodTotal.setText((double)Math.round(model.getPrice() * model.getQuantity() * 100d) / 100d + " lei");
+                        holder.foodTotal.setText((double) Math.round(model.getPrice() * model.getQuantity() * 100d) / 100d + " lei");
                         Picasso.with(getBaseContext()).load(model.getImage()).placeholder(R.drawable.loading)
                                 .into(holder.foodImage);
 
@@ -613,6 +627,12 @@ public class OrdersList extends AppCompatActivity {
 //    protected void onStop() {
 //        super.onStop();
 //        adapter.stopListening();
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        adapter.startListening();
 //    }
 }
 

@@ -307,7 +307,9 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Order order = snapshot.getValue(Order.class);
                         pbPreparationTime.setVisibility(View.GONE);
-                        tvTime.setText(order.getPreparationTime() + " de minute");
+                        if (order != null) {
+                            tvTime.setText(order.getPreparationTime() + " de minute");
+                        }
                     }
 
                     @Override
@@ -425,6 +427,7 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
                 Intent mainMenu = new Intent(ConfirmationOrder.this, PrincipalMenu.class);
                 startActivity(mainMenu);
                 finish();
+                overridePendingTransition(R.anim.slide_nothing, R.anim.slide_down);
             }
         });
 

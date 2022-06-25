@@ -72,6 +72,7 @@ public class CardPayment extends AppCompatActivity {
                             }
                             startActivity(confirmationOrder);
                             finish();
+                            overridePendingTransition(R.anim.slide_nothing, R.anim.slide_down);
                         }
                     });
                     alertBuilder.setNegativeButton("Anulare", new DialogInterface.OnClickListener() {

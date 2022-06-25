@@ -118,6 +118,7 @@ public class PhoneNumberValidation extends AppCompatActivity {
                                         if (task.isSuccessful()) {
                                             Toast.makeText(PhoneNumberValidation.this, "Cont creat", Toast.LENGTH_SHORT).show();
                                             startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
+                                            overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
                                             finish();
                                         } else {
                                             Toast.makeText(PhoneNumberValidation.this, "Eroare la crearea contului" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
@@ -175,6 +176,7 @@ public class PhoneNumberValidation extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Toast.makeText(PhoneNumberValidation.this, "Numar de telefon validat", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), Home.class));
+                            overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
                             finish();
 
                         } else {

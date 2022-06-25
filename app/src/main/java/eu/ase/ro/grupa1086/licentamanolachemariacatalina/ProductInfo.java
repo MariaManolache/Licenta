@@ -1,23 +1,35 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,9 +38,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Order;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.rating.CommentsList;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.rating.Rating;
@@ -44,6 +60,7 @@ public class ProductInfo extends AppCompatActivity {
     private ImageView editProductName;
     private ImageView editProductPrice;
     private ImageView editProductDescription;
+    private ImageView editProductImage;
 
     private TextView commentsList;
     float ratingValue = 0.0f;
@@ -59,6 +76,15 @@ public class ProductInfo extends AppCompatActivity {
 
     FirebaseUser user;
     DatabaseReference foodItem;
+
+    private StorageReference storageReference;
+
+    private Uri productImageUri;
+    ActivityResultLauncher<Intent> someActivityResultLauncher;
+
+    DatabaseReference banner;
+
+    ImageView close;
 
 
     @Override
@@ -79,6 +105,9 @@ public class ProductInfo extends AppCompatActivity {
         editProductName = findViewById(R.id.editProductName);
         editProductPrice = findViewById(R.id.editProductPrice);
         editProductDescription = findViewById(R.id.editProductDescription);
+        editProductImage = findViewById(R.id.editProductImage);
+
+        storageReference = FirebaseStorage.getInstance().getReference("foodImages");
 
         inflater = this.getLayoutInflater();
 
@@ -88,8 +117,21 @@ public class ProductInfo extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         foodItem = FirebaseDatabase.getInstance().getReference("food").child(user.getUid());
+        banner = FirebaseDatabase.getInstance().getReference("banner");
+
+        close = findViewById(R.id.closeActivity);
 
         if (getIntent() != null && getIntent().getExtras() != null) {
+
+            close.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                    overridePendingTransition(R.anim.slide_nothing, R.anim.slide_down);
+                }
+            });
+
+
             origin = getIntent().getExtras().getString("origin");
             if (origin != null && origin.equals("activityRestaurantProducts")) {
                 productId = getIntent().getStringExtra("id");
@@ -102,7 +144,7 @@ public class ProductInfo extends AppCompatActivity {
                         if (food != null) {
 
 
-                            Picasso.with(getBaseContext()).load(food.getImage())
+                            Picasso.with(getBaseContext()).load(food.getImage()).placeholder(R.drawable.loading)
                                     .into(productImage);
                             collapsingToolbarLayout.setTitle(food.getName());
                             productName.setText(food.getName());
@@ -116,7 +158,9 @@ public class ProductInfo extends AppCompatActivity {
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                         Rating rating = dataSnapshot.getValue(Rating.class);
-                                        ratingValue += rating.getRateValue();
+                                        if (rating != null) {
+                                            ratingValue += rating.getRateValue();
+                                        }
                                         nbOfRatings++;
                                     }
 
@@ -159,6 +203,20 @@ public class ProductInfo extends AppCompatActivity {
                                                                 Toast.makeText(getApplicationContext(), "Denumirea produsului a fost modificata", Toast.LENGTH_SHORT).show();
                                                                 productName.setText(name.getText().toString());
                                                                 collapsingToolbarLayout.setTitle(name.getText().toString());
+
+                                                                banner.child(productId).addValueEventListener(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                        if(snapshot.exists()) {
+                                                                            banner.child(productId).child("name").setValue(food.getName());
+                                                                        }
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                    }
+                                                                });
                                                             }
                                                         });
                                                     }
@@ -195,6 +253,20 @@ public class ProductInfo extends AppCompatActivity {
                                                             public void onSuccess(Void unused) {
                                                                 Toast.makeText(getApplicationContext(), "Pretul produsului a fost modificat", Toast.LENGTH_SHORT).show();
                                                                 productPrice.setText(String.valueOf(Float.parseFloat(price.getText().toString())));
+
+                                                                banner.child(productId).addValueEventListener(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                        if(snapshot.exists()) {
+                                                                            banner.child(productId).child("price").setValue(food.getPrice());
+                                                                        }
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                    }
+                                                                });
                                                             }
                                                         });
                                                     }
@@ -231,6 +303,20 @@ public class ProductInfo extends AppCompatActivity {
                                                             public void onSuccess(Void unused) {
                                                                 Toast.makeText(getApplicationContext(), "Descrierea produsului a fost modificata", Toast.LENGTH_SHORT).show();
                                                                 productDescription.setText(description.getText().toString());
+
+                                                                banner.child(productId).addValueEventListener(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                        if(snapshot.exists()) {
+                                                                            banner.child(productId).child("description").setValue(food.getDescription());
+                                                                        }
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                    }
+                                                                });
                                                             }
                                                         });
                                                     }
@@ -264,5 +350,112 @@ public class ProductInfo extends AppCompatActivity {
             }
         }
 
+        editProductImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openFileChooser();
+            }
+        });
+
+        someActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            // There are no request codes
+                            productImageUri = result.getData().getData();
+                            Picasso.with(getApplicationContext()).load(R.drawable.loading).placeholder(R.drawable.loading).into(productImage);
+                            uploadFile();
+                        }
+                    }
+                });
+
+    }
+
+    private String getFileExtension(Uri uri) {
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
+
+    private void uploadFile() {
+        if (productImageUri != null) {
+            StorageReference fileReference = storageReference.child(user.getUid()).child(productImageUri + "." + getFileExtension(productImageUri));
+            fileReference.putFile(productImageUri)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(getApplicationContext(), "Imaginea a fost încărcată", Toast.LENGTH_LONG).show();
+//                            restaurants.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+//                                @Override
+//                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                    Restaurant restaurant = snapshot.getValue(Restaurant.class);
+//                                    assert restaurant != null;
+//                                    restaurant.setImage(String.valueOf(taskSnapshot.getStorage().getDownloadUrl().toString()));
+//                                    restaurants.child(user.getUid()).setValue(restaurant);
+//                                }
+//
+//                                @Override
+//                                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                                }
+//                            });
+                            //restaurants.child(user.getUid()).child("image").setValue(taskSnapshot.getStorage().getDownloadUrl().toString());
+                            fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    foodItem.child(productId).child("image").setValue(uri.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Picasso.with(getBaseContext()).load(uri.toString()).placeholder(R.drawable.loading)
+                                                    .into(productImage);
+
+                                            banner.child(productId).addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    if(snapshot.exists()) {
+                                                        banner.child(productId).child("image").setValue(uri.toString());
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+                                        }
+                                    });
+
+
+                                }
+                            })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(), "Imaginea nu a putut fi incarcata", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+
+        } else {
+            Toast.makeText(getApplicationContext(), "Nicio imagine selectata", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    private void openFileChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        someActivityResultLauncher.launch(intent);
     }
 }

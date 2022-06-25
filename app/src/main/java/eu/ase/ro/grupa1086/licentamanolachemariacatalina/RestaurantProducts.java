@@ -93,6 +93,7 @@ public class RestaurantProducts extends AppCompatActivity {
             public void onClick(View v) {
                 Intent addNewProduct = new Intent(getApplicationContext(), AddRestaurantProduct.class);
                 startActivity(addNewProduct);
+                overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
             }
         });
 
@@ -102,20 +103,34 @@ public class RestaurantProducts extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.products:
-                        return true;
-                    case R.id.orders:
-                        startActivity(new Intent(getApplicationContext(), RestaurantOrders.class));
-                        finish();
-                        //overridePendingTransition(0, 0);
-                        return true;
-                    case R.id.account:
-                        startActivity(new Intent(getApplicationContext(), RestaurantAccount.class));
-                        finish();
-                        //overridePendingTransition(0, 0);
-                        return true;
+                int id = item.getItemId();
+                if(id == R.id.products) {
+                    return true;
+                } else if(id == R.id.orders) {
+                    startActivity(new Intent(getApplicationContext(), RestaurantOrders.class));
+                    overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
+                    finish();
+                    return true;
+                } else if(id == R.id.account) {
+                    startActivity(new Intent(getApplicationContext(), RestaurantAccount.class));
+                    overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
+                    finish();
+                    return true;
                 }
+//                switch (item.getItemId()) {
+//                    case R.id.products:
+//                        return true;
+//                    case R.id.orders:
+//                        startActivity(new Intent(getApplicationContext(), RestaurantOrders.class));
+//                        finish();
+//                        overridePendingTransition(0, 0);
+//                        return true;
+//                    case R.id.account:
+//                        startActivity(new Intent(getApplicationContext(), RestaurantAccount.class));
+//                        finish();
+//                        overridePendingTransition(0, 0);
+//                        return true;
+//                }
                 return false;
             }
         });
@@ -194,6 +209,7 @@ public class RestaurantProducts extends AppCompatActivity {
                         productInfo.putExtra("origin", "activityRestaurantProducts");
                         //Log.i("foodid", adapter.getRef(position).getKey());
                         startActivity(productInfo);
+                        overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
                     }
                 });
             }

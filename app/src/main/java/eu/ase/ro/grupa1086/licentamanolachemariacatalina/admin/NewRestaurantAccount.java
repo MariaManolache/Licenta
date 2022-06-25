@@ -102,6 +102,7 @@ public class NewRestaurantAccount extends AppCompatActivity {
     List<String> chosenCategoriesList = new ArrayList<>();
     List<String> chosenCategoriesIdList = new ArrayList<>();
 
+    ImageView close;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +113,16 @@ public class NewRestaurantAccount extends AppCompatActivity {
     }
 
     private void initializeComponents() {
+
+        close = findViewById(R.id.closeActivity);
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                overridePendingTransition(R.anim.slide_nothing, R.anim.slide_down);
+            }
+        });
 
         etRestaurantName = findViewById(R.id.etRestaurantName);
         etRestaurantEmail = findViewById(R.id.etRestaurantEmail);

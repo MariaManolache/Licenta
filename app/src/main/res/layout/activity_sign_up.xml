@@ -19,8 +19,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/alatsi"
+            android:fontFamily="@font/alata"
             android:gravity="center"
+            android:textStyle="bold"
             android:text="@string/create_account"
             android:textAlignment="center"
             android:textColor="@color/violet"

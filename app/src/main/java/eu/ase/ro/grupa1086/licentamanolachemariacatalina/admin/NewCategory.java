@@ -54,6 +54,8 @@ public class NewCategory extends AppCompatActivity {
     private String categoryImageString;
     private Button btnAddNewCategory;
 
+    ImageView close;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +66,16 @@ public class NewCategory extends AppCompatActivity {
     }
 
     private void initializeComponents() {
+
+        close = findViewById(R.id.closeActivity);
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                overridePendingTransition(R.anim.slide_nothing, R.anim.slide_down);
+            }
+        });
 
 
         etCategoryName = findViewById(R.id.etCategoryName);

@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
 //        firebaseService = FirebaseService.getInstance();
 //        firebaseService.addFoodListener(dataChangeCallback());
 
+
         btnSignIn = findViewById(R.id.btnSignIn);
         btnSignUp = findViewById(R.id.btnSignUp);
         database = FirebaseDatabase.getInstance();
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), SignUp.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
             }
         });
 
@@ -77,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), SignIn.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
             }
         });
 
@@ -86,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent restaurantLogin = new Intent(getApplicationContext(), RestaurantLogin.class);
                 startActivity(restaurantLogin);
+                overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
             }
         });
 
@@ -95,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent driverLogin = new Intent(getApplicationContext(), DriverLogIn.class);
                 startActivity(driverLogin);
+                overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
             }
         });
 
@@ -103,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent adminPage = new Intent(getApplicationContext(), AdminAccount.class);
                 startActivity((adminPage));
+                overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
             }
         });
     }
@@ -126,8 +132,10 @@ public class MainActivity extends AppCompatActivity {
                                         if(snapshot.getValue(Integer.class) != null) {
                                             if (isDriver == 1) {
                                                 startActivity(new Intent(getApplicationContext(), DriverMenu.class));
+                                                overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
                                             } else if (isDriver == 0) {
                                                 startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
+                                                overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
                                             }
                                             finish();
                                         }
@@ -139,8 +147,10 @@ public class MainActivity extends AppCompatActivity {
                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                 if (snapshot.exists()) {
                                                     startActivity(new Intent(getApplicationContext(), RestaurantAccount.class));
+                                                    overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
                                                 } else {
                                                     startActivity(new Intent(getApplicationContext(), DriverAccountsList.class));
+                                                    overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
                                                 }
 
                                             }

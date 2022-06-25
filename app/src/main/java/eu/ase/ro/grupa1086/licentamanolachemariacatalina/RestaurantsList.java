@@ -56,7 +56,7 @@ public class RestaurantsList extends AppCompatActivity {
         setContentView(R.layout.activity_restaurants_list);
 
 
-        Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_24);// set drawable icon
+        Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_24);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //Firebase
@@ -88,6 +88,7 @@ public class RestaurantsList extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                overridePendingTransition(R.anim.slide_right, R.anim.slide_left);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -139,6 +140,7 @@ public class RestaurantsList extends AppCompatActivity {
                             Intent foodList = new Intent(RestaurantsList.this, FoodList.class);
                             foodList.putExtra("restaurantId", model.getId());
                             startActivity(foodList);
+                            overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
 
                         }
                     });
@@ -228,6 +230,7 @@ public class RestaurantsList extends AppCompatActivity {
                         Intent foodList = new Intent(RestaurantsList.this, FoodList.class);
                         foodList.putExtra("restaurantId", adapter.getRef(position).getKey());
                         startActivity(foodList);
+                        overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
 
                     }
                 });

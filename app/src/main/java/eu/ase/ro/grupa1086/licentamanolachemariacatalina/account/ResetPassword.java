@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.MainActivity;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
@@ -47,6 +49,9 @@ public class ResetPassword extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
+
+        Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_24);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         oldPassword = findViewById(R.id.etOldPassword);
         newPassword = findViewById(R.id.etResetPassword);
@@ -173,5 +178,19 @@ public class ResetPassword extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                overridePendingTransition(R.anim.slide_right, R.anim.slide_left);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 }

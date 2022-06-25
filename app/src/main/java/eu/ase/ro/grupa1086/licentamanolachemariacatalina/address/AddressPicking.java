@@ -214,6 +214,7 @@ public class AddressPicking extends AppCompatActivity {
                                 placeOrder.putExtra("floor", floor);
                                 placeOrder.putExtra("apartment", apartment);
                                 startActivity(placeOrder);
+                                overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
 
 //                                tvAddressInfo.setText(getLocationFromAddress(result).toString());
 //                                tvAddressInfo.setText(result);
@@ -365,6 +366,7 @@ public class AddressPicking extends AppCompatActivity {
                                                 placeOrder.putExtra("currentAddress", s);
                                                 startActivity(placeOrder);
                                                 finish();
+                                                overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
 //                                                btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
 //                                                    @SuppressLint("MissingPermission")
 //                                                    @Override
@@ -485,6 +487,7 @@ public class AddressPicking extends AppCompatActivity {
 //                        mapsActivity.putExtra("origin", "mapsActivity");
                                 startActivity(mapsActivity);
                                 finish();
+                        overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
 //                            }
 //                        });
 

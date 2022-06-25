@@ -148,6 +148,7 @@ public class FoodInfo extends FragmentActivity {
                 @Override
                 public void onClick(View v) {
                     finish();
+                    overridePendingTransition(R.anim.slide_nothing, R.anim.slide_down);
                 }
             });
 
@@ -243,6 +244,7 @@ public class FoodInfo extends FragmentActivity {
                     commentsList.putExtra("restaurantId", restaurantId);
                     commentsList.putExtra("userName", userName);
                     startActivity(commentsList);
+                    overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
                 }
             });
 
@@ -382,7 +384,7 @@ public class FoodInfo extends FragmentActivity {
                 if (selectedFood != null) {
 
 
-                    Picasso.with(getBaseContext()).load(selectedFood.getImage())
+                    Picasso.with(getBaseContext()).load(selectedFood.getImage()).placeholder(R.drawable.loading)
                             .into(image);
 
                     collapsingToolbarLayout.setTitle(selectedFood.getName());
@@ -452,7 +454,7 @@ public class FoodInfo extends FragmentActivity {
                 food = snapshot.getValue(Food.class);
 
                 //image
-                Picasso.with(getBaseContext()).load(food.getImage())
+                Picasso.with(getBaseContext()).load(food.getImage()).placeholder(R.drawable.loading)
                         .into(image);
 
                 collapsingToolbarLayout.setTitle(food.getName());

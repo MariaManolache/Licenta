@@ -36,6 +36,19 @@
         android:fontFamily="@font/alata"
         android:textAlignment="center"></TextView>
 
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/personalOrderList"
+        android:background="@color/teal_100"
+        android:layout_width="match_parent"
+        android:scrollbars="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myOrders"
+        android:layout_height="500dp">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="match_parent"
@@ -47,29 +60,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/myOrders" />
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/personalOrderList"
-        android:background="@color/teal_100"
-        android:layout_width="match_parent"
-        android:scrollbars="horizontal"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/myOrders"
-        android:layout_height="500dp">
-
-    </androidx.recyclerview.widget.RecyclerView>
-
     <ImageView
         android:visibility="gone"
         android:id="@+id/noDriverOrders"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/empty_cart_512"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="232dp"
+        android:src="@drawable/ic_cart_512"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/currentLocation"></ImageView>
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/tvNoDriverOrders"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nu ai confirmat nici o comandă."
+        android:fontFamily="@font/alata"
+        android:textColor="@color/violet"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/noDriverOrders"></TextView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

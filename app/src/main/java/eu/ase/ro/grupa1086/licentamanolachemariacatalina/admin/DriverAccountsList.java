@@ -116,6 +116,7 @@ public class DriverAccountsList extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), NewDriverAccount.class));
+                overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
             }
         });
 
@@ -125,20 +126,34 @@ public class DriverAccountsList extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.restaurantAccounts:
-                        startActivity(new Intent(getApplicationContext(), RestaurantAccountsList.class));
-                        finish();
-                        overridePendingTransition(0, 0);
-                        return true;
-                    case R.id.driverAccounts:
-                        return true;
-                    case R.id.topOrders:
-                        startActivity(new Intent(getApplicationContext(), AdminOrders.class));
-                        finish();
-                        overridePendingTransition(0, 0);
-                        return true;
+                int id = item.getItemId();
+                if(id == R.id.restaurantAccounts) {
+                    startActivity(new Intent(getApplicationContext(), RestaurantAccountsList.class));
+                    overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
+                    finish();
+                    return true;
+                } else if(id == R.id.driverAccounts) {
+                    return true;
+                } else if(id == R.id.topOrders) {
+                    startActivity(new Intent(getApplicationContext(), AdminOrders.class));
+                    overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
+                    finish();
+                    return true;
                 }
+//                switch (item.getItemId()) {
+//                    case R.id.restaurantAccounts:
+//                        startActivity(new Intent(getApplicationContext(), RestaurantAccountsList.class));
+//                        finish();
+//                        overridePendingTransition(0, 0);
+//                        return true;
+//                    case R.id.driverAccounts:
+//                        return true;
+//                    case R.id.topOrders:
+//                        startActivity(new Intent(getApplicationContext(), AdminOrders.class));
+//                        finish();
+//                        overridePendingTransition(0, 0);
+//                        return true;
+//                }
                 return false;
             }
         });
@@ -344,6 +359,7 @@ public class DriverAccountsList extends AppCompatActivity {
                                                                                 foodInfo.putExtra("foodId", local2.getId());
                                                                                 foodInfo.putExtra("restaurantId", model.getRestaurantId());
                                                                                 startActivity(foodInfo);
+                                                                                overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
 
                                                                             }
                                                                         });
@@ -469,6 +485,7 @@ public class DriverAccountsList extends AppCompatActivity {
                             FirebaseAuth.getInstance().signOut();
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                             finish();
+                            overridePendingTransition(R.anim.slide_nothing, R.anim.slide_down);
 
                         }
                     }).setNegativeButton("Nu", null)

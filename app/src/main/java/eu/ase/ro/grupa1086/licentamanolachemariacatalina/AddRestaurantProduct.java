@@ -21,6 +21,7 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -63,6 +64,8 @@ public class AddRestaurantProduct extends AppCompatActivity {
     private StorageReference storageReference;
     private String productImage;
 
+    ImageView close;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +81,16 @@ public class AddRestaurantProduct extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         restaurants = FirebaseDatabase.getInstance().getReference("food").child(user.getUid());
         storageReference = FirebaseStorage.getInstance().getReference("foodImages");
+
+        close = findViewById(R.id.closeActivity);
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                overridePendingTransition(R.anim.slide_nothing, R.anim.slide_down);
+            }
+        });
 
         btnAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override

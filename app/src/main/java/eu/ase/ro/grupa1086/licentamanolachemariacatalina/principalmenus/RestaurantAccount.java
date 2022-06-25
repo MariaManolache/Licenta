@@ -69,7 +69,7 @@ import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.order.RestaurantOrders;
 
 public class RestaurantAccount extends AppCompatActivity {
-    Button logout;
+    //Button logout;
     BottomNavigationView bottomNavigationView;
     private static final int PICK_IMAGE_REQUEST = 1;
     private FloatingActionButton editRestaurantImage;
@@ -93,8 +93,6 @@ public class RestaurantAccount extends AppCompatActivity {
 
     //private Spinner categorySpinner;
 
-    private Boolean alreadyDisplayed = false;
-
     AlertDialog.Builder resetName;
     AlertDialog.Builder resetPhoneNumber;
     AlertDialog.Builder resetEmail;
@@ -117,6 +115,8 @@ public class RestaurantAccount extends AppCompatActivity {
     List<String> chosenCategoriesList = new ArrayList<>();
     List<Integer> selectedCategoriesList = new ArrayList<>();
     List<String> chosenCategoriesIdList = new ArrayList<>();
+
+    AlertDialog.Builder signOutAlert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,6 +149,8 @@ public class RestaurantAccount extends AppCompatActivity {
         chooseCategory = findViewById(R.id.chooseCategory);
 
         inflater = this.getLayoutInflater();
+
+        signOutAlert = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
 
         // categorySpinner = findViewById(R.id.categorySpinner);
 //        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.categoryType,
@@ -574,15 +576,15 @@ public class RestaurantAccount extends AppCompatActivity {
                     }
                 });
 
-        logout = findViewById(R.id.btnLogout);
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                finish();
-            }
-        });
+//        logout = findViewById(R.id.btnLogout);
+//        logout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FirebaseAuth.getInstance().signOut();
+//                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//                finish();
+//            }
+//        });
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.account);
@@ -590,20 +592,34 @@ public class RestaurantAccount extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.account:
-                        return true;
-                    case R.id.orders:
-                        startActivity(new Intent(getApplicationContext(), RestaurantOrders.class));
-                        finish();
-                        //overridePendingTransition(0, 0);
-                        return true;
-                    case R.id.products:
-                        startActivity(new Intent(getApplicationContext(), RestaurantProducts.class));
-                        finish();
-                        //overridePendingTransition(0, 0);
-                        return true;
+                int id = item.getItemId();
+                if(id == R.id.account) {
+                    return true;
+                } else if(id == R.id.orders) {
+                    startActivity(new Intent(getApplicationContext(), RestaurantOrders.class));
+                    overridePendingTransition(R.anim.slide_right, R.anim.slide_left);
+                    finish();
+                    return true;
+                } else if(id == R.id.products) {
+                    startActivity(new Intent(getApplicationContext(), RestaurantProducts.class));
+                    overridePendingTransition(R.anim.slide_right, R.anim.slide_left);
+                    finish();
+                    return true;
                 }
+//                switch (item.getItemId()) {
+//                    case R.id.account:
+//                        return true;
+//                    case R.id.orders:
+//                        startActivity(new Intent(getApplicationContext(), RestaurantOrders.class));
+//                        overridePendingTransition(R.anim.slide_right, R.anim.slide_left);
+//                        finish();
+//                        return true;
+//                    case R.id.products:
+//                        startActivity(new Intent(getApplicationContext(), RestaurantProducts.class));
+//                        overridePendingTransition(R.anim.slide_right, R.anim.slide_left);
+//                        finish();
+//                        return true;
+//                }
                 return false;
             }
         });
@@ -768,13 +784,13 @@ public class RestaurantAccount extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        alreadyDisplayed = false;
+        //alreadyDisplayed = false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        alreadyDisplayed = false;
+        //alreadyDisplayed = false;
     }
 
     @Override
@@ -791,6 +807,22 @@ public class RestaurantAccount extends AppCompatActivity {
             changePassword.putExtra("origin", "restaurant");
             startActivity(changePassword);
         }
+        else if (item.getItemId() == R.id.logout) {
+            signOutAlert.setTitle("Ieșire din cont")
+                    .setMessage("Ești sigur că dorești să ieși din cont?")
+                    .setPositiveButton("Da", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            FirebaseAuth.getInstance().signOut();
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            finish();
+
+                        }
+                    }).setNegativeButton("Nu", null)
+                    .create().show();
+        }
+
         return false;
     }
 }

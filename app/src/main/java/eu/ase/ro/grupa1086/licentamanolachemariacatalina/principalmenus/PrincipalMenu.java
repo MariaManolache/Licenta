@@ -121,6 +121,7 @@ public class PrincipalMenu extends AppCompatActivity {
             public void onClick(View v) {
                 Intent shoppingCart = new Intent(PrincipalMenu.this, ShoppingCart.class);
                 startActivity(shoppingCart);
+                overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
             }
         });
 
@@ -157,6 +158,7 @@ public class PrincipalMenu extends AppCompatActivity {
             public void onClick(View v) {
                 Intent completeFoodList = new Intent(PrincipalMenu.this, CompleteFoodList.class);
                 startActivity(completeFoodList);
+                overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
             }
         });
 
@@ -169,20 +171,33 @@ public class PrincipalMenu extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-                switch (item.getItemId()) {
-                    case R.id.account:
-                        startActivity(new Intent(getApplicationContext(), Account.class));
-                        finish();
-                        overridePendingTransition(0, 0);
-                        return true;
-                    case R.id.restaurantsMenu:
-                        return true;
-                    case R.id.orders:
-                        startActivity(new Intent(getApplicationContext(), OrdersList.class));
-                        overridePendingTransition(0, 0);
-                        finish();
-                        return true;
+                if(id == R.id.account) {
+                    startActivity(new Intent(getApplicationContext(), Account.class));
+                    overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
+                    finish();
+                    return true;
+                } else if(id == R.id.restaurantsMenu) {
+                    return true;
+                } else if(id == R.id.orders) {
+                    startActivity(new Intent(getApplicationContext(), OrdersList.class));
+                    overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
+                    finish();
+                    return true;
                 }
+//                switch (item.getItemId()) {
+//                    case R.id.account:
+//                        startActivity(new Intent(getApplicationContext(), Account.class));
+//                        finish();
+//                        overridePendingTransition(0, 0);
+//                        return true;
+//                    case R.id.restaurantsMenu:
+//                        return true;
+//                    case R.id.orders:
+//                        startActivity(new Intent(getApplicationContext(), OrdersList.class));
+//                        overridePendingTransition(0, 0);
+//                        finish();
+//                        return true;
+//                }
                 return false;
             }
         });
@@ -218,6 +233,7 @@ public class PrincipalMenu extends AppCompatActivity {
                         Intent restaurantsList = new Intent(PrincipalMenu.this, RestaurantsList.class);
                         restaurantsList.putExtra("categoryId", adapter.getRef(position).getKey());
                         startActivity(restaurantsList);
+                        overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
                     }
                 });
             }
@@ -265,6 +281,7 @@ public class PrincipalMenu extends AppCompatActivity {
                                     intent.putExtra("foodId", idOfFood);
                                     intent.putExtra("restaurantId", restaurantId);
                                     startActivity(intent);
+                                    overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
                                 }
                             });
                     textSliderView.bundle(new Bundle());
@@ -323,6 +340,7 @@ public class PrincipalMenu extends AppCompatActivity {
                         Intent foodList = new Intent(PrincipalMenu.this, FoodList.class);
                         foodList.putExtra("restaurantId", model.getId());
                         startActivity(foodList);
+                        overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
 
                     }
                 });

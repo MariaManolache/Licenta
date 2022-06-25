@@ -2,7 +2,6 @@ package eu.ase.ro.grupa1086.licentamanolachemariacatalina.account;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.GnssAntennaInfo;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -99,7 +97,7 @@ public class Account extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-                    Toast.makeText(Account.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(Account.this, error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -133,6 +131,7 @@ public class Account extends AppCompatActivity {
                 databaseReference.removeEventListener(listener);
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                overridePendingTransition(R.anim.slide_nothing, R.anim.slide_down);
                 finish();
             }
         });
@@ -142,6 +141,7 @@ public class Account extends AppCompatActivity {
             public void onClick(View v) {
                 Intent myProfile = new Intent(Account.this, AccountDetails.class);
                 startActivity(myProfile);
+                overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
             }
         });
 
@@ -151,6 +151,7 @@ public class Account extends AppCompatActivity {
                 Intent myAddresses = new Intent(Account.this, AddressesList.class);
                 myAddresses.putExtra("origin", "account");
                 startActivity(myAddresses);
+                overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
             }
         });
 
@@ -161,19 +162,32 @@ public class Account extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-                switch (item.getItemId()) {
-                    case R.id.restaurantsMenu:
-                        startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
-                        //finish();
-                        overridePendingTransition(0, 0);
-                        return true;
-                    case R.id.account:
-                        return true;
-                    case R.id.orders:
-                        startActivity(new Intent(getApplicationContext(), OrdersList.class));
-                        overridePendingTransition(0, 0);
-                        return true;
+                if(id == R.id.restaurantsMenu) {
+                    startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
+                    overridePendingTransition(R.anim.slide_right, R.anim.slide_left);
+                    finish();
+                    return true;
+                } else if(id == R.id.account){
+                    return true;
+                } else if(id == R.id.orders) {
+                    startActivity(new Intent(getApplicationContext(), OrdersList.class));
+                    overridePendingTransition(R.anim.slide_right, R.anim.slide_left);
+                    finish();
+                    return true;
                 }
+//                switch (item.getItemId()) {
+//                    case R.id.restaurantsMenu:
+//                        startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
+//                        //finish();
+//                        overridePendingTransition(0, 0);
+//                        return true;
+//                    case R.id.account:
+//                        return true;
+//                    case R.id.orders:
+//                        startActivity(new Intent(getApplicationContext(), OrdersList.class));
+//                        overridePendingTransition(0, 0);
+//                        return true;
+//                }
                 return false;
             }
         });
@@ -191,6 +205,7 @@ public class Account extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.resetPassword) {
             startActivity(new Intent(getApplicationContext(), ResetPassword.class));
+            overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
         }
         if(item.getItemId() == R.id.deleteAccount) {
             deleteAlert.setTitle("Dorești să îți ștergi contul?")
@@ -246,6 +261,7 @@ public class Account extends AppCompatActivity {
                                                     Toast.makeText(Account.this, "Cont sters", Toast.LENGTH_LONG).show();
                                                     FirebaseAuth.getInstance().signOut();
                                                     startActivity(new Intent(getApplicationContext(), SignIn.class));
+                                                    overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
                                                     finish();
                                                 }
                                             });

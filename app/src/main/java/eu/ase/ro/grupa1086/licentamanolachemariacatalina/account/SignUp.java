@@ -88,6 +88,7 @@ public class SignUp extends AppCompatActivity {
         if(firebaseAuth.getCurrentUser() != null) {
             startActivity(new Intent(getApplicationContext(), Home.class));
             finish();
+            overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
         }
 
         //btnRegister.setOnClickListener(addUser());
@@ -165,6 +166,7 @@ public class SignUp extends AppCompatActivity {
                                     phoneValidationIntent.putExtra("password", password);
                                     phoneValidationIntent.putExtra("authCredential", s);
                                     startActivity(phoneValidationIntent);
+                                    overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
                                 }
                             };
 
@@ -224,6 +226,7 @@ public class SignUp extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), SignIn.class));
+                overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
             }
         });
     }

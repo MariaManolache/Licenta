@@ -210,6 +210,7 @@ public class PlaceOrder extends AppCompatActivity {
             public void onClick(View v) {
                 Intent addressPicking = new Intent(PlaceOrder.this, AddressPicking.class);
                 startActivity(addressPicking);
+                overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
             }
         });
 
@@ -219,6 +220,7 @@ public class PlaceOrder extends AppCompatActivity {
                 Intent savedAddresses = new Intent(PlaceOrder.this, AddressesList.class);
                 savedAddresses.putExtra("origin", "placeOrder");
                 startActivity(savedAddresses);
+                overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
             }
         });
 
@@ -385,6 +387,7 @@ public class PlaceOrder extends AppCompatActivity {
                                                 cardPayment.putExtra("orderId", orderId);
                                                 cardPayment.putExtra("origin", "cardPayment");
                                                 startActivity(cardPayment);
+                                                overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
                                                 finish();
                                             } else {
                                                 Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
@@ -392,6 +395,7 @@ public class PlaceOrder extends AppCompatActivity {
                                                 confirmationOrder.putExtra("origin", "mapsLocation");
                                                 startActivity(confirmationOrder);
                                                 finish();
+                                                overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
                                             }
 
                                         } else {
@@ -604,12 +608,14 @@ public class PlaceOrder extends AppCompatActivity {
                                         cardPayment.putExtra("origin", "cardPayment");
                                         startActivity(cardPayment);
                                         finish();
+                                        overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
                                     } else {
                                         Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
                                         confirmationOrder.putExtra("orderId", orderId);
                                         confirmationOrder.putExtra("origin", "currentAddress");
                                         startActivity(confirmationOrder);
                                         finish();
+                                        overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
                                     }
                                 } else {
                                     Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
@@ -781,12 +787,14 @@ public class PlaceOrder extends AppCompatActivity {
                                         cardPayment.putExtra("origin", "cardPayment-anotherAddress");
                                         startActivity(cardPayment);
                                         finish();
+                                        overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
                                     } else {
                                         Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
                                         confirmationOrder.putExtra("orderId", orderId);
                                         confirmationOrder.putExtra("origin", "addAnotherAddress");
                                         startActivity(confirmationOrder);
                                         finish();
+                                        overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
                                     }
 
                                 } else {
@@ -908,12 +916,14 @@ public class PlaceOrder extends AppCompatActivity {
                                             cardPayment.putExtra("origin", "cardPayment");
                                             startActivity(cardPayment);
                                             finish();
+                                            overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
                                         } else {
                                             Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
                                             confirmationOrder.putExtra("orderId", orderId);
                                             confirmationOrder.putExtra("origin", "savedAddress");
                                             startActivity(confirmationOrder);
                                             finish();
+                                            overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
                                         }
 
                                     } else {

@@ -115,6 +115,7 @@ public class PersonalDriverOrders extends AppCompatActivity {
 
     TextView myOrders;
     ImageView noOrdersFound;
+    TextView tvNoOrdersFound;
     ProgressBar progressBar;
 
     @Override
@@ -148,6 +149,7 @@ public class PersonalDriverOrders extends AppCompatActivity {
 
         tvCurrentLocation = findViewById(R.id.currentLocation);
         noOrdersFound = findViewById(R.id.noDriverOrders);
+        tvNoOrdersFound = findViewById(R.id.tvNoDriverOrders);
 
         inflater = this.getLayoutInflater();
         acceptOrder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
@@ -183,20 +185,34 @@ public class PersonalDriverOrders extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.account:
-                        startActivity(new Intent(getApplicationContext(), DriverAccount.class));
-                        finish();
-                        overridePendingTransition(0, 0);
-                        return true;
-                    case R.id.personalOrders:
-                        return true;
-                    case R.id.orders:
-                        startActivity(new Intent(getApplicationContext(), DriverMenu.class));
-                        finish();
-                        overridePendingTransition(0, 0);
-                        return true;
+                int id = item.getItemId();
+                if(id == R.id.account) {
+                    startActivity(new Intent(getApplicationContext(), DriverAccount.class));
+                    overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
+                    finish();
+                    return true;
+                } else if(id == R.id.personalOrders) {
+                    return true;
+                } else if(id == R.id.orders) {
+                    startActivity(new Intent(getApplicationContext(), DriverMenu.class));
+                    overridePendingTransition(R.anim.slide_right, R.anim.slide_left);
+                    finish();
+                    return true;
                 }
+//                switch (item.getItemId()) {
+//                    case R.id.account:
+//                        startActivity(new Intent(getApplicationContext(), DriverAccount.class));
+//                        finish();
+//                        overridePendingTransition(0, 0);
+//                        return true;
+//                    case R.id.personalOrders:
+//                        return true;
+//                    case R.id.orders:
+//                        startActivity(new Intent(getApplicationContext(), DriverMenu.class));
+//                        finish();
+//                        overridePendingTransition(0, 0);
+//                        return true;
+//                }
                 return false;
             }
         });
@@ -222,10 +238,13 @@ public class PersonalDriverOrders extends AppCompatActivity {
                     myOrders.setVisibility(View.GONE);
                     recyclerViewMyOrders.setVisibility(View.GONE);
                     noOrdersFound.setVisibility(View.VISIBLE);
+                    tvNoOrdersFound.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
                 } else {
-                    myOrders.setVisibility(View.VISIBLE);
+                    //myOrders.setVisibility(View.VISIBLE);
                     //recyclerViewMyOrders.setVisibility(View.VISIBLE);
                     noOrdersFound.setVisibility(View.GONE);
+                    tvNoOrdersFound.setVisibility(View.GONE);
                 }
             }
 
@@ -350,6 +369,8 @@ public class PersonalDriverOrders extends AppCompatActivity {
                             Picasso.with(getBaseContext()).load(restaurantImage).placeholder(R.drawable.loading)
                                     .into(holder.restaurantImage);
 
+
+                            progressBar.setVisibility(View.GONE);
                             String restaurantName2 = restaurantName;
                             String restaurantImage2 = restaurantImage;
                             restaurantName = null;
@@ -576,6 +597,7 @@ public class PersonalDriverOrders extends AppCompatActivity {
         recyclerViewMyOrders.setAdapter(adapterMyOrders);
         recyclerViewMyOrders.setVisibility(View.VISIBLE);
         adapterMyOrders.startListening();
+        myOrders.setVisibility(View.VISIBLE);
     }
 
     private void initializeLocation() {
@@ -606,6 +628,7 @@ public class PersonalDriverOrders extends AppCompatActivity {
                 tvCurrentLocation.setText(sCurrentLocation);
                 latLngLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                 loadMyOrders();
+                //progressBar.setVisibility(View.GONE);
             }
         };
     }

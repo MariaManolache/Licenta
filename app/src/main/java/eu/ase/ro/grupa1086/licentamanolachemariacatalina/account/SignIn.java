@@ -197,20 +197,40 @@ public class SignIn extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
 
 
-                firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            onAuthSuccess(task.getResult().getUser());
+//                users = database.getReference("users");
+//                users.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//                            User user = dataSnapshot.getValue(User.class);
+//                            if (user != null && email.equals(user.getEmail())) {
+                                firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {
+                                            onAuthSuccess(task.getResult().getUser());
 //                            startActivity(new Intent(getApplicationContext(), MainMenu.class));
 
 
-                        } else {
-                            Toast.makeText(SignIn.this, "Eroare la autentificare", Toast.LENGTH_LONG).show();
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    }
-                });
+                                        } else {
+                                            Toast.makeText(SignIn.this, "Eroare la autentificare", Toast.LENGTH_LONG).show();
+                                            progressBar.setVisibility(View.GONE);
+                                        }
+                                    }
+                                });
+//                            } else {
+//                                Toast.makeText(SignIn.this, "Eroare la autentificare", Toast.LENGTH_LONG).show();
+//                                progressBar.setVisibility(View.GONE);
+//                            }
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+
             }
         });
 
@@ -234,11 +254,17 @@ public class SignIn extends AppCompatActivity {
                         if (isDriver == 0) {
                             Toast.makeText(SignIn.this, "Autentificare realizată cu succes", Toast.LENGTH_LONG).show();
                             startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
+                            overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
                             finish();
                         } else {
                            Toast.makeText(getApplicationContext(), "Utilizatorul introdus nu se află în baza de date", Toast.LENGTH_SHORT).show();
                             progressBar.setVisibility(View.GONE);
+                            FirebaseAuth.getInstance().signOut();
                         }
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Utilizatorul introdus nu se află în baza de date", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                        FirebaseAuth.getInstance().signOut();
                     }
                 }
 

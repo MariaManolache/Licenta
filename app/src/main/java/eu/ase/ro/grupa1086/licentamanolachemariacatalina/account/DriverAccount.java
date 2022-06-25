@@ -91,6 +91,7 @@ public class DriverAccount extends AppCompatActivity {
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                overridePendingTransition(R.anim.slide_nothing, R.anim.slide_down);
                 finish();
             }
         });
@@ -205,19 +206,34 @@ public class DriverAccount extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.account:
-                        return true;
-                    case R.id.orders:
-                        startActivity(new Intent(getApplicationContext(), DriverMenu.class));
-                        overridePendingTransition(0, 0);
-                        return true;
-                    case R.id.personalOrders:
-                        startActivity(new Intent(getApplicationContext(), PersonalDriverOrders.class));
-                        finish();
-                        overridePendingTransition(0, 0);
-                        return true;
+                int id = item.getItemId();
+                if(id == R.id.account) {
+                    return true;
+                } else if(id == R.id.orders) {
+                    startActivity(new Intent(getApplicationContext(), DriverMenu.class));
+                    overridePendingTransition(R.anim.slide_right, R.anim.slide_left);
+                    finish();
+                    return true;
+                } else if(id == R.id.personalOrders) {
+                    startActivity(new Intent(getApplicationContext(), PersonalDriverOrders.class));
+                    overridePendingTransition(R.anim.slide_right, R.anim.slide_left);
+                    finish();
+                    return true;
                 }
+//                switch (item.getItemId()) {
+//                    case R.id.account:
+//                        return true;
+//                    case R.id.orders:
+//                        startActivity(new Intent(getApplicationContext(), DriverMenu.class));
+//                        overridePendingTransition(0, 0);
+//                        finish();
+//                        return true;
+//                    case R.id.personalOrders:
+//                        startActivity(new Intent(getApplicationContext(), PersonalDriverOrders.class));
+//                        overridePendingTransition(0, 0);
+////                        finish();
+//                        return true;
+//                }
                 return false;
             }
         });
@@ -236,6 +252,7 @@ public class DriverAccount extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.resetPassword) {
             startActivity(new Intent(getApplicationContext(), ResetPassword.class));
+            overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
         }
         if (item.getItemId() == R.id.deleteAccount) {
             deleteAlert.setTitle("Dorești să iți ștergi contul?")

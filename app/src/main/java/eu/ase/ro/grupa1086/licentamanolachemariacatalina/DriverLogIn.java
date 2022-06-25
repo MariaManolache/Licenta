@@ -121,6 +121,7 @@ public class DriverLogIn extends AppCompatActivity {
                             Toast.makeText(DriverLogIn.this, "Autentificare realizata cu succes", Toast.LENGTH_LONG).show();
                             startActivity(new Intent(getApplicationContext(), DriverMenu.class));
                             finish();
+                            overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
                         } else {
                             Toast.makeText(getApplicationContext(), "Utilizatorul introdus nu se afla in baza de date", Toast.LENGTH_SHORT).show();
                             progressBar.setVisibility(View.GONE);

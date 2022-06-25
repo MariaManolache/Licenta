@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -47,6 +48,8 @@ public class NewDriverAccount extends AppCompatActivity {
     private String message = "";
     private String password;
 
+    ImageView close;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +59,16 @@ public class NewDriverAccount extends AppCompatActivity {
     }
 
     private void initializeComponents() {
+
+        close = findViewById(R.id.closeActivity);
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                overridePendingTransition(R.anim.slide_nothing, R.anim.slide_down);
+            }
+        });
 
         etDriverName = findViewById(R.id.etDriverName);
         etDriverEmail = findViewById(R.id.etDriverEmail);

@@ -125,6 +125,7 @@ public class DriverMenu extends AppCompatActivity {
     LayoutInflater inflater;
     LatLng latLngLocation;
     ImageView noOrdersFound;
+    TextView tvNoOrdersFound;
 
     TextView myOrders;
     TextView allOrders;
@@ -152,7 +153,7 @@ public class DriverMenu extends AppCompatActivity {
         driverOrders = database.getReference().child("driverOrders");
         restaurantOrders = database.getReference().child("restaurantOrders");
         driverOrdersHistory = database.getReference().child("driverOrdersHistory");
-        ordersHistory = database.getInstance().getReference("ordersHistory");
+        ordersHistory = database.getReference("ordersHistory");
 
         users = database.getReference().child("users");
 
@@ -167,6 +168,7 @@ public class DriverMenu extends AppCompatActivity {
 
         tvCurrentLocation = findViewById(R.id.currentLocation);
         noOrdersFound = findViewById(R.id.noDriverOrders);
+        tvNoOrdersFound = findViewById(R.id.tvNoDriverOrders);
         //loadingImage = findViewById(R.id.loadindImage);
 
         progressBar = findViewById(R.id.progressBar);
@@ -227,20 +229,34 @@ public class DriverMenu extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.account:
-                        startActivity(new Intent(getApplicationContext(), DriverAccount.class));
-                        finish();
-                        overridePendingTransition(0, 0);
-                        return true;
-                    case R.id.orders:
-                        return true;
-                    case R.id.personalOrders:
-                        startActivity(new Intent(getApplicationContext(), PersonalDriverOrders.class));
-                        finish();
-                        overridePendingTransition(0, 0);
-                        return true;
+                int id = item.getItemId();
+                if(id == R.id.account) {
+                    startActivity(new Intent(getApplicationContext(), DriverAccount.class));
+                    overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
+                    finish();
+                    return true;
+                } else if(id == R.id.orders) {
+                    return true;
+                } else if(id == R.id.personalOrders) {
+                    startActivity(new Intent(getApplicationContext(), PersonalDriverOrders.class));
+                    overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
+                    finish();
+                    return true;
                 }
+//                switch (item.getItemId()) {
+//                    case R.id.account:
+//                        startActivity(new Intent(getApplicationContext(), DriverAccount.class));
+//                        finish();
+//                        overridePendingTransition(0, 0);
+//                        return true;
+//                    case R.id.orders:
+//                        return true;
+//                    case R.id.personalOrders:
+//                        startActivity(new Intent(getApplicationContext(), PersonalDriverOrders.class));
+//                        finish();
+//                        overridePendingTransition(0, 0);
+//                        return true;
+//                }
                 return false;
             }
         });
@@ -389,11 +405,14 @@ public class DriverMenu extends AppCompatActivity {
                     allOrders.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.GONE);
                     noOrdersFound.setVisibility(View.VISIBLE);
+                    tvNoOrdersFound.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
                     //loadingImage.setVisibility(View.GONE);
                 } else {
                     allOrders.setVisibility(View.VISIBLE);
                     //recyclerView.setVisibility(View.VISIBLE);
                     noOrdersFound.setVisibility(View.GONE);
+                    tvNoOrdersFound.setVisibility(View.GONE);
                     //loadingImage.setVisibility(View.GONE);
                 }
             }
@@ -520,6 +539,8 @@ public class DriverMenu extends AppCompatActivity {
                             holder.orderPriceTotal.setText("Total: " + (double)Math.round(model.getTotal() * 100) / 100 + " lei");
                             Picasso.with(getBaseContext()).load(restaurantImage).placeholder(R.drawable.loading)
                                     .into(holder.restaurantImage);
+
+                            progressBar.setVisibility(View.GONE);
 
                             String restaurantName2 = restaurantName;
                             String restaurantImage2 = restaurantImage;

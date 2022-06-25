@@ -41,17 +41,6 @@
         android:textAlignment="center"></TextView>
 
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="250dp"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/allOrders" />
-
     <ImageView
         android:id="@+id/loadindImage"
         android:visibility="gone"
@@ -84,24 +73,50 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
-    <ImageView
-        android:id="@+id/noDriverOrders"
-        android:layout_width="wrap_content"
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:src="@drawable/empty_cart_512"
+        android:layout_marginTop="250dp"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/currentLocation"></ImageView>
+        app:layout_constraintTop_toBottomOf="@+id/allOrders" />
 
-
-<!--    <TextView-->
+    <!--    <TextView-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="300dp"-->
 <!--        app:layout_constraintEnd_toEndOf="parent"-->
 <!--        app:layout_constraintStart_toStartOf="parent"-->
 <!--        app:layout_constraintTop_toBottomOf="@+id/allOrders"></TextView>-->
 
+
+    <ImageView
+        android:visibility="gone"
+        android:id="@+id/noDriverOrders"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="232dp"
+        android:src="@drawable/ic_cart_512"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/currentLocation"></ImageView>
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/tvNoDriverOrders"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nu există comenzi plasate."
+        android:fontFamily="@font/alata"
+        android:textColor="@color/violet"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/noDriverOrders"></TextView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

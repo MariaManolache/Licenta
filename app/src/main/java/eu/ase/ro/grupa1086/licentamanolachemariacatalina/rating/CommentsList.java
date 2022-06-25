@@ -62,6 +62,7 @@ public class CommentsList extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+                overridePendingTransition(R.anim.slide_nothing, R.anim.slide_down);
             }
         });
 

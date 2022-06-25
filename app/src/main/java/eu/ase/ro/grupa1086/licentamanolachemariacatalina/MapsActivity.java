@@ -95,6 +95,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             placingOrder.putExtra("longitude", address.getLongitude());
                             startActivity(placingOrder);
                             finish();
+                            overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
                         }
                     });
                 } else {

@@ -95,7 +95,7 @@ public class RestaurantLogin extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             onAuthSuccess(task.getResult().getUser());
-                            Toast.makeText(RestaurantLogin.this, "Autentificare realizata cu succes", Toast.LENGTH_LONG).show();
+//                            Toast.makeText(RestaurantLogin.this, "Autentificare realizata cu succes", Toast.LENGTH_LONG).show();
 //                            startActivity(new Intent(getApplicationContext(), MainMenu.class));
 
 
@@ -119,28 +119,40 @@ public class RestaurantLogin extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     User connectedUser = snapshot.getValue(User.class);
 
-                    Query query = restaurants.orderByChild("id").equalTo(connectedUser.getId());
-                    query.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if(!snapshot.exists()) {
-                                restaurants.child(user.getUid()).child("name").setValue(connectedUser.getName()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        Toast.makeText(RestaurantLogin.this, "Autentificare realizata cu success", Toast.LENGTH_LONG).show();
+                    if(!snapshot.exists()) {
+                        Toast.makeText(getApplicationContext(), "Utilizatorul introdus nu se află în baza de date", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                        FirebaseAuth.getInstance().signOut();
+                    } else {
+                        Query query = null;
+                        if (connectedUser != null) {
+                            query = restaurants.orderByChild("id").equalTo(connectedUser.getId());
+                            query.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if(!snapshot.exists()) {
+                                        restaurants.child(user.getUid()).child("name").setValue(connectedUser.getName()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                //Toast.makeText(RestaurantLogin.this, "Autentificare realizata cu success", Toast.LENGTH_LONG).show();
+                                            }
+                                        });
                                     }
-                                });
-                            }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                         }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(RestaurantLogin.this, "Autentificare realizată cu succes", Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(getApplicationContext(), RestaurantOrders.class));
+                        overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
+                        finish();
+                    }
 
-                        }
-                    });
-
-                    startActivity(new Intent(getApplicationContext(), RestaurantOrders.class));
-                    finish();
                 }
 
                 @Override

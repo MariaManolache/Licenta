@@ -4,8 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/food"
+    android:background="@color/teal_100"
     tools:context=".SplashScreenActivity">
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/food"></ImageView>
 
     <ProgressBar
         android:layout_width="wrap_content"
