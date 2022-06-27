@@ -222,6 +222,7 @@ public class OrdersList extends AppCompatActivity {
 
                         holder.restaurantsName.setText(restaurantName);
                         holder.orderStatus.setText(getString(R.string.order_status) + " " + String.valueOf(model.getStatus()).substring(0, 1).toUpperCase(Locale.ROOT) + String.valueOf(model.getStatus()).replace("_", " ").substring(1));
+                        holder.orderPaymentType.setText("Metoda de plată: " + String.valueOf(model.getPaymentMethod()).toUpperCase(Locale.ROOT).replace("_", " "));
                         holder.orderAddress.setText(getString(R.string.address) + " " + model.getAddress().getMapsAddress());
                         holder.orderDateAndTime.setText("Data: " + model.getCurrentDateAndTime());
                         holder.orderPriceTotal.setText(getString(R.string.total) + " " + (double) Math.round(model.getTotal() * 100d) / 100d + " " + getString(R.string.lei));
@@ -298,10 +299,11 @@ public class OrdersList extends AppCompatActivity {
 
                                                             Intent foodInfo = new Intent(OrdersList.this, FoodInfo.class);
                                                             foodInfo.putExtra("origin", "ordersList");
-                                                            foodInfo.putExtra("orderId", model.getId());
+                                                            foodInfo.putExtra("orderId", local.getId());
                                                             foodInfo.putExtra("quantity", local2.getQuantity());
                                                             foodInfo.putExtra("foodId", local2.getId());
                                                             foodInfo.putExtra("restaurantId", model.getRestaurantId());
+                                                            foodInfo.putExtra("userId", local.getUserId());
                                                             startActivity(foodInfo);
 
                                                         }

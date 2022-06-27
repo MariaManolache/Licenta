@@ -10,6 +10,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -42,6 +43,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -158,6 +160,9 @@ public class PlaceOrder extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_order);
+
+        Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_24);// set drawable icon
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         paymentSpinner = findViewById(R.id.paymentSpinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.paymentMethod,
@@ -1005,6 +1010,20 @@ public class PlaceOrder extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                overridePendingTransition(R.anim.slide_right, R.anim.slide_left);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
     //        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 //            @SuppressLint("MissingPermission")
 //            public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -1531,8 +1550,10 @@ public class PlaceOrder extends AppCompatActivity {
                 return null;
             }
 
-            android.location.Address location = address.get(0);
-            coordinates = new LatLng(location.getLatitude(), location.getLongitude());
+            if(address != null && address.size() >= 1) {
+                android.location.Address location = address.get(0);
+                coordinates = new LatLng(location.getLatitude(), location.getLongitude());
+            }
 
         } catch (IOException ex) {
 
@@ -1613,14 +1634,14 @@ public class PlaceOrder extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             Restaurant restaurant = snapshot.getValue(Restaurant.class);
-                            if (restaurant != null) {
+                            if (restaurant != null && latLngClient != null && restaurant.getAddress() != null) {
                                 restaurantAddressesList.add(restaurant.getAddress());
 
                                 restaurantCoordinates.add(getLocationFromAddress(restaurant.getAddress()));
-                                Log.i("distancesCheck", getLocationFromAddress(restaurant.getAddress()).toString());
+                                //Log.i("distancesCheck", getLocationFromAddress(restaurant.getAddress()).toString());
 
                                 Double distance = SphericalUtil.computeDistanceBetween(latLngClient, getLocationFromAddress(restaurant.getAddress()));
-                                Log.i("distancesCheck", distance.toString());
+                                //Log.i("distancesCheck", distance.toString());
                                 distances.put(getLocationFromAddress(restaurant.getAddress()), distance);
 
                                 totalDistance += distance;

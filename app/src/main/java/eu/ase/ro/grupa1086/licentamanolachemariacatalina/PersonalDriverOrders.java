@@ -231,7 +231,7 @@ public class PersonalDriverOrders extends AppCompatActivity {
                         .setQuery(query, Order.class)
                         .build();
 
-        driverOrders.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        driverOrders.child(user.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(!(snapshot.exists())) {
@@ -363,6 +363,7 @@ public class PersonalDriverOrders extends AppCompatActivity {
 
                             holder.restaurantsName.setText(restaurantName);
                             holder.orderStatus.setText("Status: " + String.valueOf(model.getStatus()).substring(0, 1).toUpperCase(Locale.ROOT) + String.valueOf(model.getStatus()).replace("_", " ").substring(1));
+                            holder.orderPaymentType.setText("Metoda de plată: " + String.valueOf(model.getPaymentMethod()).toUpperCase(Locale.ROOT).replace("_", " "));
                             holder.orderDateAndTime.setText("Data: " + model.getCurrentDateAndTime());
                             holder.orderAddress.setText("Adresa: " + String.valueOf(model.getAddress().getMapsAddress()));
                             holder.orderPriceTotal.setText("Total: " + model.getTotal() + " lei");
@@ -562,7 +563,7 @@ public class PersonalDriverOrders extends AppCompatActivity {
 //                                                            });
 
                                                         }
-                                                    }).setNegativeButton("Anuleaza", null)
+                                                    }).setNegativeButton("Anulează", null)
                                                     .create().show();
                                         }
                                     }

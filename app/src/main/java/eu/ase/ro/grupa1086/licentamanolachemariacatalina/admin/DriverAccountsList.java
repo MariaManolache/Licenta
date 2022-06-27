@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -123,18 +124,20 @@ public class DriverAccountsList extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.driverAccounts);
 
+        bottomNavigationView.setVisibility(View.VISIBLE);
+
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-                if(id == R.id.restaurantAccounts) {
+                if (id == R.id.restaurantAccounts) {
                     startActivity(new Intent(getApplicationContext(), RestaurantAccountsList.class));
                     overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
                     finish();
                     return true;
-                } else if(id == R.id.driverAccounts) {
+                } else if (id == R.id.driverAccounts) {
                     return true;
-                } else if(id == R.id.topOrders) {
+                } else if (id == R.id.topOrders) {
                     startActivity(new Intent(getApplicationContext(), AdminOrders.class));
                     overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
                     finish();
@@ -469,9 +472,334 @@ public class DriverAccountsList extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+
+        getMenuInflater().inflate(R.menu.search_menu, menu);
         getMenuInflater().inflate(R.menu.sign_out_menu, menu);
-        return true;
+//        return true;
+
+        MenuItem item = menu.findItem(R.id.actionSearch);
+
+        SearchView searchView = (SearchView) item.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchProcess(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchProcess(newText);
+                return false;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
     }
+
+    private void searchProcess(String query) {
+
+        Query query2 = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("users")
+                .orderByChild("name").startAt(query).endAt(query + "\uf8ff")
+                .limitToLast(50);
+
+
+        FirebaseRecyclerOptions<User> options =
+                new FirebaseRecyclerOptions.Builder<User>()
+                        .setQuery(query2, User.class)
+                        .build();
+
+        adapter = new FirebaseRecyclerAdapter<User, DriverViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull DriverViewHolder holder, int position, @NonNull User model) {
+
+                if (model.getIsDriver() == 0) {
+                    holder.itemView.setVisibility(View.GONE);
+                    holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
+
+                } else if (model.getIsDriver() == 1) {
+
+                    holder.itemView.setVisibility(View.VISIBLE);
+                    holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    driverOrders = 0;
+                    holder.driverName.setText(model.getName());
+                    holder.driverEmail.setText("Email: " + model.getEmail());
+                    holder.driverPhoneNumber.setText("Telefon: " + model.getPhoneNumber());
+                    driverOrdersHistory.child(model.getId()).child("orders").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                driverOrders++;
+                            }
+                            holder.driverOrderNumbers.setText("Comenzi livrate: " + String.valueOf(driverOrders));
+                            driverOrders = 0;
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                    final User local = model;
+                    holder.setItemClickListener(new ItemClickListener() {
+                        @Override
+                        public void onClick(View view, int position, boolean isLongClick) {
+
+                            //Toast.makeText(DriverAccountsList.this, model.getId(), Toast.LENGTH_LONG).show();
+                            if (!isLongClick) {
+                                if (holder.downArrow.getVisibility() == View.VISIBLE) {
+                                    holder.downArrow.setVisibility(View.GONE);
+                                } else {
+                                    holder.downArrow.setVisibility(View.VISIBLE);
+                                }
+
+                                if (holder.upArrow.getVisibility() == View.VISIBLE) {
+                                    holder.upArrow.setVisibility(View.GONE);
+                                } else {
+                                    holder.upArrow.setVisibility(View.VISIBLE);
+                                }
+
+                                Query query = FirebaseDatabase.getInstance()
+                                        .getReference()
+                                        .child("driverOrdersHistory")
+                                        .child(local.getId())
+                                        .child("orders")
+                                        .orderByChild("currentDateAndTime")
+                                        .limitToLast(50);
+
+                                FirebaseRecyclerOptions<Order> options =
+                                        new FirebaseRecyclerOptions.Builder<Order>()
+                                                .setQuery(query, Order.class)
+                                                .build();
+
+                                secondAdapter = new FirebaseRecyclerAdapter<Order, OrderAdminViewHolder>(options) {
+                                    @Override
+                                    protected void onBindViewHolder(@NonNull OrderAdminViewHolder holder, int position, @NonNull Order model2) {
+
+                                        //Log.i("ceva", model.toString());
+                                        restaurantName = null;
+                                        restaurantImage = null;
+                                        orderList.add(model2);
+                                        Log.i("ceva", orderList.toString());
+                                        orderId = model2.getId();
+
+                                        driverOrdersHistory.child(local.getId()).child("orders").child(model2.getId()).child("restaurantAddress").addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                                    Log.i("ceva", dataSnapshot.toString());
+                                                    Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+                                                    if (restaurantName == null) {
+                                                        restaurantName = restaurant.getName();
+                                                        restaurantImage = restaurant.getImage();
+                                                    } else {
+                                                        restaurantName += ", " + restaurant.getName();
+                                                    }
+                                                }
+
+                                                users.child(model2.getUserId()).addValueEventListener(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                        User user = snapshot.getValue(User.class);
+                                                        holder.clientName.setText("#" + user.getName());
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                    }
+                                                });
+
+                                                holder.restaurantsName.setText(restaurantName);
+                                                holder.orderStatus.setText(getString(R.string.order_status) + " " + String.valueOf(model2.getStatus()).substring(0, 1).toUpperCase(Locale.ROOT) + String.valueOf(model2.getStatus()).replace("_", " ").substring(1));
+                                                holder.orderAddress.setText(getString(R.string.address) + " " + model2.getAddress().getMapsAddress());
+                                                holder.orderDateAndTime.setText("Data: " + model2.getCurrentDateAndTime());
+                                                holder.orderPriceTotal.setText(getString(R.string.total) + " " + (double) Math.round(model2.getTotal() * 100d) / 100d + " " + getString(R.string.lei));
+                                                Picasso.with(getBaseContext()).load(restaurantImage).placeholder(R.drawable.loading)
+                                                        .into(holder.restaurantImage);
+
+                                                String restaurantName2 = restaurantName;
+                                                String restaurantImage2 = restaurantImage;
+                                                restaurantName = null;
+                                                restaurantImage = null;
+
+                                                //final Order local = model;
+                                                holder.setItemClickListener(new ItemClickListener() {
+                                                    @Override
+                                                    public void onClick(View view, int position, boolean isLongClick) {
+
+                                                        if (!isLongClick) {
+                                                            //Toast.makeText(OrdersList.this, model.getCart().toString(), Toast.LENGTH_LONG).show();
+//                                    loadOrderDetails(model.getId());
+
+                                                            if (holder.downArrow.getVisibility() == View.VISIBLE) {
+                                                                holder.downArrow.setVisibility(View.GONE);
+                                                            } else {
+                                                                holder.downArrow.setVisibility(View.VISIBLE);
+                                                            }
+
+                                                            if (holder.upArrow.getVisibility() == View.VISIBLE) {
+                                                                holder.upArrow.setVisibility(View.GONE);
+                                                            } else {
+                                                                holder.upArrow.setVisibility(View.VISIBLE);
+                                                            }
+
+                                                            cart = database.getReference().child("driverOrdersHistory").child(local.getId()).child("orders").child(model2.getId()).child("cart");
+                                                            restaurantAddresses = database.getReference().child("driverOrdersHistory").child(local.getId()).child("orders").child(model2.getId()).child("restaurantAddress");
+
+                                                            Query query = cart
+                                                                    .orderByChild("id")
+                                                                    .limitToLast(50);
+
+                                                            FirebaseRecyclerOptions<Food> options =
+                                                                    new FirebaseRecyclerOptions.Builder<Food>()
+                                                                            .setQuery(query, Food.class)
+                                                                            .build();
+
+                                                            thirdAdapter = new FirebaseRecyclerAdapter<Food, OrderDetailsViewHolder>(options) {
+                                                                @Override
+                                                                protected void onBindViewHolder(@NonNull OrderDetailsViewHolder holder2, int position, @NonNull Food model) {
+
+                                                                    holder2.foodName.setText(model.getName());
+
+                                                                    restaurantAddresses.addValueEventListener(new ValueEventListener() {
+                                                                        @Override
+                                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                                                                Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
+                                                                                if (model.getRestaurantId().equals(restaurant.getId())) {
+                                                                                    holder2.restaurantName.setText(restaurant.getName() + " : ");
+                                                                                }
+                                                                            }
+
+                                                                            holder2.foodPrice.setText(String.valueOf(model.getPrice()));
+                                                                            holder2.foodQuantity.setText(String.valueOf(model.getQuantity()));
+                                                                            holder2.foodTotal.setText((double) Math.round(model.getPrice() * model.getQuantity() * 100d) / 100d + " lei");
+                                                                            Picasso.with(getBaseContext()).load(model.getImage()).placeholder(R.drawable.loading)
+                                                                                    .into(holder2.foodImage);
+
+                                                                            final Food local2 = model;
+                                                                            holder2.setItemClickListener(new ItemClickListener() {
+                                                                                @Override
+                                                                                public void onClick(View view, int position, boolean isLongClick) {
+
+                                                                                    Toast.makeText(DriverAccountsList.this, model.getName(), Toast.LENGTH_LONG).show();
+//                                                            showRatingDialog(model.getId());
+
+                                                                                    Intent foodInfo = new Intent(DriverAccountsList.this, FoodInfo.class);
+                                                                                    foodInfo.putExtra("origin", "ordersList");
+                                                                                    foodInfo.putExtra("orderId", model.getId());
+                                                                                    foodInfo.putExtra("quantity", local2.getQuantity());
+                                                                                    foodInfo.putExtra("foodId", local2.getId());
+                                                                                    foodInfo.putExtra("restaurantId", model.getRestaurantId());
+                                                                                    startActivity(foodInfo);
+                                                                                    overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
+
+                                                                                }
+                                                                            });
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                        }
+                                                                    });
+
+
+                                                                }
+
+
+                                                                @NonNull
+                                                                @Override
+                                                                public OrderDetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                                                                    View view = LayoutInflater.from(parent.getContext())
+                                                                            .inflate(R.layout.order_detail_layout, parent, false);
+                                                                    view.setMinimumWidth(parent.getMeasuredWidth());
+
+                                                                    return new OrderDetailsViewHolder(view);
+                                                                }
+                                                            };
+
+//                                    secondRecyclerView.setAdapter(secondAdapter);
+//                                    secondAdapter.startListening();
+                                                            if (holder.secondRecyclerView.getVisibility() == View.GONE) {
+                                                                holder.secondRecyclerView.setVisibility(View.VISIBLE);
+                                                            } else {
+                                                                holder.secondRecyclerView.setVisibility(View.GONE);
+                                                            }
+                                                            thirdLayoutManager = new LinearLayoutManager(getApplicationContext());
+                                                            //holder.secondRecyclerView.setHasFixedSize(true);
+                                                            holder.secondRecyclerView.setLayoutManager(thirdLayoutManager);
+                                                            holder.secondRecyclerView.setAdapter(thirdAdapter);
+                                                            thirdAdapter.startListening();
+
+                                                        }
+
+                                                    }
+                                                });
+
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
+
+
+                                    }
+
+                                    @NonNull
+                                    @Override
+                                    public OrderAdminViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                                        View view = LayoutInflater.from(parent.getContext())
+                                                .inflate(R.layout.order_admin_layout, parent, false);
+                                        view.setMinimumWidth(parent.getMeasuredWidth());
+
+                                        return new OrderAdminViewHolder(view);
+                                    }
+                                };
+
+                                if (holder.secondRecyclerView.getVisibility() == View.GONE) {
+                                    holder.secondRecyclerView.setVisibility(View.VISIBLE);
+                                } else {
+                                    holder.secondRecyclerView.setVisibility(View.GONE);
+                                }
+                                secondLayoutManager = new LinearLayoutManager(getApplicationContext());
+                                //holder.secondRecyclerView.setHasFixedSize(true);
+                                holder.secondRecyclerView.setLayoutManager(secondLayoutManager);
+                                holder.secondRecyclerView.setAdapter(secondAdapter);
+                                secondAdapter.startListening();
+
+
+                            }
+                        }
+                    });
+
+
+                    driverOrders = 0;
+                }
+            }
+
+            @NonNull
+            @Override
+            public DriverViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.driver_account_layout, parent, false);
+                view.setMinimumWidth(parent.getMeasuredWidth());
+
+                return new DriverViewHolder(view);
+            }
+        };
+
+        adapter.startListening();
+        recyclerView.setAdapter(adapter);
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

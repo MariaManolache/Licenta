@@ -16,6 +16,7 @@ public class OrderAdminViewHolder extends RecyclerView.ViewHolder implements Vie
     public TextView restaurantsName;
     public TextView orderStatus;
     public TextView orderAddress;
+    public TextView orderPaymentType;
     public TextView orderDateAndTime;
     public TextView orderPriceTotal;
     public ImageView restaurantImage;
@@ -35,6 +36,7 @@ public class OrderAdminViewHolder extends RecyclerView.ViewHolder implements Vie
         clientName = itemView.findViewById(R.id.clientName);
         restaurantsName = itemView.findViewById(R.id.restaurants);
         orderStatus = itemView.findViewById(R.id.orderStatus);
+        orderPaymentType = itemView.findViewById(R.id.orderPaymentType);
         orderAddress = itemView.findViewById(R.id.orderAddress);
         orderDateAndTime = itemView.findViewById(R.id.orderDateAndTime);
         orderPriceTotal = itemView.findViewById(R.id.orderPriceTotal);

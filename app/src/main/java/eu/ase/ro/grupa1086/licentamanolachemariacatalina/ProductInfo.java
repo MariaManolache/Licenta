@@ -381,7 +381,7 @@ public class ProductInfo extends AppCompatActivity {
 
     private void uploadFile() {
         if (productImageUri != null) {
-            StorageReference fileReference = storageReference.child(user.getUid()).child(productImageUri + "." + getFileExtension(productImageUri));
+            StorageReference fileReference = storageReference.child(user.getUid()).child(productId).child("images").child(productImageUri + "." + getFileExtension(productImageUri));
             fileReference.putFile(productImageUri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -433,7 +433,7 @@ public class ProductInfo extends AppCompatActivity {
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            //Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                                         }
                                     });
                         }

@@ -231,6 +231,7 @@ public class RestaurantOrders extends AppCompatActivity {
                     });
 
                     holder.orderStatus.setText("Status: " + String.valueOf(model.getStatus()).substring(0, 1).toUpperCase(Locale.ROOT) + String.valueOf(model.getStatus()).replace("_", " ").substring(1));
+                    holder.orderPaymentType.setText("Metoda de plată: " + String.valueOf(model.getPaymentMethod()).toUpperCase(Locale.ROOT).replace("_", " "));
                     holder.orderAddress.setText("Adresa: " + model.getAddress().getMapsAddress());
                     holder.orderDateAndTime.setText("Data: " + model.getCurrentDateAndTime());
                     holder.orderPriceTotal.setText("Total: " + Math.round(model.getTotal() * 100.0) / 100.0 + " lei");

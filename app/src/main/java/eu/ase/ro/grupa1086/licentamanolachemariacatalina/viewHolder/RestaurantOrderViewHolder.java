@@ -15,6 +15,7 @@ public class RestaurantOrderViewHolder extends RecyclerView.ViewHolder implement
     public TextView orderName;
     public TextView orderStatus;
     public TextView orderAddress;
+    public TextView orderPaymentType;
     public TextView orderDateAndTime;
     public TextView orderPriceTotal;
     public ImageView downArrow;
@@ -30,6 +31,7 @@ public class RestaurantOrderViewHolder extends RecyclerView.ViewHolder implement
         orderName = itemView.findViewById(R.id.orderName);
         orderStatus = itemView.findViewById(R.id.orderStatus);
         orderAddress = itemView.findViewById(R.id.orderAddress);
+        orderPaymentType = itemView.findViewById(R.id.orderPaymentType);
         orderDateAndTime = itemView.findViewById(R.id.orderDateAndTime);
         orderPriceTotal = itemView.findViewById(R.id.orderPriceTotal);
         downArrow = itemView.findViewById(R.id.downArrow);

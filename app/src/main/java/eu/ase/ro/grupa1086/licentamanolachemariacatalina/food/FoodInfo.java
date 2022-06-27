@@ -59,6 +59,7 @@ public class FoodInfo extends FragmentActivity {
 
     String foodId = "";
     String restaurantId = "";
+    String userId = "";
 
     FirebaseDatabase database;
     DatabaseReference foodList;
@@ -182,6 +183,7 @@ public class FoodInfo extends FragmentActivity {
                 orderId = getIntent().getStringExtra("orderId");
                 foodId = getIntent().getStringExtra("foodId");
                 restaurantId = getIntent().getStringExtra("restaurantId");
+                userId = getIntent().getStringExtra("userId");
                 quantityFromOrdersList = getIntent().getIntExtra("quantity", 1);
                 quantity.setText(String.valueOf(quantityFromOrdersList));
 
@@ -216,7 +218,9 @@ public class FoodInfo extends FragmentActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             Rating rating = dataSnapshot.getValue(Rating.class);
-                            ratingValue += rating.getRateValue();
+                            if (rating != null) {
+                                ratingValue += rating.getRateValue();
+                            }
                             nbOfRatings++;
                         }
 

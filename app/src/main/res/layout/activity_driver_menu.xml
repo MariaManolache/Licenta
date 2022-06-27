@@ -61,7 +61,6 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:visibility="gone"
         android:id="@+id/ordersList"
         android:background="@color/teal_100"
         android:layout_width="match_parent"

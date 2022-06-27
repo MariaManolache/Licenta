@@ -419,8 +419,8 @@ public class CompleteFoodList extends AppCompatActivity {
                             }
 
                             @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                throw databaseError.toException();
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                //throw databaseError.toException();
                             }
                         });
 

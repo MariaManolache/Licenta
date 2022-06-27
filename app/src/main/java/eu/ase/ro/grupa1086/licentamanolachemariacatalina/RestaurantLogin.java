@@ -134,7 +134,7 @@ public class RestaurantLogin extends AppCompatActivity {
                                         restaurants.child(user.getUid()).child("name").setValue(connectedUser.getName()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
-                                                //Toast.makeText(RestaurantLogin.this, "Autentificare realizata cu success", Toast.LENGTH_LONG).show();
+                                                Toast.makeText(RestaurantLogin.this, "Autentificare realizata cu success", Toast.LENGTH_LONG).show();
                                             }
                                         });
                                     }
@@ -147,7 +147,7 @@ public class RestaurantLogin extends AppCompatActivity {
                             });
                         }
 
-                        Toast.makeText(RestaurantLogin.this, "Autentificare realizată cu succes", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(RestaurantLogin.this, "Autentificare realizată cu succes", Toast.LENGTH_LONG).show();
                         startActivity(new Intent(getApplicationContext(), RestaurantOrders.class));
                         overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
                         finish();

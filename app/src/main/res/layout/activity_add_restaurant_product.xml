@@ -38,6 +38,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/alata"
             android:gravity="center"
+            android:textStyle="bold"
             android:text="@string/add_new_product"
             android:textAlignment="center"
             android:textColor="@color/violet"

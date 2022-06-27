@@ -426,8 +426,8 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
             public void onClick(View v) {
                 Intent mainMenu = new Intent(ConfirmationOrder.this, PrincipalMenu.class);
                 startActivity(mainMenu);
-                finish();
                 overridePendingTransition(R.anim.slide_nothing, R.anim.slide_down);
+                finish();
             }
         });
 

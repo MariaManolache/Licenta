@@ -398,7 +398,7 @@ public class DriverMenu extends AppCompatActivity {
                         .setQuery(query, Order.class)
                         .build();
 
-        driverOrders.child("orders").addListenerForSingleValueEvent(new ValueEventListener() {
+        driverOrders.child("orders").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(!(snapshot.exists())) {
@@ -452,10 +452,12 @@ public class DriverMenu extends AppCompatActivity {
                                 Map<LatLng, Double> distances = new LinkedHashMap<>();
                                 for(int i = 0; i < model.getRestaurantAddress().size(); i++) {
                                     LatLng latLngRestaurant = getLocationFromAddress(model.getRestaurantAddress().get(i).getAddress());
-                                    Double distance = SphericalUtil.computeDistanceBetween(latLngLocation, latLngRestaurant);
-                                    Log.i("distancesCheck", distance.toString());
-                                    distances.put(latLngRestaurant, distance);
-                                    Location.distanceBetween(latLngLocation.latitude, latLngLocation.longitude, latLngRestaurant.latitude, latLngRestaurant.longitude, results);
+                                    if(latLngRestaurant != null) {
+                                        Double distance = SphericalUtil.computeDistanceBetween(latLngLocation, latLngRestaurant);
+                                        //Log.i("distancesCheck", distance.toString());
+                                        distances.put(latLngRestaurant, distance);
+                                        Location.distanceBetween(latLngLocation.latitude, latLngLocation.longitude, latLngRestaurant.latitude, latLngRestaurant.longitude, results);
+                                    }
                                 }
 
                                 UserComparator comparator = new UserComparator(distances);
@@ -484,56 +486,60 @@ public class DriverMenu extends AppCompatActivity {
                                     }
                                 }
 
-                                Double deliveryDistanceKm = SphericalUtil.computeDistanceBetween(sortedLocations.get(sortedLocations.size()-1), clientAddress);
+                                if(sortedLocations != null  && clientAddress != null && sortedLocations.size() >=1) {
+                                    Double deliveryDistanceKm = SphericalUtil.computeDistanceBetween(sortedLocations.get(sortedLocations.size()-1), clientAddress);
 
 
-                                holder.pickUpDistance.setText("Distanța de preluare: " + String.format("%.2f", totalDistance / 1000) + " km");
-                                holder.deliveryDistance.setText("Distanța de livrare: " + String.format("%.2f", deliveryDistanceKm / 1000) + " km");
-                                holder.totalDistance.setText("Distanța totală: " + String.format("%.2f", (totalDistance + deliveryDistanceKm) / 1000) + " km");
+                                    holder.pickUpDistance.setText("Distanța de preluare: " + String.format("%.2f", totalDistance / 1000) + " km");
+                                    holder.deliveryDistance.setText("Distanța de livrare: " + String.format("%.2f", deliveryDistanceKm / 1000) + " km");
+                                    holder.totalDistance.setText("Distanța totală: " + String.format("%.2f", (totalDistance + deliveryDistanceKm) / 1000) + " km");
 
-                                users.child(model.getUserId()).child("phoneNumber").addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        String phoneNumber = snapshot.getValue(String.class);
-                                        holder.callButton.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                Intent dialIntent = new Intent(Intent.ACTION_DIAL);
-                                                dialIntent.setData(Uri.parse("tel:" + phoneNumber));
-                                                startActivity(dialIntent);
-                                                finish();
-                                            }
-                                        });
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                    }
-                                });
-
-                                holder.mapsButton.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        String uriGoogle = "https://www.google.co.in/maps/dir/";
-                                        uriGoogle += latLngLocation.latitude + "," + latLngLocation.longitude;
-                                        for(int i = 0; i < sortedLocations.size(); i++) {
-                                            uriGoogle += "/" + sortedLocations.get(i).latitude + "," + sortedLocations.get(i).longitude;
+                                    users.child(model.getUserId()).child("phoneNumber").addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            String phoneNumber = snapshot.getValue(String.class);
+                                            holder.callButton.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    Intent dialIntent = new Intent(Intent.ACTION_DIAL);
+                                                    dialIntent.setData(Uri.parse("tel:" + phoneNumber));
+                                                    startActivity(dialIntent);
+                                                    finish();
+                                                }
+                                            });
                                         }
-                                        uriGoogle += "/" + clientAddress.latitude + "," + clientAddress.longitude;
 
-                                        Intent intentGoogleNav = new Intent(Intent.ACTION_VIEW, Uri.parse(uriGoogle));
-                                        intentGoogleNav.setPackage("com.google.android.apps.maps");
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
 
-                                        startActivity(intentGoogleNav);
-                                        finish();
-                                    }
-                                });
+                                        }
+                                    });
+
+                                    holder.mapsButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            String uriGoogle = "https://www.google.co.in/maps/dir/";
+                                            uriGoogle += latLngLocation.latitude + "," + latLngLocation.longitude;
+                                            for(int i = 0; i < sortedLocations.size(); i++) {
+                                                uriGoogle += "/" + sortedLocations.get(i).latitude + "," + sortedLocations.get(i).longitude;
+                                            }
+                                            uriGoogle += "/" + clientAddress.latitude + "," + clientAddress.longitude;
+
+                                            Intent intentGoogleNav = new Intent(Intent.ACTION_VIEW, Uri.parse(uriGoogle));
+                                            intentGoogleNav.setPackage("com.google.android.apps.maps");
+
+                                            startActivity(intentGoogleNav);
+                                            finish();
+                                        }
+                                    });
+
+                                }
 
                             }
 
                             holder.restaurantsName.setText(restaurantName);
                             holder.orderStatus.setText("Status: " + String.valueOf(model.getStatus()).substring(0, 1).toUpperCase(Locale.ROOT) + String.valueOf(model.getStatus()).replace("_", " ").substring(1));
+                            holder.orderPaymentType.setText("Metoda de plată: " + String.valueOf(model.getPaymentMethod()).toUpperCase(Locale.ROOT).replace("_", " "));
                             holder.orderDateAndTime.setText("Data: " + model.getCurrentDateAndTime());
                             holder.orderAddress.setText("Adresa: " + String.valueOf(model.getAddress().getMapsAddress()));
                             holder.orderPriceTotal.setText("Total: " + (double)Math.round(model.getTotal() * 100) / 100 + " lei");
@@ -703,7 +709,7 @@ public class DriverMenu extends AppCompatActivity {
 
 
                                                         }
-                                                    }).setNegativeButton("Anuleaza", null)
+                                                    }).setNegativeButton("Anulează", null)
                                                     .create().show();
 
                                         }

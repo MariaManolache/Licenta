@@ -806,6 +806,7 @@ public class RestaurantAccount extends AppCompatActivity {
             Intent changePassword = new Intent(getApplicationContext(), ResetPassword.class);
             changePassword.putExtra("origin", "restaurant");
             startActivity(changePassword);
+            overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
         }
         else if (item.getItemId() == R.id.logout) {
             signOutAlert.setTitle("Ieșire din cont")

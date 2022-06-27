@@ -17,6 +17,7 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
     public TextView restaurantsName;
     public TextView orderStatus;
     public TextView orderAddress;
+    public TextView orderPaymentType;
     public TextView orderDateAndTime;
     public TextView orderPriceTotal;
     public ImageView restaurantImage;
@@ -36,6 +37,7 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
         restaurantsName = itemView.findViewById(R.id.restaurants);
         orderStatus = itemView.findViewById(R.id.orderStatus);
         orderAddress = itemView.findViewById(R.id.orderAddress);
+        orderPaymentType = itemView.findViewById(R.id.orderPaymentType);
         orderDateAndTime = itemView.findViewById(R.id.orderDateAndTime);
         orderPriceTotal = itemView.findViewById(R.id.orderPriceTotal);
         restaurantImage = itemView.findViewById(R.id.restaurantImage);
