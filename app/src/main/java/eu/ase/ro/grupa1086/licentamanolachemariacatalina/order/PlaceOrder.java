@@ -600,7 +600,7 @@ public class PlaceOrder extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(PlaceOrder.this, "Comandă plasată", Toast.LENGTH_LONG).show();
 
                                     ordersHistory.child(orderId).setValue(order);
                                     for (int i = 0; i < restaurantAddresses.size(); i++) {
@@ -778,7 +778,7 @@ public class PlaceOrder extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(PlaceOrder.this, "Comandă plasată", Toast.LENGTH_LONG).show();
 
                                     ordersHistory.child(orderId).setValue(order);
                                     for (int i = 0; i < restaurantAddresses.size(); i++) {
@@ -907,7 +907,7 @@ public class PlaceOrder extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        Toast.makeText(PlaceOrder.this, "Comanda plasata", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(PlaceOrder.this, "Comandă plasată", Toast.LENGTH_LONG).show();
 
 //                                        cart.removeValue();
                                         ordersHistory.child(orderId).setValue(order);

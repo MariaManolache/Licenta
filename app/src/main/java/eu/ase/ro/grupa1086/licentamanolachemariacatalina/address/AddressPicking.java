@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,6 +36,7 @@ import com.google.android.gms.tasks.Task;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.MapsActivity;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.order.PlaceOrder;
@@ -89,6 +91,9 @@ public class AddressPicking extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address_picking);
+
+        Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_24);// set drawable icon
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         firstRow = findViewById(R.id.firstRow);
         secondRow = findViewById(R.id.secondRow);
@@ -731,5 +736,19 @@ public class AddressPicking extends AppCompatActivity {
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
         }
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                overridePendingTransition(R.anim.slide_right, R.anim.slide_left);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 }

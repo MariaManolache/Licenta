@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.SearchView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,13 +20,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
@@ -42,10 +47,14 @@ public class RestaurantsList extends AppCompatActivity {
 
     FirebaseDatabase database;
     DatabaseReference restaurantsList;
+    DatabaseReference restaurantListByCategories;
 
     String categoryId = "";
 
     FirebaseRecyclerAdapter<Restaurant, RestaurantViewHolder> adapter;
+
+    ImageView nothingFound;
+    TextView tvNoRestaurant;
 
     //ProgressDialog loader;
 
@@ -59,9 +68,13 @@ public class RestaurantsList extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_24);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        nothingFound = findViewById(R.id.noRestaurants);
+        tvNoRestaurant = findViewById(R.id.tvNoRestaurants);
+
         //Firebase
         database = FirebaseDatabase.getInstance();
         restaurantsList = database.getReference("restaurants");
+        restaurantListByCategories = database.getReference("restaurantsByCategories");
 
         recyclerView = (RecyclerView)findViewById(R.id.recyclerRestaurants);
         recyclerView.setHasFixedSize(true);
@@ -105,6 +118,24 @@ public class RestaurantsList extends AppCompatActivity {
                     .orderByChild("id")
 //                    .orderByChild("categoryId").equalTo(categoryId)
                     .limitToLast(50);
+
+            restaurantListByCategories.child(categoryId).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(!snapshot.exists()) {
+                        nothingFound.setVisibility(View.VISIBLE);
+                        tvNoRestaurant.setVisibility(View.VISIBLE);
+                    } else {
+                        nothingFound.setVisibility(View.GONE);
+                        tvNoRestaurant.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
 
 
             FirebaseRecyclerOptions<Restaurant> options =

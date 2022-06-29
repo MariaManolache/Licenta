@@ -282,7 +282,7 @@
                 android:layout_height="match_parent"
                 android:backgroundTint="@color/white"
                 android:fontFamily="@font/alata"
-                android:hint="@string/region"
+                android:hint="Județ/Sector"
                 android:inputType="textPostalAddress"
                 android:textColorHint="@color/violet"
                 android:textAlignment="center"

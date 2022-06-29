@@ -66,8 +66,6 @@ public class ShoppingCart extends AppCompatActivity {
     DatabaseReference cart;
     DatabaseReference restaurants;
 
-
-
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
 

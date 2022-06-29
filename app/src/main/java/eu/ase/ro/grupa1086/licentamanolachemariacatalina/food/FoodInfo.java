@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Status;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.rating.CommentsList;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.rating.Rating;
@@ -63,6 +64,7 @@ public class FoodInfo extends FragmentActivity {
 
     FirebaseDatabase database;
     DatabaseReference foodList;
+    DatabaseReference orders;
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
     List<Food> cartFood;
@@ -76,6 +78,7 @@ public class FoodInfo extends FragmentActivity {
     String orderId;
     TextView tvQuantity;
     int quantityFromOrdersList;
+    String status;
 
     Food food;
     TextView comments;
@@ -95,6 +98,7 @@ public class FoodInfo extends FragmentActivity {
         //Firebase
         database = FirebaseDatabase.getInstance();
         foodList = database.getReference("food");
+        orders = database.getReference("orders");
 
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
@@ -185,13 +189,14 @@ public class FoodInfo extends FragmentActivity {
                 restaurantId = getIntent().getStringExtra("restaurantId");
                 userId = getIntent().getStringExtra("userId");
                 quantityFromOrdersList = getIntent().getIntExtra("quantity", 1);
+                status = getIntent().getStringExtra("status");
                 quantity.setText(String.valueOf(quantityFromOrdersList));
 
                 foodList.child(restaurantId).child(foodId).child("ratings").child(orderId).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                        if (snapshot.exists()) {
+                        if (snapshot.exists() || !status.equals(Status.finalizata.toString())) {
                             btnRating.setVisibility(View.GONE);
                         } else {
                             btnRating.setVisibility(View.VISIBLE);

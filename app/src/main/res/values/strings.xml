@@ -201,4 +201,6 @@
     <string name="new_category">Categorie nouă</string>
     <string name="pick_category_or_categories">Alege categoria/categoriile</string>
     <string name="payment_method">Metodă de plată:</string>
+    <string name="no_restaurants">Nu există restaurante în această categorie</string>
+    <string name="no_products">Nu există produse disponibile la acest restaurant.</string>
 </resources>

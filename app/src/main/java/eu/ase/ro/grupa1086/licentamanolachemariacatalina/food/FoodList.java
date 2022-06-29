@@ -12,13 +12,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
@@ -40,6 +45,9 @@ public class FoodList extends AppCompatActivity {
 
     FirebaseRecyclerAdapter<Food, FoodViewHolder> adapter;
 
+    ImageView nothingFound;
+    TextView tvNoRestaurant;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +56,10 @@ public class FoodList extends AppCompatActivity {
 
         Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_24);// set drawable icon
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        nothingFound = findViewById(R.id.noRestaurants);
+        tvNoRestaurant = findViewById(R.id.tvNoRestaurants);
+
         //Firebase
         database = FirebaseDatabase.getInstance();
         foodList = database.getReference("food");
@@ -89,6 +101,24 @@ public class FoodList extends AppCompatActivity {
                 .child(restaurantId)
                 .orderByChild("restaurantId").equalTo(restaurantId)
                 .limitToLast(50);
+
+        foodList.child(restaurantId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(!snapshot.exists()) {
+                    nothingFound.setVisibility(View.VISIBLE);
+                    tvNoRestaurant.setVisibility(View.VISIBLE);
+                } else {
+                    nothingFound.setVisibility(View.GONE);
+                    tvNoRestaurant.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         FirebaseRecyclerOptions<Food> options =
                 new FirebaseRecyclerOptions.Builder<Food>()

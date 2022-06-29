@@ -259,7 +259,7 @@ public class OrdersList extends AppCompatActivity {
                                     restaurantAddresses = database.getReference("orders").child(user.getUid()).child(model.getId()).child("restaurants");
 
                                     Query query = cart
-                                            .orderByChild("id")
+                                            .orderByChild("restaurantId")
                                             .limitToLast(50);
 
                                     FirebaseRecyclerOptions<Food> options =
@@ -304,6 +304,7 @@ public class OrdersList extends AppCompatActivity {
                                                             foodInfo.putExtra("foodId", local2.getId());
                                                             foodInfo.putExtra("restaurantId", model.getRestaurantId());
                                                             foodInfo.putExtra("userId", local.getUserId());
+                                                            foodInfo.putExtra("status", local.getStatus().toString());
                                                             startActivity(foodInfo);
 
                                                         }

@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -59,6 +60,7 @@ public class RestaurantProducts extends AppCompatActivity {
     FirebaseUser user;
     List<Food> listOfFoods = new ArrayList<>();
 
+
     FirebaseRecyclerAdapter<Food, RestaurantFoodViewHolder> adapter;
 
     FloatingActionButton fabAddProduct;
@@ -74,6 +76,7 @@ public class RestaurantProducts extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         Log.i("model", user.getUid());
         foodList = database.getReference("food");
+
 
         recyclerView = (RecyclerView)findViewById(R.id.recyclerFood);
         recyclerView.setHasFixedSize(true);

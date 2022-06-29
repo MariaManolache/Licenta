@@ -579,7 +579,7 @@ public class DriverMenu extends AppCompatActivity {
                                         restaurantAddresses = database.getReference("driverOrders").child("orders").child(model.getId()).child("restaurantAddress");
 
                                         Query query = cart
-                                                .orderByChild("id")
+                                                .orderByChild("restaurantId")
                                                 .limitToLast(50);
 
                                         FirebaseRecyclerOptions<Food> options =

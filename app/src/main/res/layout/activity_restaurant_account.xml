@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,7 +10,9 @@
         android:layout_height="match_parent"
         android:background="@color/teal_100"
         android:scrollbars="horizontal"
-        tools:context=".principalmenus.RestaurantAccount">
+        tools:context=".principalmenus.RestaurantAccount"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintEnd_toStartOf="@id/bottom_navigation">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -314,7 +316,7 @@
                 android:layout_height="100dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btnLogout"></TextView>
+                app:layout_constraintTop_toBottomOf="@+id/chooseCategory"></TextView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
@@ -336,4 +338,4 @@
                 app:menu="@menu/menu_restaurant"></com.google.android.material.bottomnavigation.BottomNavigationView>
 
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

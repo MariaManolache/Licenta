@@ -7,6 +7,34 @@
     android:background="@color/teal_100"
     tools:context=".RestaurantProducts">
 
+<!--    <TextView-->
+<!--        android:visibility="gone"-->
+<!--        android:id="@+id/tvNoRestaurants"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:fontFamily="@font/alata"-->
+<!--        android:gravity="center"-->
+<!--        android:text="@string/no_restaurants"-->
+<!--        android:textAlignment="center"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        android:textColor="@color/violet"-->
+<!--        android:textSize="25sp"></TextView>-->
+
+<!--    <ImageView-->
+<!--        android:visibility="gone"-->
+<!--        android:id="@+id/noRestaurants"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tvNoRestaurants"-->
+<!--        android:layout_centerInParent="true"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:src="@drawable/ic_cart_512"-->
+<!--        android:textAlignment="center"></ImageView>-->
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerFood"
