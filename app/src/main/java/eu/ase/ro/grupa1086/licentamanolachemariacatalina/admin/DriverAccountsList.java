@@ -233,7 +233,7 @@ public class DriverAccountsList extends AppCompatActivity {
                                     .child("driverOrdersHistory")
                                     .child(local.getId())
                                     .child("orders")
-                                    .orderByChild("currentDateAndTime")
+                                    .orderByChild("id")
                                     .limitToLast(50);
 
                             FirebaseRecyclerOptions<Order> options =
@@ -281,6 +281,7 @@ public class DriverAccountsList extends AppCompatActivity {
 
                                             holder.restaurantsName.setText(restaurantName);
                                             holder.orderStatus.setText(getString(R.string.order_status) + " " + String.valueOf(model2.getStatus()).substring(0, 1).toUpperCase(Locale.ROOT) + String.valueOf(model2.getStatus()).replace("_", " ").substring(1));
+                                            holder.orderPaymentType.setText("Metoda de plată: " + String.valueOf(model2.getPaymentMethod()).toUpperCase(Locale.ROOT).replace("_", " "));
                                             holder.orderAddress.setText(getString(R.string.address) + " " + model2.getAddress().getMapsAddress());
                                             holder.orderDateAndTime.setText("Data: " + model2.getCurrentDateAndTime());
                                             holder.orderPriceTotal.setText(getString(R.string.total) + " " + (double) Math.round(model2.getTotal() * 100d) / 100d + " " + getString(R.string.lei));

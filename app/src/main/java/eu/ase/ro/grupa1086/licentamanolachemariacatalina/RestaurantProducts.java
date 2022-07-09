@@ -51,7 +51,7 @@ public class RestaurantProducts extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
     RecyclerView recyclerView;
-    ImageView noProductsFound;
+    //ImageView noProductsFound;
 
     RecyclerView.LayoutManager layoutManager;
 
@@ -59,6 +59,9 @@ public class RestaurantProducts extends AppCompatActivity {
     DatabaseReference foodList;
     FirebaseUser user;
     List<Food> listOfFoods = new ArrayList<>();
+
+    ImageView nothingFound;
+    TextView tvNoRestaurant;
 
 
     FirebaseRecyclerAdapter<Food, RestaurantFoodViewHolder> adapter;
@@ -74,7 +77,9 @@ public class RestaurantProducts extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
 
         user = FirebaseAuth.getInstance().getCurrentUser();
-        Log.i("model", user.getUid());
+        if (user != null) {
+            Log.i("model", user.getUid());
+        }
         foodList = database.getReference("food");
 
 
@@ -85,7 +90,8 @@ public class RestaurantProducts extends AppCompatActivity {
 
         deleteAlert = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
 
-        noProductsFound = findViewById(R.id.noProductFound);
+        nothingFound = findViewById(R.id.noRestaurants);
+        tvNoRestaurant = findViewById(R.id.tvNoRestaurants);
 
         loadFoodList(user.getUid());
 
@@ -154,9 +160,11 @@ public class RestaurantProducts extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(!snapshot.exists()) {
-                    noProductsFound.setVisibility(View.VISIBLE);
+                    nothingFound.setVisibility(View.VISIBLE);
+                    tvNoRestaurant.setVisibility(View.VISIBLE);
                 } else {
-                    noProductsFound.setVisibility(View.GONE);
+                    nothingFound.setVisibility(View.GONE);
+                    tvNoRestaurant.setVisibility(View.GONE);
                 }
             }
 

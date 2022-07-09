@@ -310,7 +310,7 @@ public class AdminOrders extends AppCompatActivity {
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
                 .child("ordersHistory")
-                .orderByChild("currentDateAndTime")
+                .orderByChild("id")
                 .limitToLast(50);
 
         FirebaseRecyclerOptions<Order> options =
@@ -379,6 +379,7 @@ public class AdminOrders extends AppCompatActivity {
                                 holder.restaurantsName.setText(restaurantName);
                                 holder.orderStatus.setText(getString(R.string.order_status) + " " + String.valueOf(model.getStatus()).substring(0, 1).toUpperCase(Locale.ROOT) + String.valueOf(model.getStatus()).replace("_", " ").substring(1));
                                 holder.orderAddress.setText(getString(R.string.address) + " " + model.getAddress().getMapsAddress());
+                                holder.orderPaymentType.setText("Metoda de plată: " + String.valueOf(model.getPaymentMethod()).toUpperCase(Locale.ROOT).replace("_", " "));
                                 holder.orderDateAndTime.setText("Data: " + model.getCurrentDateAndTime());
                                 holder.orderPriceTotal.setText(getString(R.string.total) + " " + (double) Math.round(model.getTotal() * 100d) / 100d + " " + getString(R.string.lei));
                                 Picasso.with(getBaseContext()).load(restaurantImage).placeholder(R.drawable.loading)

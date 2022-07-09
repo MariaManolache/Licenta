@@ -44,16 +44,44 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"></androidx.recyclerview.widget.RecyclerView>
 
-    <ImageView
-        android:id="@+id/noProductFound"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+<!--    <ImageView-->
+<!--        android:id="@+id/noProductFound"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:visibility="gone"-->
+<!--        android:src="@drawable/ic_no_order_found"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"></ImageView>-->
+
+    <TextView
         android:visibility="gone"
-        android:src="@drawable/ic_no_order_found"
-        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:id="@+id/tvNoRestaurants"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/alata"
+        android:gravity="center"
+        android:text="@string/restaurant_no_products"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></ImageView>
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/violet"
+        android:textSize="25sp"></TextView>
+
+    <ImageView
+        android:visibility="gone"
+        android:id="@+id/noRestaurants"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvNoRestaurants"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_cart_512"
+        android:textAlignment="center"></ImageView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddProduct"

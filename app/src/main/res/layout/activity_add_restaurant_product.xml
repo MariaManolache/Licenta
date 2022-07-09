@@ -71,7 +71,7 @@
                 android:backgroundTint="@color/white"
                 android:fontFamily="@font/alata"
                 android:hint="@string/margherita"
-                android:inputType="text"
+                android:inputType="textCapWords"
                 android:textAlignment="center"
                 android:textColor="@color/violet"
                 android:textSize="15dp"></EditText>
@@ -136,7 +136,7 @@
                 android:backgroundTint="@color/white"
                 android:fontFamily="@font/alata"
                 android:hint="@string/description_example"
-                android:inputType="text"
+                android:inputType="textCapSentences"
                 android:textAlignment="center"
                 android:textColor="@color/violet"
                 android:textSize="15dp"></EditText>

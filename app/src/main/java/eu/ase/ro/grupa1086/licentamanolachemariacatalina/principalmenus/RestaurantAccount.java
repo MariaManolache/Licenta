@@ -473,8 +473,11 @@ public class RestaurantAccount extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         Restaurant restaurant = snapshot.getValue(Restaurant.class);
-                                        restaurant.setName(name.getText().toString());
-                                        restaurants.child(user.getUid()).setValue(restaurant);
+                                        if (restaurant != null) {
+                                            restaurant.setName(name.getText().toString());
+                                            restaurants.child(user.getUid()).setValue(restaurant);
+                                            restaurantsByCategories.child(restaurant.getCategoryId()).child(restaurant.getId()).child("name").setValue(name.getText().toString());
+                                        }
                                     }
 
                                     @Override
@@ -536,7 +539,9 @@ public class RestaurantAccount extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         Restaurant restaurant = snapshot.getValue(Restaurant.class);
-                                        restaurant.setAddress(address.getText().toString());
+                                        if (restaurant != null) {
+                                            restaurant.setAddress(address.getText().toString());
+                                        }
                                         restaurants.child(user.getUid()).setValue(restaurant);
                                     }
 
@@ -569,9 +574,12 @@ public class RestaurantAccount extends AppCompatActivity {
                     public void onActivityResult(ActivityResult result) {
                         if (result.getResultCode() == Activity.RESULT_OK) {
                             // There are no request codes
-                            restaurantImageUri = result.getData().getData();
-                            Picasso.with(getApplicationContext()).load(restaurantImageUri).placeholder(R.drawable.loading).into(restaurantImage);
-                            uploadFile();
+                            if (result.getData() != null) {
+                                restaurantImageUri = result.getData().getData();
+                                Picasso.with(getApplicationContext()).load(restaurantImageUri).placeholder(R.drawable.loading).into(restaurantImage);
+                                uploadFile();
+                            }
+
                         }
                     }
                 });
@@ -703,11 +711,13 @@ public class RestaurantAccount extends AppCompatActivity {
                                                                 @Override
                                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                                     Order order = snapshot.getValue(Order.class);
-                                                                    Log.i("verificare", order.toString());
-                                                                    for (int i = 0; i < order.getRestaurantAddress().size(); i++) {
-                                                                        if (order.getRestaurantAddress().get(i).getId().equals(user.getUid())) {
-                                                                            order.getRestaurantAddress().get(i).setImage(uri.toString());
-                                                                            orders.child(userId).child(orderId).child("restaurantAddress").setValue(order.getRestaurantAddress());
+                                                                    //Log.i("verificare", order.toString());
+                                                                    if (order != null) {
+                                                                        for (int i = 0; i < order.getRestaurantAddress().size(); i++) {
+                                                                            if (order.getRestaurantAddress().get(i).getId().equals(user.getUid())) {
+                                                                                order.getRestaurantAddress().get(i).setImage(uri.toString());
+                                                                                orders.child(userId).child(orderId).child("restaurantAddress").setValue(order.getRestaurantAddress());
+                                                                            }
                                                                         }
                                                                     }
 
@@ -723,7 +733,9 @@ public class RestaurantAccount extends AppCompatActivity {
                                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                                     if (snapshot.exists()) {
                                                                         Restaurant restaurant = snapshot.getValue(Restaurant.class);
-                                                                        restaurant.setImage(uri.toString());
+                                                                        if (restaurant != null) {
+                                                                            restaurant.setImage(uri.toString());
+                                                                        }
                                                                         orders.child(userId).child(orderId).child("restaurants").child(user.getUid()).setValue(restaurant);
                                                                     }
                                                                 }

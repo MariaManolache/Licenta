@@ -238,6 +238,8 @@ public class SignIn extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), SignUp.class));
+                overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
+                finish();
             }
         });
 

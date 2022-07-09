@@ -237,7 +237,7 @@ public class RestaurantAccountsList extends AppCompatActivity {
                                     .child("restaurantOrdersHistory")
                                     .child(local.getId())
                                     .child("orders")
-                                    .orderByChild("currentDateAndTime")
+                                    .orderByChild("orderId")
                                     .limitToLast(50);
 
                             FirebaseRecyclerOptions<RestaurantOrder> options =
@@ -266,6 +266,7 @@ public class RestaurantAccountsList extends AppCompatActivity {
                                     holder2.orderAddress.setText("Adresa: " + model.getAddress().getMapsAddress());
                                     holder2.orderDateAndTime.setText("Data: " + model.getCurrentDateAndTime());
                                     holder2.orderPriceTotal.setText("Total: " + Math.round(model.getTotal() * 100.0) / 100.0 + " lei");
+                                    holder2.orderPaymentType.setText("Metoda de plată: " + String.valueOf(model.getPaymentMethod()).toUpperCase(Locale.ROOT).replace("_", " "));
 
                                     final RestaurantOrder local2 = model;
                                     holder2.setItemClickListener(new ItemClickListener() {

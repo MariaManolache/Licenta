@@ -331,7 +331,7 @@ public class NewRestaurantAccount extends AppCompatActivity {
                                                         restaurant.setCategories(chosenCategoriesIdList);
 
                                                         message = "Bine ai venit în echipa Deliver It Right, " + name + "!" + '\n' + '\n' + "Folosește următoarele date pentru a te conecta în aplicație:" + '\n' + '\n' +
-                                                                "Adresa de email: " + email + '\n' + "Parola: " + password;
+                                                                "Adresa de email: " + email + '\n' + "Parola: " + password + '\n' + '\n' + "Mulțumim și sperăm să avem o colaborare cât mai bună!" + '\n' + "Echipa Deliver It Right!";
 
                                                         databaseReference.setValue(restaurantAccount).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
@@ -362,6 +362,7 @@ public class NewRestaurantAccount extends AppCompatActivity {
                                                                                     startActivity(Intent.createChooser(sendEmail, "Alege email-ul:"));
 
                                                                                     finish();
+                                                                                    overridePendingTransition(R.anim.slide_nothing, R.anim.slide_down);
                                                                                 }
                                                                             });
                                                                         }

@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -88,7 +89,8 @@ public class RestaurantOrders extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
     boolean allRestaurantsConfirmed;
-    ImageView noRestaurantOrderFound;
+    ImageView nothingFound;
+    TextView tvNoRestaurant;
 
 
     @Override
@@ -116,7 +118,8 @@ public class RestaurantOrders extends AppCompatActivity {
 
         acceptOrder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogStyle));
 
-        noRestaurantOrderFound = findViewById(R.id.noRestaurantOrderFound);
+        nothingFound = findViewById(R.id.noRestaurants);
+        tvNoRestaurant = findViewById(R.id.tvNoRestaurants);
 
         loadOrders();
 
@@ -178,9 +181,11 @@ public class RestaurantOrders extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.getValue() == null) {
-                    noRestaurantOrderFound.setVisibility(View.VISIBLE);
+                    nothingFound.setVisibility(View.VISIBLE);
+                    tvNoRestaurant.setVisibility(View.VISIBLE);
                 } else {
-                    noRestaurantOrderFound.setVisibility(View.GONE);
+                    nothingFound.setVisibility(View.GONE);
+                    tvNoRestaurant.setVisibility(View.GONE);
                 }
             }
 

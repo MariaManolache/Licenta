@@ -128,7 +128,7 @@ public class NewDriverAccount extends AppCompatActivity {
                             User newUser = new User(id, email, name, password, phoneNumber, isDriver);
 
                             message = "Bine ai venit în echipa Deliver It Right, " + name + "!" + '\n' + '\n' + "Folosește următoarele date pentru a te conecta în aplicație:" + '\n' + '\n' +
-                                    "Adresa de email: " + email + '\n' + "Parola: " + password;
+                                    "Adresa de email: " + email + '\n' + "Parola: " + password + '\n' + '\n' + "Mulțumim și sperăm să avem o colaborare cât mai bună!" + '\n' + "Echipa Deliver It Right!";
 
                             databaseReference.setValue(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -145,6 +145,7 @@ public class NewDriverAccount extends AppCompatActivity {
                                         startActivity(Intent.createChooser(sendEmail, "Alege email-ul:"));
 
                                         finish();
+                                        overridePendingTransition(R.anim.slide_nothing, R.anim.slide_down);
                                     } else {
                                         Toast.makeText(NewDriverAccount.this, "Eroare la crearea contului" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                     }

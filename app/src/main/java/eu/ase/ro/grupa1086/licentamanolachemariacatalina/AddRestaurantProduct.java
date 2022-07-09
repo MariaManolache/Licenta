@@ -138,7 +138,7 @@ public class AddRestaurantProduct extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(getApplicationContext(), "Imaginea a fost incarcata", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Imaginea a fost încărcată", Toast.LENGTH_SHORT).show();
 
                             fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
@@ -152,22 +152,22 @@ public class AddRestaurantProduct extends AppCompatActivity {
                                     Log.i("preparation", String.valueOf(preparationTime));
 
                                     if (TextUtils.isEmpty(productName)) {
-                                        addProductName.setError("Numele este necesar pentru adaugarea produsului");
+                                        addProductName.setError("Numele este necesar pentru adăugarea produsului");
                                         return;
                                     }
 
                                     if (TextUtils.isEmpty(String.valueOf(productPrice))) {
-                                        addProductPrice.setError("Pretul este necesar pentru adaugarea produsului");
+                                        addProductPrice.setError("Prețul este necesar pentru adăugarea produsului");
                                         return;
                                     }
 
                                     if (TextUtils.isEmpty(productDescription)) {
-                                        addProductDescription.setError("Descrierea este necesara pentru adaugarea produsului");
+                                        addProductDescription.setError("Descrierea este necesară pentru adăugarea produsului");
                                         return;
                                     }
 
                                     if (restaurantImageUri == null) {
-                                        Toast.makeText(getApplicationContext(), "Trebuie selectata o imagine pentru produs", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getApplicationContext(), "Trebuie selectată o imagine pentru produs", Toast.LENGTH_SHORT).show();
                                         return;
                                     }
 
@@ -176,7 +176,7 @@ public class AddRestaurantProduct extends AppCompatActivity {
                                     restaurants.child(id).setValue(food).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
-                                            Toast.makeText(getApplicationContext(), "Produsul a fost adaugat", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplicationContext(), "Produsul a fost adăugat", Toast.LENGTH_LONG).show();
                                             finish();
                                         }
                                     });
@@ -193,7 +193,7 @@ public class AddRestaurantProduct extends AppCompatActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getApplicationContext(), "Imaginea nu a putut fi incarcata", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Imaginea nu a putut fi încărcată", Toast.LENGTH_SHORT).show();
                         }
                     });
 
