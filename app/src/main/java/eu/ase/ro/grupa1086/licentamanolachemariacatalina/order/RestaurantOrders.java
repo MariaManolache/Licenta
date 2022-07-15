@@ -3,13 +3,9 @@ package eu.ase.ro.grupa1086.licentamanolachemariacatalina.order;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -45,14 +41,13 @@ import java.util.List;
 import java.util.Locale;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.RestaurantProducts;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.restaurant.RestaurantProducts;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Order;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.RestaurantOrder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Status;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.PrincipalMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.RestaurantAccount;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.RestaurantOrderDetailsViewHolder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.RestaurantOrderViewHolder;
@@ -100,14 +95,14 @@ public class RestaurantOrders extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
-        Log.i("restaurantOrder", user.getUid());
+        //Log.i("restaurantOrder", user.getUid());
         restaurants = database.getReference("restaurants");
         driverOrders = database.getReference().child("driverOrders");
         restaurantOrders = database.getReference().child("restaurantOrders");
         orders = database.getReference().child("orders");
         users = database.getReference("users");
         restaurantOrdersHistory = database.getReference("restaurantOrdersHistory");
-        ordersHistory = database.getInstance().getReference("ordersHistory");
+        ordersHistory = database.getReference("ordersHistory");
 
         recyclerView = (RecyclerView) findViewById(R.id.restaurantOrdersList);
         recyclerView.setHasFixedSize(true);

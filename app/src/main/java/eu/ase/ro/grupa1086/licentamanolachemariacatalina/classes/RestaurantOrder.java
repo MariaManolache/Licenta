@@ -1,5 +1,7 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
@@ -143,6 +145,7 @@ public class RestaurantOrder implements Serializable {
         this.currentDateAndTime = currentDateAndTime;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "RestaurantOrder{" +

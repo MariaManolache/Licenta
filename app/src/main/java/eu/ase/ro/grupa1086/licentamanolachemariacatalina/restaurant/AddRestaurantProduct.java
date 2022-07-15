@@ -1,4 +1,4 @@
-package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
+package eu.ase.ro.grupa1086.licentamanolachemariacatalina.restaurant;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -43,6 +43,7 @@ import com.squareup.picasso.Picasso;
 import java.time.Duration;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Order;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
@@ -115,7 +116,9 @@ public class AddRestaurantProduct extends AppCompatActivity {
                     public void onActivityResult(ActivityResult result) {
                         if (result.getResultCode() == Activity.RESULT_OK) {
                             // There are no request codes
-                            restaurantImageUri = result.getData().getData();
+                            if (result.getData() != null) {
+                                restaurantImageUri = result.getData().getData();
+                            }
                             Picasso.with(getApplicationContext()).load(restaurantImageUri).into(addProductImage);
                         }
                     }
@@ -138,7 +141,6 @@ public class AddRestaurantProduct extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(getApplicationContext(), "Imaginea a fost încărcată", Toast.LENGTH_SHORT).show();
 
                             fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
@@ -146,17 +148,17 @@ public class AddRestaurantProduct extends AppCompatActivity {
                                     productImage = uri.toString();
 
                                     String productName = addProductName.getText().toString();
-                                    float productPrice = Float.parseFloat(addProductPrice.getText().toString());
+                                    String productPriceString = addProductPrice.getText().toString();
                                     String productDescription = addProductDescription.getText().toString();
-                                    int preparationTime = Integer.parseInt(addProductTime.getText().toString());
-                                    Log.i("preparation", String.valueOf(preparationTime));
+                                    String preparationTimeString = addProductTime.getText().toString();
+                                    //Log.i("preparation", String.valueOf(preparationTimeString));
 
                                     if (TextUtils.isEmpty(productName)) {
                                         addProductName.setError("Numele este necesar pentru adăugarea produsului");
                                         return;
                                     }
 
-                                    if (TextUtils.isEmpty(String.valueOf(productPrice))) {
+                                    if (TextUtils.isEmpty(String.valueOf(productPriceString))) {
                                         addProductPrice.setError("Prețul este necesar pentru adăugarea produsului");
                                         return;
                                     }
@@ -166,10 +168,20 @@ public class AddRestaurantProduct extends AppCompatActivity {
                                         return;
                                     }
 
+                                    if (TextUtils.isEmpty(preparationTimeString)) {
+                                        addProductDescription.setError("Timpul de preparare este necesar pentru adăugarea produsului");
+                                        return;
+                                    }
+
                                     if (restaurantImageUri == null) {
                                         Toast.makeText(getApplicationContext(), "Trebuie selectată o imagine pentru produs", Toast.LENGTH_SHORT).show();
                                         return;
                                     }
+
+                                    float productPrice = Float.parseFloat(addProductPrice.getText().toString());
+                                    int preparationTime = Integer.parseInt(addProductTime.getText().toString());
+
+                                    Toast.makeText(getApplicationContext(), "Imaginea a fost încărcată", Toast.LENGTH_SHORT).show();
 
 
                                     Food food = new Food(id, productName, productPrice, productDescription, 0, productImage, user.getUid(), preparationTime);

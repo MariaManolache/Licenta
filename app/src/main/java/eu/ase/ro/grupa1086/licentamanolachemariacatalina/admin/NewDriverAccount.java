@@ -114,8 +114,11 @@ public class NewDriverAccount extends AppCompatActivity {
 
                             int isDriver = 1;
                             FirebaseUser user = firebaseAuth.getCurrentUser();
-                            String id = user.getUid();
-                            databaseReference = FirebaseDatabase.getInstance().getReference("users").child(id);
+                            String id = null;
+                            if (user != null) {
+                                id = user.getUid();
+
+                                databaseReference = FirebaseDatabase.getInstance().getReference("users").child(id);
 //                                HashMap<String, String> hashMap = new HashMap<>();
 //                                hashMap.put("id", id);
 //                                hashMap.put("name", name);
@@ -125,32 +128,33 @@ public class NewDriverAccount extends AppCompatActivity {
 //                                hashMap.put("isDriver", isDriver);
 
 
-                            User newUser = new User(id, email, name, password, phoneNumber, isDriver);
+                                User newUser = new User(id, email, name, password, phoneNumber, isDriver);
 
-                            message = "Bine ai venit în echipa Deliver It Right, " + name + "!" + '\n' + '\n' + "Folosește următoarele date pentru a te conecta în aplicație:" + '\n' + '\n' +
-                                    "Adresa de email: " + email + '\n' + "Parola: " + password + '\n' + '\n' + "Mulțumim și sperăm să avem o colaborare cât mai bună!" + '\n' + "Echipa Deliver It Right!";
+                                message = "Bine ai venit în echipa Deliver It Right, " + name + "!" + '\n' + '\n' + "Folosește următoarele date pentru a te conecta în aplicație:" + '\n' + '\n' +
+                                        "Adresa de email: " + email + '\n' + "Parola: " + password + '\n' + '\n' + "Mulțumim și sperăm să avem o colaborare cât mai bună!" + '\n' + "Echipa Deliver It Right!";
 
-                            databaseReference.setValue(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(NewDriverAccount.this, "Livrator adăugat", Toast.LENGTH_SHORT).show();
-                                        Intent sendEmail = new Intent(Intent.ACTION_SEND);
-                                        sendEmail.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
-                                        sendEmail.putExtra(Intent.EXTRA_SUBJECT, subject);
-                                        sendEmail.putExtra(Intent.EXTRA_TEXT, message);
+                                databaseReference.setValue(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(NewDriverAccount.this, "Livrator adăugat", Toast.LENGTH_SHORT).show();
+                                            Intent sendEmail = new Intent(Intent.ACTION_SEND);
+                                            sendEmail.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
+                                            sendEmail.putExtra(Intent.EXTRA_SUBJECT, subject);
+                                            sendEmail.putExtra(Intent.EXTRA_TEXT, message);
 
-                                        sendEmail.setType("message/rfc822");
+                                            sendEmail.setType("message/rfc822");
 
-                                        startActivity(Intent.createChooser(sendEmail, "Alege email-ul:"));
+                                            startActivity(Intent.createChooser(sendEmail, "Alege email-ul:"));
 
-                                        finish();
-                                        overridePendingTransition(R.anim.slide_nothing, R.anim.slide_down);
-                                    } else {
-                                        Toast.makeText(NewDriverAccount.this, "Eroare la crearea contului" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                            finish();
+                                            overridePendingTransition(R.anim.slide_nothing, R.anim.slide_down);
+                                        } else {
+                                            Toast.makeText(NewDriverAccount.this, "Eroare la crearea contului" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
 
 
                         } else {

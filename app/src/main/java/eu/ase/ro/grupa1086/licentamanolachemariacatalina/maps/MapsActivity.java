@@ -1,4 +1,4 @@
-package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
+package eu.ase.ro.grupa1086.licentamanolachemariacatalina.maps;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.order.PlaceOrder;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMarkerDragListener {
@@ -134,7 +135,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera

@@ -1,10 +1,12 @@
-package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
+package eu.ase.ro.grupa1086.licentamanolachemariacatalina.splashscreen;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
+
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.MainActivity;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 
 public class SplashScreenActivity extends AppCompatActivity {
 

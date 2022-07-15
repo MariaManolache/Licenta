@@ -1,4 +1,4 @@
-package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
+package eu.ase.ro.grupa1086.licentamanolachemariacatalina.restaurant;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,13 +37,11 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.food.FoodInfo;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.food.FoodList;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.order.RestaurantOrders;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.RestaurantAccount;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.FoodViewHolder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.RestaurantFoodViewHolder;
 
 public class RestaurantProducts extends AppCompatActivity {

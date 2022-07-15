@@ -147,9 +147,11 @@ public class NewRestaurantAccount extends AppCompatActivity {
                 listCategoryId = new ArrayList<>();
                 for (DataSnapshot snap : dataSnapshot.getChildren()) {
                     Category category = snap.getValue(Category.class);
-                    Log.i("categoryName", category.toString());
-                    mapCategoryId.put(category.getId(), category.getName());
-                    listCategoryId.add(category.getName());
+                    //Log.i("categoryName", category.toString());
+                    if (category != null) {
+                        mapCategoryId.put(category.getId(), category.getName());
+                        listCategoryId.add(category.getName());
+                    }
 
                 }
 
@@ -223,7 +225,7 @@ public class NewRestaurantAccount extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
 
@@ -246,8 +248,10 @@ public class NewRestaurantAccount extends AppCompatActivity {
                     public void onActivityResult(ActivityResult result) {
                         if (result.getResultCode() == Activity.RESULT_OK) {
                             // There are no request codes
-                            restaurantImageUri = result.getData().getData();
-                            Picasso.with(getApplicationContext()).load(restaurantImageUri).into(restaurantImage);
+                            if (result.getData() != null) {
+                                restaurantImageUri = result.getData().getData();
+                                Picasso.with(getApplicationContext()).load(restaurantImageUri).into(restaurantImage);
+                            }
                         }
                     }
                 });
@@ -378,7 +382,7 @@ public class NewRestaurantAccount extends AppCompatActivity {
                                                         .addOnFailureListener(new OnFailureListener() {
                                                             @Override
                                                             public void onFailure(@NonNull Exception e) {
-                                                                Toast.makeText(getApplicationContext(), "Imaginea nu a putut fi incarcata", Toast.LENGTH_SHORT).show();
+                                                                Toast.makeText(getApplicationContext(), "Imaginea nu a putut fi încărcată", Toast.LENGTH_SHORT).show();
                                                             }
                                                         });
                                             }
@@ -392,7 +396,7 @@ public class NewRestaurantAccount extends AppCompatActivity {
 
 
                         } else {
-                            Toast.makeText(NewRestaurantAccount.this, "Eroare la crearea contului" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(NewRestaurantAccount.this, "Eroare la crearea contului", Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
                         }
 

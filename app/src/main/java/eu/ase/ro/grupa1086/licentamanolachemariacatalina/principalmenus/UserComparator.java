@@ -4,6 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Comparator;
 import java.util.Map;
+import java.util.Objects;
 
 public class UserComparator implements Comparator<Object> {
     Map<LatLng, Double> map;
@@ -16,7 +17,7 @@ public class UserComparator implements Comparator<Object> {
         if (map.get(o2) == map.get(o1))
             return 1;
         else
-            return ((Double) map.get(o1)).compareTo((Double)
-                    map.get(o2));
+            return ((Double) Objects.requireNonNull(map.get(o1))).compareTo((Double)
+                    Objects.requireNonNull(map.get(o2)));
     }
 }

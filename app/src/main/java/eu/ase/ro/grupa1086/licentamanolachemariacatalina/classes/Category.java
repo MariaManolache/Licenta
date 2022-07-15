@@ -2,6 +2,8 @@ package eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes;
 
 import android.media.Image;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -64,6 +66,7 @@ public class Category implements Serializable {
 //    }
 
 
+    @NonNull
     @Override
     public String toString() {
         return "Category{" +

@@ -1,5 +1,7 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.time.Duration;
 
@@ -133,6 +135,7 @@ public class Food implements Serializable {
         this.preparationTime = preparationTime;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Food{" +

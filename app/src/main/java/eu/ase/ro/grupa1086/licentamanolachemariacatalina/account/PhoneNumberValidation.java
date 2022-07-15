@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.Home;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.old.Home;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.PrincipalMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
@@ -99,8 +99,11 @@ public class PhoneNumberValidation extends AppCompatActivity {
 
                                 int isDriver = 0;
                                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                                String id = user.getUid();
-                                databaseReference = FirebaseDatabase.getInstance().getReference("users").child(id);
+                                String id = null;
+                                if (user != null) {
+                                    id = user.getUid();
+
+                                    databaseReference = FirebaseDatabase.getInstance().getReference("users").child(id);
 //                                HashMap<String, String> hashMap = new HashMap<>();
 //                                hashMap.put("id", id);
 //                                hashMap.put("name", name);
@@ -109,56 +112,57 @@ public class PhoneNumberValidation extends AppCompatActivity {
 //                                hashMap.put("password", password);
 //                                hashMap.put("isDriver", isDriver);
 
-                                User newUser = new User(id, email, name, password,phoneNumber, isDriver);
+                                    User newUser = new User(id, email, name, password, phoneNumber, isDriver);
 
 
-                                databaseReference.setValue(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Toast.makeText(PhoneNumberValidation.this, "Cont creat", Toast.LENGTH_SHORT).show();
-                                            startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
-                                            overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
-                                            finish();
-                                        } else {
-                                            Toast.makeText(PhoneNumberValidation.this, "Eroare la crearea contului" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                    databaseReference.setValue(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(PhoneNumberValidation.this, "Cont creat", Toast.LENGTH_SHORT).show();
+                                                startActivity(new Intent(getApplicationContext(), PrincipalMenu.class));
+                                                overridePendingTransition(R.anim.slide_left2, R.anim.slide_right2);
+                                                finish();
+                                            } else {
+                                                Toast.makeText(PhoneNumberValidation.this, "Eroare la crearea contului" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                            }
                                         }
-                                    }
-                                });
+                                    });
 
-                                databaseReferenceShoppingCart = FirebaseDatabase.getInstance().getReference("carts").child(id);
-                                Cart cart = new Cart(id, foodList);
-                                HashMap<String, String> hashMapCarts = new HashMap<>();
-                                hashMapCarts.put("id", id);
-                                hashMapCarts.put("food", foodList.toString());
-                                databaseReferenceShoppingCart.setValue(cart).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Toast.makeText(PhoneNumberValidation.this, "Cos de cumparaturi creat", Toast.LENGTH_LONG).show();
-                                        } else {
-                                            Toast.makeText(PhoneNumberValidation.this, "Eroare la crearea contului" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                    databaseReferenceShoppingCart = FirebaseDatabase.getInstance().getReference("carts").child(id);
+                                    Cart cart = new Cart(id, foodList);
+                                    HashMap<String, String> hashMapCarts = new HashMap<>();
+                                    hashMapCarts.put("id", id);
+                                    hashMapCarts.put("food", foodList.toString());
+                                    databaseReferenceShoppingCart.setValue(cart).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(PhoneNumberValidation.this, "Cos de cumparaturi creat", Toast.LENGTH_LONG).show();
+                                            } else {
+                                                Toast.makeText(PhoneNumberValidation.this, "Eroare la crearea contului" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                            }
                                         }
-                                    }
-                                });
+                                    });
 
-                                databaseReferenceAddresses = FirebaseDatabase.getInstance().getReference("addresses").child(id);
-                                AddressList addressList = new AddressList(id, addressesList);
-                                databaseReferenceAddresses.setValue(addressList).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Toast.makeText(PhoneNumberValidation.this, "Lista de adrese creata", Toast.LENGTH_LONG).show();
-                                        } else {
-                                            Toast.makeText(PhoneNumberValidation.this, "Eroare la crearea listei de adrese" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                    databaseReferenceAddresses = FirebaseDatabase.getInstance().getReference("addresses").child(id);
+                                    AddressList addressList = new AddressList(id, addressesList);
+                                    databaseReferenceAddresses.setValue(addressList).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(PhoneNumberValidation.this, "Lista de adrese creata", Toast.LENGTH_LONG).show();
+                                            } else {
+                                                Toast.makeText(PhoneNumberValidation.this, "Eroare la crearea listei de adrese" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+
+                                }
 
                             } else {
                                 Toast.makeText(PhoneNumberValidation.this, "Eroare la crearea contului" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                             }
-
 
 
                         }

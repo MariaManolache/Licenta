@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.Home;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.old.Home;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.firebase.FirebaseService;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;

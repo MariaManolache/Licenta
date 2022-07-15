@@ -1,5 +1,7 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina.rating;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.Map;
 
@@ -63,6 +65,7 @@ public class Rating implements Serializable {
         this.commentTimeStamp = commentTimeStamp;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Rating{" +

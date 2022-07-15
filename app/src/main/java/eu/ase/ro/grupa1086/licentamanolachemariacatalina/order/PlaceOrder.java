@@ -281,22 +281,24 @@ public class PlaceOrder extends AppCompatActivity {
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                             Address address1 = dataSnapshot.getValue(Address.class);
-                                            if (address1.getMapsAddress().equals(newAddress.getMapsAddress())) {
+                                            if (address1 != null && address1.getMapsAddress().equals(newAddress.getMapsAddress())) {
                                                 same = 1;
                                             }
                                         }
 
                                         if (same != 1) {
-                                            addresses.child(addressId).setValue(newAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if (task.isSuccessful()) {
-                                                        Toast.makeText(PlaceOrder.this, "Adresa adaugata", Toast.LENGTH_SHORT).show();
-                                                    } else {
-                                                        //Toast.makeText(PlaceOrder.this, "Eroare la adaugarea adresei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                            if (addressId != null) {
+                                                addresses.child(addressId).setValue(newAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()) {
+                                                            Toast.makeText(PlaceOrder.this, "Adresa adaugata", Toast.LENGTH_SHORT).show();
+                                                        } else {
+                                                            //Toast.makeText(PlaceOrder.this, "Eroare la adaugarea adresei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                                        }
                                                     }
-                                                }
-                                            });
+                                                });
+                                            }
                                         }
                                     }
 
@@ -368,46 +370,50 @@ public class PlaceOrder extends AppCompatActivity {
 //                                }
                                     RestaurantOrder restaurantOrder = new RestaurantOrder(restaurantsId.get(i), restaurantFood, orderId, status, totalForCurrentRestaurant, paymentMethod, userId, currentRestaurant, newAddress, preparationTime);
                                     restaurantOrder.setCurrentDateAndTime(simpleDateFormat.format(calendar.getTime()));
-                                    restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).setValue(restaurantOrder);
+                                    if (orderId != null) {
+                                        restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).setValue(restaurantOrder);
+                                    }
                                     restaurantOrders.child(restaurantsId.get(i)).child("id").setValue(restaurantsId.get(i));
                                     restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).child("confirmed").setValue(false);
 
                                 }
 
 //                                driverOrders.child(orderId).setValue(order);
-                                orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Toast.makeText(PlaceOrder.this, "Comandă plasata", Toast.LENGTH_LONG).show();
+                                if (orderId != null) {
+                                    orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(PlaceOrder.this, "Comandă plasata", Toast.LENGTH_LONG).show();
 
-                                            ordersHistory.child(orderId).setValue(order);
-                                            for (int i = 0; i < restaurantAddresses.size(); i++) {
-                                                orders.child(orderId).child("restaurants").child(restaurantAddresses.get(i).getId()).setValue(restaurantAddresses.get(i));
-                                            }
+                                                ordersHistory.child(orderId).setValue(order);
+                                                for (int i = 0; i < restaurantAddresses.size(); i++) {
+                                                    orders.child(orderId).child("restaurants").child(restaurantAddresses.get(i).getId()).setValue(restaurantAddresses.get(i));
+                                                }
 
 
-                                            if (paymentMethod.equals(PaymentMethod.CARD_ONLINE)) {
-                                                Intent cardPayment = new Intent(PlaceOrder.this, CardPayment.class);
-                                                cardPayment.putExtra("orderId", orderId);
-                                                cardPayment.putExtra("origin", "cardPayment");
-                                                startActivity(cardPayment);
-                                                overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
-                                                finish();
+                                                if (paymentMethod.equals(PaymentMethod.CARD_ONLINE)) {
+                                                    Intent cardPayment = new Intent(PlaceOrder.this, CardPayment.class);
+                                                    cardPayment.putExtra("orderId", orderId);
+                                                    cardPayment.putExtra("origin", "cardPayment");
+                                                    startActivity(cardPayment);
+                                                    overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
+                                                    finish();
+                                                } else {
+                                                    Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
+                                                    confirmationOrder.putExtra("orderId", orderId);
+                                                    confirmationOrder.putExtra("origin", "mapsLocation");
+                                                    startActivity(confirmationOrder);
+                                                    finish();
+                                                    overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
+                                                }
+
                                             } else {
-                                                Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
-                                                confirmationOrder.putExtra("orderId", orderId);
-                                                confirmationOrder.putExtra("origin", "mapsLocation");
-                                                startActivity(confirmationOrder);
-                                                finish();
-                                                overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
+                                                //Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                             }
-
-                                        } else {
-                                            //Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                         }
-                                    }
-                                });
+                                    });
+                                }
 
                             }
                         });
@@ -504,22 +510,24 @@ public class PlaceOrder extends AppCompatActivity {
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                     Address address1 = dataSnapshot.getValue(Address.class);
-                                    if (address1.getMapsAddress().equals(newAddress.getMapsAddress())) {
+                                    if (address1 != null && address1.getMapsAddress().equals(newAddress.getMapsAddress())) {
                                         same = 1;
                                     }
                                 }
 
                                 if (same != 1) {
-                                    addresses.child(addressId).setValue(newAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                Toast.makeText(PlaceOrder.this, "Adresa adaugata", Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                Toast.makeText(PlaceOrder.this, "Eroare la adaugarea adresei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                    if (addressId != null) {
+                                        addresses.child(addressId).setValue(newAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(PlaceOrder.this, "Adresa adaugata", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(PlaceOrder.this, "Eroare la adaugarea adresei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                                }
                                             }
-                                        }
-                                    });
+                                        });
+                                    }
                                 }
                             }
 
@@ -596,37 +604,39 @@ public class PlaceOrder extends AppCompatActivity {
 
                         Log.i("restaurant", String.valueOf(restaurantAddresses));
                         //driverOrders.child(orderId).setValue(order);
-                        orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(PlaceOrder.this, "Comandă plasată", Toast.LENGTH_LONG).show();
+                        if (orderId != null) {
+                            orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(PlaceOrder.this, "Comandă plasată", Toast.LENGTH_LONG).show();
 
-                                    ordersHistory.child(orderId).setValue(order);
-                                    for (int i = 0; i < restaurantAddresses.size(); i++) {
-                                        orders.child(orderId).child("restaurants").child(restaurantAddresses.get(i).getId()).setValue(restaurantAddresses.get(i));
-                                    }
+                                        ordersHistory.child(orderId).setValue(order);
+                                        for (int i = 0; i < restaurantAddresses.size(); i++) {
+                                            orders.child(orderId).child("restaurants").child(restaurantAddresses.get(i).getId()).setValue(restaurantAddresses.get(i));
+                                        }
 
-                                    if (paymentMethod.equals(PaymentMethod.CARD_ONLINE)) {
-                                        Intent cardPayment = new Intent(PlaceOrder.this, CardPayment.class);
-                                        cardPayment.putExtra("orderId", orderId);
-                                        cardPayment.putExtra("origin", "cardPayment");
-                                        startActivity(cardPayment);
-                                        finish();
-                                        overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
+                                        if (paymentMethod.equals(PaymentMethod.CARD_ONLINE)) {
+                                            Intent cardPayment = new Intent(PlaceOrder.this, CardPayment.class);
+                                            cardPayment.putExtra("orderId", orderId);
+                                            cardPayment.putExtra("origin", "cardPayment");
+                                            startActivity(cardPayment);
+                                            finish();
+                                            overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
+                                        } else {
+                                            Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
+                                            confirmationOrder.putExtra("orderId", orderId);
+                                            confirmationOrder.putExtra("origin", "currentAddress");
+                                            startActivity(confirmationOrder);
+                                            finish();
+                                            overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
+                                        }
                                     } else {
-                                        Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
-                                        confirmationOrder.putExtra("orderId", orderId);
-                                        confirmationOrder.putExtra("origin", "currentAddress");
-                                        startActivity(confirmationOrder);
-                                        finish();
-                                        overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
+                                        Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                     }
-                                } else {
-                                    Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                 }
-                            }
-                        });
+                            });
+                        }
                     }
 
                 });
@@ -684,22 +694,24 @@ public class PlaceOrder extends AppCompatActivity {
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                     Address address1 = dataSnapshot.getValue(Address.class);
-                                    if (address1.getMapsAddress().equals(newAddress.getMapsAddress())) {
+                                    if (address1 != null && address1.getMapsAddress().equals(newAddress.getMapsAddress())) {
                                         same = 1;
                                     }
                                 }
 
                                 if (same != 1) {
-                                    addresses.child(addressId).setValue(newAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                Toast.makeText(PlaceOrder.this, "Adresa adaugata", Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                Toast.makeText(PlaceOrder.this, "Eroare la adaugarea adresei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                    if (addressId != null) {
+                                        addresses.child(addressId).setValue(newAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(PlaceOrder.this, "Adresa adaugata", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(PlaceOrder.this, "Eroare la adaugarea adresei" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                                }
                                             }
-                                        }
-                                    });
+                                        });
+                                    }
                                 }
                             }
 
@@ -768,45 +780,49 @@ public class PlaceOrder extends AppCompatActivity {
 //                                }
                             RestaurantOrder restaurantOrder = new RestaurantOrder(restaurantsId.get(i), restaurantFood, orderId, status, totalForCurrentRestaurant, paymentMethod, userId, currentRestaurant, newAddress, preparationTime);
                             restaurantOrder.setCurrentDateAndTime(simpleDateFormat.format(calendar.getTime()));
-                            restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).setValue(restaurantOrder);
+                            if (orderId != null) {
+                                restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).setValue(restaurantOrder);
+                            }
                             restaurantOrders.child(restaurantsId.get(i)).child("id").setValue(restaurantsId.get(i));
                             restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).child("confirmed").setValue(false);
                         }
 
                         //driverOrders.child(orderId).setValue(order);
-                        orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(PlaceOrder.this, "Comandă plasată", Toast.LENGTH_LONG).show();
+                        if (orderId != null) {
+                            orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(PlaceOrder.this, "Comandă plasată", Toast.LENGTH_LONG).show();
 
-                                    ordersHistory.child(orderId).setValue(order);
-                                    for (int i = 0; i < restaurantAddresses.size(); i++) {
-                                        orders.child(orderId).child("restaurants").child(restaurantAddresses.get(i).getId()).setValue(restaurantAddresses.get(i));
-                                    }
-                                    //cart.removeValue();
+                                        ordersHistory.child(orderId).setValue(order);
+                                        for (int i = 0; i < restaurantAddresses.size(); i++) {
+                                            orders.child(orderId).child("restaurants").child(restaurantAddresses.get(i).getId()).setValue(restaurantAddresses.get(i));
+                                        }
+                                        //cart.removeValue();
 
-                                    if (paymentMethod.equals(PaymentMethod.CARD_ONLINE)) {
-                                        Intent cardPayment = new Intent(PlaceOrder.this, CardPayment.class);
-                                        cardPayment.putExtra("orderId", orderId);
-                                        cardPayment.putExtra("origin", "cardPayment-anotherAddress");
-                                        startActivity(cardPayment);
-                                        finish();
-                                        overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
+                                        if (paymentMethod.equals(PaymentMethod.CARD_ONLINE)) {
+                                            Intent cardPayment = new Intent(PlaceOrder.this, CardPayment.class);
+                                            cardPayment.putExtra("orderId", orderId);
+                                            cardPayment.putExtra("origin", "cardPayment-anotherAddress");
+                                            startActivity(cardPayment);
+                                            finish();
+                                            overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
+                                        } else {
+                                            Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
+                                            confirmationOrder.putExtra("orderId", orderId);
+                                            confirmationOrder.putExtra("origin", "addAnotherAddress");
+                                            startActivity(confirmationOrder);
+                                            finish();
+                                            overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
+                                        }
+
                                     } else {
-                                        Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
-                                        confirmationOrder.putExtra("orderId", orderId);
-                                        confirmationOrder.putExtra("origin", "addAnotherAddress");
-                                        startActivity(confirmationOrder);
-                                        finish();
-                                        overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
+                                        Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                     }
-
-                                } else {
-                                    Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                 }
-                            }
-                        });
+                            });
+                        }
 
                     }
 
@@ -822,7 +838,9 @@ public class PlaceOrder extends AppCompatActivity {
                     tvAddressInfo.setVisibility(View.VISIBLE);
                     tvAddress.setVisibility(View.VISIBLE);
 //                    if (address != null) {
-                    tvAddressInfo.setText(address.getMapsAddress());
+                    if (address != null) {
+                        tvAddressInfo.setText(address.getMapsAddress());
+                    }
                     loadTransportFee(address.getMapsAddress());
                     //}
 
@@ -896,46 +914,50 @@ public class PlaceOrder extends AppCompatActivity {
 //                                }
                                 RestaurantOrder restaurantOrder = new RestaurantOrder(restaurantsId.get(i), restaurantFood, orderId, status, totalForCurrentRestaurant, paymentMethod, userId, currentRestaurant, address, preparationTime);
                                 restaurantOrder.setCurrentDateAndTime(simpleDateFormat.format(calendar.getTime()));
-                                restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).setValue(restaurantOrder);
+                                if (orderId != null) {
+                                    restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).setValue(restaurantOrder);
+                                }
                                 restaurantOrders.child(restaurantsId.get(i)).child("id").setValue(restaurantsId.get(i));
                                 restaurantOrders.child(restaurantsId.get(i)).child("orders").child(orderId).child("confirmed").setValue(false);
                             }
 
 
                             //driverOrders.child(orderId).setValue(order);
-                            orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(PlaceOrder.this, "Comandă plasată", Toast.LENGTH_LONG).show();
+                            if (orderId != null) {
+                                orders.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(PlaceOrder.this, "Comandă plasată", Toast.LENGTH_LONG).show();
 
-//                                        cart.removeValue();
-                                        ordersHistory.child(orderId).setValue(order);
-                                        for (int i = 0; i < restaurantAddresses.size(); i++) {
-                                            orders.child(orderId).child("restaurants").child(restaurantAddresses.get(i).getId()).setValue(restaurantAddresses.get(i));
-                                        }
+    //                                        cart.removeValue();
+                                            ordersHistory.child(orderId).setValue(order);
+                                            for (int i = 0; i < restaurantAddresses.size(); i++) {
+                                                orders.child(orderId).child("restaurants").child(restaurantAddresses.get(i).getId()).setValue(restaurantAddresses.get(i));
+                                            }
 
-                                        if (paymentMethod.equals(PaymentMethod.CARD_ONLINE)) {
-                                            Intent cardPayment = new Intent(PlaceOrder.this, CardPayment.class);
-                                            cardPayment.putExtra("orderId", orderId);
-                                            cardPayment.putExtra("origin", "cardPayment");
-                                            startActivity(cardPayment);
-                                            finish();
-                                            overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
+                                            if (paymentMethod.equals(PaymentMethod.CARD_ONLINE)) {
+                                                Intent cardPayment = new Intent(PlaceOrder.this, CardPayment.class);
+                                                cardPayment.putExtra("orderId", orderId);
+                                                cardPayment.putExtra("origin", "cardPayment");
+                                                startActivity(cardPayment);
+                                                finish();
+                                                overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
+                                            } else {
+                                                Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
+                                                confirmationOrder.putExtra("orderId", orderId);
+                                                confirmationOrder.putExtra("origin", "savedAddress");
+                                                startActivity(confirmationOrder);
+                                                finish();
+                                                overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
+                                            }
+
                                         } else {
-                                            Intent confirmationOrder = new Intent(PlaceOrder.this, ConfirmationOrder.class);
-                                            confirmationOrder.putExtra("orderId", orderId);
-                                            confirmationOrder.putExtra("origin", "savedAddress");
-                                            startActivity(confirmationOrder);
-                                            finish();
-                                            overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
+                                            Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                         }
-
-                                    } else {
-                                        Toast.makeText(PlaceOrder.this, "Eroare la plasarea comenzii" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                     }
-                                }
-                            });
+                                });
+                            }
 
 
                         }
@@ -957,31 +979,35 @@ public class PlaceOrder extends AppCompatActivity {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Food food = dataSnapshot.getValue(Food.class);
                     cartList.add(food);
-                    total += food.getPrice() * food.getQuantity();
+                    if (food != null) {
+                        total += food.getPrice() * food.getQuantity();
+                    }
                     sameAddress = 0;
-                    restaurants.child(food.getRestaurantId()).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            sameAddress = 0;
-                            Restaurant restaurant = snapshot.getValue(Restaurant.class);
-                            for (Restaurant alreadySavedRestaurant : restaurantAddresses) {
-                                if (restaurant.getId().equals(alreadySavedRestaurant.getId())) {
-                                    sameAddress = 1;
+                    if (food != null) {
+                        restaurants.child(food.getRestaurantId()).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                sameAddress = 0;
+                                Restaurant restaurant = snapshot.getValue(Restaurant.class);
+                                for (Restaurant alreadySavedRestaurant : restaurantAddresses) {
+                                    if (restaurant != null && restaurant.getId().equals(alreadySavedRestaurant.getId())) {
+                                        sameAddress = 1;
+                                    }
                                 }
+                                if (sameAddress == 0) {
+                                    restaurantAddresses.add(restaurant);
+                                }
+
+                                //Log.i("incercare", restaurant.toString());
+
                             }
-                            if (sameAddress == 0) {
-                                restaurantAddresses.add(restaurant);
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
                             }
-
-                            Log.i("incercare", restaurant.toString());
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
+                        });
+                    }
 
                 }
 

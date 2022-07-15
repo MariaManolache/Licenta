@@ -31,7 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.MainActivity;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.PersonalDriverOrders;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.driver.PersonalDriverOrders;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.DriverMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
@@ -101,7 +101,7 @@ public class DriverAccount extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User currentUser = snapshot.getValue(User.class);
-                if(currentUser != null) {
+                if (currentUser != null) {
                     tvDriverName.setText(currentUser.getName());
                     tvDriverEmail.setText(currentUser.getEmail());
                     tvDriverPhoneNumber.setText(currentUser.getPhoneNumber());
@@ -207,14 +207,14 @@ public class DriverAccount extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-                if(id == R.id.account) {
+                if (id == R.id.account) {
                     return true;
-                } else if(id == R.id.orders) {
+                } else if (id == R.id.orders) {
                     startActivity(new Intent(getApplicationContext(), DriverMenu.class));
                     overridePendingTransition(R.anim.slide_right, R.anim.slide_left);
                     finish();
                     return true;
-                } else if(id == R.id.personalOrders) {
+                } else if (id == R.id.personalOrders) {
                     startActivity(new Intent(getApplicationContext(), PersonalDriverOrders.class));
                     overridePendingTransition(R.anim.slide_right, R.anim.slide_left);
                     finish();
@@ -264,27 +264,30 @@ public class DriverAccount extends AppCompatActivity {
 
                             FirebaseUser user = firebaseAuth.getCurrentUser();
 
-                            String id = user.getUid();
-                            String email = user.getEmail();
-                            databaseReference = FirebaseDatabase.getInstance().getReference("users").child(id);
+                            String id = null;
+                            if (user != null) {
+                                id = user.getUid();
 
-                            user.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-                                    Toast.makeText(DriverAccount.this, "Cont șters", Toast.LENGTH_LONG).show();
-                                    databaseReference.removeValue();
-                                    FirebaseAuth.getInstance().signOut();
-                                    startActivity(new Intent(getApplicationContext(), SignIn.class));
-                                    finish();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(DriverAccount.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                                    finish();
-                                }
-                            });
+                                String email = user.getEmail();
+                                databaseReference = FirebaseDatabase.getInstance().getReference("users").child(id);
 
+                                user.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Toast.makeText(DriverAccount.this, "Cont șters", Toast.LENGTH_LONG).show();
+                                        databaseReference.removeValue();
+                                        FirebaseAuth.getInstance().signOut();
+                                        startActivity(new Intent(getApplicationContext(), SignIn.class));
+                                        finish();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(DriverAccount.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                                        finish();
+                                    }
+                                });
+                            }
                         }
                     }).setNegativeButton("Nu", null)
                     .create().show();

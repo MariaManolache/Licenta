@@ -77,9 +77,11 @@ public class AccountDetails extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User currentUser = snapshot.getValue(User.class);
-                tvName.setText(currentUser.getName());
-                tvEmail.setText(currentUser.getEmail());
-                tvPhoneNumber.setText(currentUser.getPhoneNumber());
+                if (currentUser != null) {
+                    tvName.setText(currentUser.getName());
+                    tvEmail.setText(currentUser.getEmail());
+                    tvPhoneNumber.setText(currentUser.getPhoneNumber());
+                }
             }
 
             @Override

@@ -21,7 +21,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -38,7 +37,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.MapsActivity;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.maps.MapsActivity;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.order.PlaceOrder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Address;
@@ -121,12 +120,13 @@ public class AddressPicking extends AppCompatActivity {
             @SuppressLint("MissingPermission")
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-                switch (checkedId) {
-                    case R.id.radioBtnAnotherLocation:
-                        firstRow.setVisibility(View.VISIBLE);
-                        secondRow.setVisibility(View.VISIBLE);
-                        thirdRow.setVisibility(View.VISIBLE);
-                        fourthRow.setVisibility(View.VISIBLE);
+//                switch (checkedId) {
+//                    case R.id.radioBtnAnotherLocation:
+                if(checkedId == R.id.radioBtnAnotherLocation) {
+                    firstRow.setVisibility(View.VISIBLE);
+                    secondRow.setVisibility(View.VISIBLE);
+                    thirdRow.setVisibility(View.VISIBLE);
+                    fourthRow.setVisibility(View.VISIBLE);
 //                        tvCoordinates.setVisibility(View.GONE);
 //                        tvCurrentAddress.setVisibility(View.GONE);
 //                        tvAddressInfo.setVisibility(View.GONE);
@@ -172,54 +172,54 @@ public class AddressPicking extends AppCompatActivity {
 //                            }
 //                        });
 
-                        btnConfirmAddress.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                street = etStreet.getText().toString();
-                                number = etNumber.getText().toString();
-                                block = etBlock.getText().toString();
-                                entrance = etEntrance.getText().toString();
-                                floor = etFloor.getText().toString();
-                                apartment = etApartment.getText().toString();
-                                city = etCity.getText().toString();
-                                region = etRegion.getText().toString();
+                    btnConfirmAddress.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            street = etStreet.getText().toString();
+                            number = etNumber.getText().toString();
+                            block = etBlock.getText().toString();
+                            entrance = etEntrance.getText().toString();
+                            floor = etFloor.getText().toString();
+                            apartment = etApartment.getText().toString();
+                            city = etCity.getText().toString();
+                            region = etRegion.getText().toString();
 
 
-                                if (TextUtils.isEmpty(street)) {
-                                    etStreet.setError("Strada este necesara pentru plasarea comenzii");
-                                    return;
-                                }
+                            if (TextUtils.isEmpty(street)) {
+                                etStreet.setError("Strada este necesara pentru plasarea comenzii");
+                                return;
+                            }
 
-                                if (TextUtils.isEmpty(number)) {
-                                    etNumber.setError("Numarul strazii este necesar pentru plasarea comenzii");
-                                    return;
-                                }
+                            if (TextUtils.isEmpty(number)) {
+                                etNumber.setError("Numarul strazii este necesar pentru plasarea comenzii");
+                                return;
+                            }
 
 
-                                StringBuilder stringBuilder = new StringBuilder();
-                                stringBuilder.append(street + " ");
-                                stringBuilder.append(number + " ");
-                                stringBuilder.append(block + " ");
-                                stringBuilder.append(entrance + " ");
-                                stringBuilder.append(floor + " ");
-                                stringBuilder.append(apartment + " ");
-                                stringBuilder.append(city + " ");
-                                stringBuilder.append(region + " ");
+                            StringBuilder stringBuilder = new StringBuilder();
+                            stringBuilder.append(street + " ");
+                            stringBuilder.append(number + " ");
+                            stringBuilder.append(block + " ");
+                            stringBuilder.append(entrance + " ");
+                            stringBuilder.append(floor + " ");
+                            stringBuilder.append(apartment + " ");
+                            stringBuilder.append(city + " ");
+                            stringBuilder.append(region + " ");
 
-                                String result = stringBuilder.toString();
+                            String result = stringBuilder.toString();
 
-                                Intent placeOrder = new Intent(AddressPicking.this, PlaceOrder.class);
-                                placeOrder.putExtra("origin", "anotherAddress");
-                                placeOrder.putExtra("street", street);
-                                placeOrder.putExtra("number", number);
-                                placeOrder.putExtra("city", city);
-                                placeOrder.putExtra("region", region);
-                                placeOrder.putExtra("block", block);
-                                placeOrder.putExtra("entrance", entrance);
-                                placeOrder.putExtra("floor", floor);
-                                placeOrder.putExtra("apartment", apartment);
-                                startActivity(placeOrder);
-                                overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
+                            Intent placeOrder = new Intent(AddressPicking.this, PlaceOrder.class);
+                            placeOrder.putExtra("origin", "anotherAddress");
+                            placeOrder.putExtra("street", street);
+                            placeOrder.putExtra("number", number);
+                            placeOrder.putExtra("city", city);
+                            placeOrder.putExtra("region", region);
+                            placeOrder.putExtra("block", block);
+                            placeOrder.putExtra("entrance", entrance);
+                            placeOrder.putExtra("floor", floor);
+                            placeOrder.putExtra("apartment", apartment);
+                            startActivity(placeOrder);
+                            overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
 
 //                                tvAddressInfo.setText(getLocationFromAddress(result).toString());
 //                                tvAddressInfo.setText(result);
@@ -233,8 +233,8 @@ public class AddressPicking extends AppCompatActivity {
 //                                if (tvAddress.getVisibility() == View.VISIBLE) {
 //                                    btnPlaceOrder.setEnabled(true);
 //                                }
-                            }
-                        });
+                        }
+                    });
 
 //                        btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
 //                            @Override
@@ -325,38 +325,40 @@ public class AddressPicking extends AppCompatActivity {
 //
 //                        });
 
-                        break;
-                    case R.id.radioBtnCurrentLocation:
-                        firstRow.setVisibility(View.GONE);
-                        secondRow.setVisibility(View.GONE);
-                        thirdRow.setVisibility(View.GONE);
-                        fourthRow.setVisibility(View.GONE);
-                        //tvAddress.setVisibility(View.VISIBLE);
+                    //break;
+                } else if(checkedId == R.id.radioBtnCurrentLocation) {
 
-                        initializeLocation();
+//                    case R.id.radioBtnCurrentLocation:
+                    firstRow.setVisibility(View.GONE);
+                    secondRow.setVisibility(View.GONE);
+                    thirdRow.setVisibility(View.GONE);
+                    fourthRow.setVisibility(View.GONE);
+                    //tvAddress.setVisibility(View.VISIBLE);
 
-                        fusedLocationProviderClient.getLastLocation()
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                       // Toast.makeText(getApplicationContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        tvCoordinates.setVisibility(View.GONE);
-                                    }
-                                })
-                                .addOnCompleteListener(new OnCompleteListener<Location>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Location> task) {
-                                        String coordinates = new StringBuilder()
-                                                .append(task.getResult().getLatitude())
-                                                .append("/")
-                                                .append(task.getResult().getLongitude()).toString();
+                    initializeLocation();
 
-                                        Single<String> singleAddress = Single.just(getAddressFromLatLng(task.getResult().getLatitude(),
-                                                task.getResult().getLongitude()));
+                    fusedLocationProviderClient.getLastLocation()
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // Toast.makeText(getApplicationContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    tvCoordinates.setVisibility(View.GONE);
+                                }
+                            })
+                            .addOnCompleteListener(new OnCompleteListener<Location>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Location> task) {
+                                    String coordinates = new StringBuilder()
+                                            .append(task.getResult().getLatitude())
+                                            .append("/")
+                                            .append(task.getResult().getLongitude()).toString();
 
-                                        Disposable disposable = singleAddress.subscribeWith(new DisposableSingleObserver<String>() {
-                                            @Override
-                                            public void onSuccess(String s) {
+                                    Single<String> singleAddress = Single.just(getAddressFromLatLng(task.getResult().getLatitude(),
+                                            task.getResult().getLongitude()));
+
+                                    Disposable disposable = singleAddress.subscribeWith(new DisposableSingleObserver<String>() {
+                                        @Override
+                                        public void onSuccess(String s) {
 //                                                tvCoordinates.setText(coordinates);
 //                                                tvCurrentAddress.setText(s);
 //                                                tvCoordinates.setVisibility(View.VISIBLE);
@@ -366,12 +368,12 @@ public class AddressPicking extends AppCompatActivity {
 //                                                tvAddressInfo.setVisibility(View.VISIBLE);
 //                                                tvAddress.setVisibility(View.VISIBLE);
 
-                                                Intent placeOrder = new Intent(AddressPicking.this, PlaceOrder.class);
-                                                placeOrder.putExtra("origin", "currentLocation");
-                                                placeOrder.putExtra("currentAddress", s);
-                                                startActivity(placeOrder);
-                                                finish();
-                                                overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
+                                            Intent placeOrder = new Intent(AddressPicking.this, PlaceOrder.class);
+                                            placeOrder.putExtra("origin", "currentLocation");
+                                            placeOrder.putExtra("currentAddress", s);
+                                            startActivity(placeOrder);
+                                            finish();
+                                            overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
 //                                                btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
 //                                                    @SuppressLint("MissingPermission")
 //                                                    @Override
@@ -438,24 +440,24 @@ public class AddressPicking extends AppCompatActivity {
 //                                                    }
 //
 //                                                });
-                                            }
+                                        }
 
-                                            @Override
-                                            public void onError(Throwable e) {
-                                                tvCoordinates.setText(e.getMessage());
-                                                tvCurrentAddress.setText(e.getMessage());
-                                                tvCoordinates.setVisibility(View.VISIBLE);
-                                                tvCurrentAddress.setVisibility(View.VISIBLE);
+                                        @Override
+                                        public void onError(Throwable e) {
+                                            tvCoordinates.setText(e.getMessage());
+                                            tvCurrentAddress.setText(e.getMessage());
+                                            tvCoordinates.setVisibility(View.VISIBLE);
+                                            tvCurrentAddress.setVisibility(View.VISIBLE);
 
 //                                                tvAddressInfo.setText(e.getMessage());
 //                                                tvAddressInfo.setVisibility(View.VISIBLE);
 //                                                tvAddress.setVisibility(View.VISIBLE);
-                                            }
-                                        });
+                                        }
+                                    });
 
 
-                                    }
-                                });
+                                }
+                            });
 
 //                        tvAddress.setVisibility(View.VISIBLE);
 //                        if (tvAddress.getVisibility() == View.GONE) {
@@ -464,9 +466,12 @@ public class AddressPicking extends AppCompatActivity {
 //                        if (tvAddress.getVisibility() == View.VISIBLE) {
 //                            btnPlaceOrder.setEnabled(true);
 //                        }
-                        break;
 
-                    case R.id.radioBtnMapsLocation:
+                    //break;
+                } else if(checkedId == R.id.radioBtnMapsLocation) {
+
+
+                   // case R.id.radioBtnMapsLocation:
 
 //                        if (getIntent() != null && getIntent().getExtras() != null) {
 //                            String origin = getIntent().getExtras().getString("origin");
@@ -618,7 +623,8 @@ public class AddressPicking extends AppCompatActivity {
 //                        if (tvAddress.getVisibility() == View.VISIBLE) {
 //                            btnPlaceOrder.setEnabled(true);
 //                        }
-                        break;
+
+                    // break;
                 }
             }
         });

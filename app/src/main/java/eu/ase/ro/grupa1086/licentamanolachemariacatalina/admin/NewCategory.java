@@ -102,8 +102,10 @@ public class NewCategory extends AppCompatActivity {
                     public void onActivityResult(ActivityResult result) {
                         if (result.getResultCode() == Activity.RESULT_OK) {
                             // There are no request codes
-                            categoryImageUri = result.getData().getData();
-                            Picasso.with(getApplicationContext()).load(categoryImageUri).into(categoryImage);
+                            if (result.getData() != null) {
+                                categoryImageUri = result.getData().getData();
+                                Picasso.with(getApplicationContext()).load(categoryImageUri).into(categoryImage);
+                            }
                         }
                     }
                 });
@@ -116,7 +118,7 @@ public class NewCategory extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
 
                 if (TextUtils.isEmpty(name)) {
-                    etCategoryName.setError("Numele categoriei este necesar pentru crearea contului");
+                    etCategoryName.setError("Numele categoriei este necesar pentru adăugarea categoriei");
                     progressBar.setVisibility(View.GONE);
                     return;
                 }
@@ -145,12 +147,14 @@ public class NewCategory extends AppCompatActivity {
                                             Category category = new Category(id, name, categoryImageString);
 
 
-                                            categories.child(id).setValue(category).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    finish();
-                                                }
-                                            });
+                                            if (id != null) {
+                                                categories.child(id).setValue(category).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        finish();
+                                                    }
+                                                });
+                                            }
                                         }
                                     })
                                             .addOnFailureListener(new OnFailureListener() {

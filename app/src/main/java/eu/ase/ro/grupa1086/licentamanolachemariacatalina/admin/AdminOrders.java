@@ -177,7 +177,9 @@ public class AdminOrders extends AppCompatActivity {
                             firstDate2 = sdf.parse(date);
 
                             if (lastDate != null) {
-                                result = DateDifference.compareDates(firstDate2, lastDate);
+                                if (firstDate2 != null) {
+                                    result = DateDifference.compareDates(firstDate2, lastDate);
+                                }
                                 if (result == 0) {
                                     tvStartDate.setText(shownDate);
                                     //loadOrders();
@@ -367,7 +369,9 @@ public class AdminOrders extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         User user = snapshot.getValue(User.class);
-                                        holder.clientName.setText("#" + user.getName());
+                                        if (user != null) {
+                                            holder.clientName.setText("#" + user.getName());
+                                        }
                                     }
 
                                     @Override
@@ -434,7 +438,7 @@ public class AdminOrders extends AppCompatActivity {
                                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                             for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                                                 Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
-                                                                if (model.getRestaurantId().equals(restaurant.getId())) {
+                                                                if (restaurant != null && model.getRestaurantId().equals(restaurant.getId())) {
                                                                     holder2.restaurantName.setText(restaurant.getName() + " : ");
                                                                 }
                                                             }

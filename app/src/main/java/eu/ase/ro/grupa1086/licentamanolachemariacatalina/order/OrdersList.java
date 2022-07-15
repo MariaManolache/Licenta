@@ -213,10 +213,14 @@ public class OrdersList extends AppCompatActivity {
                             Log.i("ceva", dataSnapshot.toString());
                             Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
                             if (restaurantName == null) {
-                                restaurantName = restaurant.getName();
-                                restaurantImage = restaurant.getImage();
+                                if (restaurant != null) {
+                                    restaurantName = restaurant.getName();
+                                    restaurantImage = restaurant.getImage();
+                                }
                             } else {
-                                restaurantName += ", " + restaurant.getName();
+                                if (restaurant != null) {
+                                    restaurantName += ", " + restaurant.getName();
+                                }
                             }
                         }
 
@@ -278,7 +282,7 @@ public class OrdersList extends AppCompatActivity {
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                                         Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
-                                                        if (model.getRestaurantId().equals(restaurant.getId())) {
+                                                        if (restaurant != null && model.getRestaurantId().equals(restaurant.getId())) {
                                                             holder2.restaurantName.setText(restaurant.getName() + " : ");
                                                         }
                                                     }
@@ -558,7 +562,7 @@ public class OrdersList extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
-                            if (model.getRestaurantId().equals(restaurant.getId())) {
+                            if (restaurant != null && model.getRestaurantId().equals(restaurant.getId())) {
                                 holder.restaurantName.setText(restaurant.getName() + " : ");
                             }
                         }

@@ -21,12 +21,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,11 +54,8 @@ import java.util.Map;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.MainActivity;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.RestaurantProducts;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.DriverAccount;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.restaurant.RestaurantProducts;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.ResetPassword;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.SignIn;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.admin.NewRestaurantAccount;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Category;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Order;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
@@ -159,14 +153,16 @@ public class RestaurantAccount extends AppCompatActivity {
 
         categories.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mapCategoryId = new HashMap<>();
                 listCategoryId = new ArrayList<>();
                 for (DataSnapshot snap : dataSnapshot.getChildren()) {
                     Category category = snap.getValue(Category.class);
-                    Log.i("categoryName", category.toString());
-                    mapCategoryId.put(category.getId(), category.getName());
-                    listCategoryId.add(category.getName());
+                    //Log.i("categoryName", category.toString());
+                    if (category != null) {
+                        mapCategoryId.put(category.getId(), category.getName());
+                        listCategoryId.add(category.getName());
+                    }
 
                 }
 
@@ -384,7 +380,7 @@ public class RestaurantAccount extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
 

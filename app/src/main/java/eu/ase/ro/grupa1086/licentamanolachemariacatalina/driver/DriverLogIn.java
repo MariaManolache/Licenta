@@ -1,4 +1,4 @@
-package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
+package eu.ase.ro.grupa1086.licentamanolachemariacatalina.driver;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,15 +22,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.order.RestaurantOrders;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.RestaurantAccount;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.DriverMenu;
 
-public class RestaurantLogin extends AppCompatActivity {
-
+public class DriverLogIn extends AppCompatActivity {
     private EditText etEmail;
     private EditText etPassword;
     private Button btnConnect;
@@ -46,7 +43,7 @@ public class RestaurantLogin extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_restaurant_login);
+        setContentView(R.layout.activity_driver_log_in);
 
         initialiseComponents();
     }
@@ -95,12 +92,11 @@ public class RestaurantLogin extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             onAuthSuccess(task.getResult().getUser());
-//                            Toast.makeText(RestaurantLogin.this, "Autentificare realizata cu succes", Toast.LENGTH_LONG).show();
 //                            startActivity(new Intent(getApplicationContext(), MainMenu.class));
 
 
                         } else {
-                            Toast.makeText(RestaurantLogin.this, "Eroare la autentificare", Toast.LENGTH_LONG).show();
+                            Toast.makeText(DriverLogIn.this, "Eroare la autentificare", Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
                         }
                     }
@@ -112,47 +108,22 @@ public class RestaurantLogin extends AppCompatActivity {
 
     private void onAuthSuccess(FirebaseUser user) {
         if (user != null) {
-            users = database.getReference("restaurantAccounts").child(user.getUid());
-            restaurants = database.getReference("restaurants");
+            users = database.getReference("users").child(user.getUid()).child("isDriver");
             users.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    User connectedUser = snapshot.getValue(User.class);
-
-                    if(!snapshot.exists()) {
-                        Toast.makeText(getApplicationContext(), "Utilizatorul introdus nu se află în baza de date", Toast.LENGTH_SHORT).show();
-                        progressBar.setVisibility(View.GONE);
-                        FirebaseAuth.getInstance().signOut();
-                    } else {
-                        Query query = null;
-                        if (connectedUser != null) {
-                            query = restaurants.orderByChild("id").equalTo(connectedUser.getId());
-                            query.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    if(!snapshot.exists()) {
-                                        restaurants.child(user.getUid()).child("name").setValue(connectedUser.getName()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                Toast.makeText(RestaurantLogin.this, "Autentificare realizata cu success", Toast.LENGTH_LONG).show();
-                                            }
-                                        });
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
+                    if (snapshot.exists()) {
+                        int isDriver = snapshot.getValue(Integer.class);
+                        if (isDriver == 1) {
+                            Toast.makeText(DriverLogIn.this, "Autentificare realizata cu succes", Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(getApplicationContext(), DriverMenu.class));
+                            finish();
+                            overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Utilizatorul introdus nu se afla in baza de date", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
                         }
-
-                        //Toast.makeText(RestaurantLogin.this, "Autentificare realizată cu succes", Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(getApplicationContext(), RestaurantOrders.class));
-                        overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
-                        finish();
                     }
-
                 }
 
                 @Override

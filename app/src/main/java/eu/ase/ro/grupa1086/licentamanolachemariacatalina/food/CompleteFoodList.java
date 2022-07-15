@@ -120,6 +120,7 @@ public class CompleteFoodList extends AppCompatActivity {
         FirebaseRecyclerOptions<DataSnapshot> options =
                 new FirebaseRecyclerOptions.Builder<DataSnapshot>()
                         .setQuery(query, new SnapshotParser<DataSnapshot>() {
+                            @NonNull
                             public DataSnapshot parseSnapshot(@NonNull DataSnapshot snapshot) {
                                 return snapshot;
                             }
@@ -132,23 +133,25 @@ public class CompleteFoodList extends AppCompatActivity {
 
                 String entry = model.getKey();
                 //Log.i("queryRestaurant", entry);
-                restaurantsList.child(entry).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Restaurant restaurant = snapshot.getValue(Restaurant.class);
-                        if (restaurant != null) {
-                            holder.restaurantName.setText(restaurant.getName());
+                if (entry != null) {
+                    restaurantsList.child(entry).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            Restaurant restaurant = snapshot.getValue(Restaurant.class);
+                            if (restaurant != null) {
+                                holder.restaurantName.setText(restaurant.getName());
+                            }
+
+                            loadAllFoodList(entry, holder);
+
                         }
 
-                        loadAllFoodList(entry, holder);
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+                        }
+                    });
+                }
 
                 final String local = entry;
 

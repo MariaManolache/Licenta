@@ -96,8 +96,10 @@ public class ShoppingCart extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
-        id = user.getUid();
-        cart = database.getInstance().getReference("carts").child(id).child("foodList");
+        if (user != null) {
+            id = user.getUid();
+        }
+        cart = database.getReference("carts").child(id).child("foodList");
 
 
         emptyCart = findViewById(R.id.emptyCart);
@@ -191,7 +193,7 @@ public class ShoppingCart extends AppCompatActivity {
 
         cart.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 //String value = dataSnapshot.getValue(String.class);
@@ -201,7 +203,7 @@ public class ShoppingCart extends AppCompatActivity {
                 total = 0.0f;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Food food = snapshot.getValue(Food.class);
-                    Log.i("hello", food.toString());
+                    //Log.i("hello", food.toString());
                     cartList.add(food);
                     total += food.getPrice() * food.getQuantity();
                 }
@@ -249,9 +251,9 @@ public class ShoppingCart extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) {
                 // Failed to read value
-                Log.i("hello", "Failed to read value.", error.toException());
+                //Log.i("hello", "Failed to read value.", error.toException());
             }
         });
         return cartList;
@@ -330,16 +332,18 @@ public class ShoppingCart extends AppCompatActivity {
 
                 restaurants.addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                         Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
-                        holder.restaurantName.setText(restaurant.getName());
+                        if (restaurant != null) {
+                            holder.restaurantName.setText(restaurant.getName());
+                        }
                     }
 
                     @Override
-                    public void onCancelled(DatabaseError error) {
+                    public void onCancelled(@NonNull DatabaseError error) {
                         // Failed to read value
-                        Log.i("hello", "Failed to read value.", error.toException());
+                        //Log.i("hello", "Failed to read value.", error.toException());
                     }
                 });
 

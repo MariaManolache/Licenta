@@ -1,5 +1,7 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -113,6 +115,7 @@ public class Restaurant implements Serializable {
         this.categories = categories;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Restaurant{" +

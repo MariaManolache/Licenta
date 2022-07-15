@@ -1,4 +1,4 @@
-package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
+package eu.ase.ro.grupa1086.licentamanolachemariacatalina.restaurant;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -43,6 +43,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Order;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
@@ -272,7 +273,7 @@ public class ProductInfo extends AppCompatActivity {
                                                     }
 
                                                 }
-                                            }).setNegativeButton("Anuleaza", null)
+                                            }).setNegativeButton("Anulează", null)
                                             .setView(view)
                                             .create().show();
 
@@ -292,7 +293,7 @@ public class ProductInfo extends AppCompatActivity {
                                                 public void onClick(DialogInterface dialog, int which) {
 
                                                     if (description.getText().toString().isEmpty()) {
-                                                        description.setError("Campul este necesar pentru modificarea descrierii");
+                                                        description.setError("Câmpul este necesar pentru modificarea descrierii");
                                                         return;
                                                     }
 
@@ -301,7 +302,7 @@ public class ProductInfo extends AppCompatActivity {
                                                         foodItem.child(productId).child("description").setValue(food.getDescription()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                             @Override
                                                             public void onSuccess(Void unused) {
-                                                                Toast.makeText(getApplicationContext(), "Descrierea produsului a fost modificata", Toast.LENGTH_SHORT).show();
+                                                                Toast.makeText(getApplicationContext(), "Descrierea produsului a fost modificată", Toast.LENGTH_SHORT).show();
                                                                 productDescription.setText(description.getText().toString());
 
                                                                 banner.child(productId).addValueEventListener(new ValueEventListener() {
@@ -364,7 +365,9 @@ public class ProductInfo extends AppCompatActivity {
                     public void onActivityResult(ActivityResult result) {
                         if (result.getResultCode() == Activity.RESULT_OK) {
                             // There are no request codes
-                            productImageUri = result.getData().getData();
+                            if (result.getData() != null) {
+                                productImageUri = result.getData().getData();
+                            }
                             Picasso.with(getApplicationContext()).load(R.drawable.loading).placeholder(R.drawable.loading).into(productImage);
                             uploadFile();
                         }
@@ -441,13 +444,13 @@ public class ProductInfo extends AppCompatActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getApplicationContext(), "Imaginea nu a putut fi incarcata", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Imaginea nu a putut fi încărcată", Toast.LENGTH_SHORT).show();
                         }
                     });
 
 
         } else {
-            Toast.makeText(getApplicationContext(), "Nicio imagine selectata", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Nicio imagine selectată", Toast.LENGTH_SHORT).show();
         }
     }
 

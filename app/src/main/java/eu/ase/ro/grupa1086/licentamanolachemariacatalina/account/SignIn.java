@@ -32,6 +32,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
+
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.DriverMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.PrincipalMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
@@ -146,7 +148,7 @@ public class SignIn extends AppCompatActivity {
                                 firebaseAuth.fetchSignInMethodsForEmail(email.getText().toString()).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
-                                        if (task.getResult().getSignInMethods().isEmpty()) {
+                                        if (Objects.requireNonNull(task.getResult().getSignInMethods()).isEmpty()) {
                                             Toast.makeText(SignIn.this, "Acestui email nu îi este asociat un cont", Toast.LENGTH_LONG).show();
                                         } else {
                                             //trimiterea linkului de resetare

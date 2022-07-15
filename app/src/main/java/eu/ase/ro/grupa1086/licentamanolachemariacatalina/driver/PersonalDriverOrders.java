@@ -1,4 +1,4 @@
-package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
+package eu.ase.ro.grupa1086.licentamanolachemariacatalina.driver;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -56,6 +56,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.DriverAccount;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
@@ -118,6 +119,8 @@ public class PersonalDriverOrders extends AppCompatActivity {
     TextView tvNoOrdersFound;
     ProgressBar progressBar;
 
+    String sCurrentLocation = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,7 +136,7 @@ public class PersonalDriverOrders extends AppCompatActivity {
         driverOrders = database.getReference().child("driverOrders");
         restaurantOrders = database.getReference().child("restaurantOrders");
         driverOrdersHistory = database.getReference().child("driverOrdersHistory");
-        ordersHistory = database.getInstance().getReference("ordersHistory");
+        ordersHistory = database.getReference().child("ordersHistory");
 
         users = database.getReference().child("users");
 
@@ -177,7 +180,9 @@ public class PersonalDriverOrders extends AppCompatActivity {
 //        });
 
         //loadOrders();
-        initializeLocation();
+        if(sCurrentLocation == null) {
+            initializeLocation();
+        }
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.personalOrders);
@@ -270,10 +275,14 @@ public class PersonalDriverOrders extends AppCompatActivity {
                             for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                 Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
                                 if (restaurantName == null) {
-                                    restaurantName = restaurant.getName();
-                                    restaurantImage = restaurant.getImage();
+                                    if (restaurant != null) {
+                                        restaurantName = restaurant.getName();
+                                        restaurantImage = restaurant.getImage();
+                                    }
                                 } else {
-                                    restaurantName += ", " + restaurant.getName();
+                                    if (restaurant != null) {
+                                        restaurantName += ", " + restaurant.getName();
+                                    }
                                 }
                             }
 
@@ -421,7 +430,7 @@ public class PersonalDriverOrders extends AppCompatActivity {
                                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                                             Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
-                                                            if (model.getRestaurantId().equals(restaurant.getId())) {
+                                                            if (restaurant != null && model.getRestaurantId().equals(restaurant.getId())) {
                                                                 holder2.restaurantName.setText(restaurant.getName() + " : ");
                                                             }
                                                         }
@@ -625,7 +634,7 @@ public class PersonalDriverOrders extends AppCompatActivity {
             public void onLocationResult(@NonNull LocationResult locationResult) {
                 super.onLocationResult(locationResult);
                 currentLocation = locationResult.getLastLocation();
-                String sCurrentLocation = getAddressFromLatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                sCurrentLocation = getAddressFromLatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                 tvCurrentLocation.setText(sCurrentLocation);
                 latLngLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                 loadMyOrders();

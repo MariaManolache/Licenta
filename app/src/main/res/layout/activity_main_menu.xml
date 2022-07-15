@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".MainMenu">
+    tools:context=".old.MainMenu">
 
     <TextView
         android:id="@+id/tvName"

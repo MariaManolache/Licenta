@@ -27,10 +27,13 @@ import com.karumi.dexter.listener.single.PermissionListener;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.SignIn;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.SignUp;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.admin.AdminAccount;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.admin.DriverAccountsList;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.driver.DriverLogIn;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.DriverMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.PrincipalMenu;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.RestaurantAccount;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.restaurant.RestaurantLogin;
 
 public class MainActivity extends AppCompatActivity {
 

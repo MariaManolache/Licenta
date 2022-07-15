@@ -1,5 +1,7 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +35,7 @@ public class Cart implements Serializable {
         this.foodList = foodList;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Cart{" +

@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -37,7 +36,6 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -54,17 +52,13 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.stream.Stream;
 
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.PersonalDriverOrders;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.driver.PersonalDriverOrders;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.DriverAccount;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
@@ -72,8 +66,6 @@ import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Order;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Status;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.food.FoodInfo;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.DriverOrderViewHolder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.OrderDetailsViewHolder;
 
@@ -134,6 +126,11 @@ public class DriverMenu extends AppCompatActivity {
     //ImageView loadingImage;
 
     ProgressBar progressBar;
+
+    String sCurrentLocation = null;
+
+//    LatLng wantedLocation;
+//    String sWantedLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -218,8 +215,14 @@ public class DriverMenu extends AppCompatActivity {
 //            }
 //        });
 
+//        wantedLocation = new LatLng(44.44799577975712, 26.098895290988867);
+//        sWantedLocation = "Clădirea Virgil Madgearu, Academia de Studii Economice, Calea Dorobanți 15-17, București 010552";
+
         //loadOrders();
-        initializeLocation();
+        if(sCurrentLocation == null) {
+            initializeLocation();
+            //tvCurrentLocation.setText(sCurrentLocation);
+        }
 
 
 
@@ -287,7 +290,7 @@ public class DriverMenu extends AppCompatActivity {
             public void onLocationResult(@NonNull LocationResult locationResult) {
                 super.onLocationResult(locationResult);
                 currentLocation = locationResult.getLastLocation();
-                String sCurrentLocation = getAddressFromLatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                sCurrentLocation = getAddressFromLatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                 tvCurrentLocation.setText(sCurrentLocation);
                 latLngLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
 
@@ -598,7 +601,7 @@ public class DriverMenu extends AppCompatActivity {
                                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                                             Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
-                                                            if (model.getRestaurantId().equals(restaurant.getId())) {
+                                                            if (restaurant != null && model.getRestaurantId().equals(restaurant.getId())) {
                                                                 holder2.restaurantName.setText(restaurant.getName() + " : ");
                                                             }
                                                         }

@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,12 +16,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
@@ -40,26 +36,14 @@ import java.util.Locale;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.MainActivity;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.RestaurantsList;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.DriverAccount;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.ResetPassword;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.SignIn;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Order;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.RestaurantAccount;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.RestaurantOrder;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.food.FoodInfo;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.food.FoodList;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.order.OrdersList;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.order.RestaurantOrders;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.DriverViewHolder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.OrderDetailsViewHolder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.RestaurantAccountViewHolder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.RestaurantOrderViewHolder;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.RestaurantViewHolder;
 
 public class RestaurantAccountsList extends AppCompatActivity {
 
@@ -311,7 +295,9 @@ public class RestaurantAccountsList extends AppCompatActivity {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                                 Restaurant restaurant = snapshot.getValue(Restaurant.class);
-                                                                holder3.restaurantName.setText(restaurant.getName() + " : ");
+                                                                if (restaurant != null) {
+                                                                    holder3.restaurantName.setText(restaurant.getName() + " : ");
+                                                                }
 
                                                                 holder3.foodPrice.setText(String.valueOf(model.getPrice()));
                                                                 holder3.foodQuantity.setText(String.valueOf(model.getQuantity()));
@@ -561,6 +547,7 @@ public class RestaurantAccountsList extends AppCompatActivity {
                                     holder2.orderAddress.setText("Adresa: " + model.getAddress().getMapsAddress());
                                     holder2.orderDateAndTime.setText("Data: " + model.getCurrentDateAndTime());
                                     holder2.orderPriceTotal.setText("Total: " + Math.round(model.getTotal() * 100.0) / 100.0 + " lei");
+                                    holder2.orderPaymentType.setText("Metoda de plată: " + String.valueOf(model.getPaymentMethod()).toUpperCase(Locale.ROOT).replace("_", " "));
 
                                     final RestaurantOrder local2 = model;
                                     holder2.setItemClickListener(new ItemClickListener() {

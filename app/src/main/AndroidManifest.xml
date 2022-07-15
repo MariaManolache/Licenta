@@ -42,27 +42,27 @@
             android:exported="false"
             android:label="@string/drivers_list" />
         <activity
-            android:name=".AdminAccount"
+            android:name=".admin.AdminAccount"
             android:exported="false"
             android:label="@string/admin_account" />
         <activity
-            android:name=".PersonalDriverOrders"
+            android:name=".driver.PersonalDriverOrders"
             android:exported="false"
             android:label="@string/personal_orders" />
         <activity
-            android:name=".DriverLogIn"
+            android:name=".driver.DriverLogIn"
             android:exported="false"
             android:label="@string/auth_driver" />
         <activity
-            android:name=".AddRestaurantProduct"
+            android:name=".restaurant.AddRestaurantProduct"
             android:exported="false"
             android:label="@string/new_product" />
         <activity
-            android:name=".ProductInfo"
+            android:name=".restaurant.ProductInfo"
             android:exported="false"
             android:label="@string/product" />
         <activity
-            android:name=".RestaurantProducts"
+            android:name=".restaurant.RestaurantProducts"
             android:exported="false"
             android:label="@string/products" />
         <activity
@@ -70,10 +70,10 @@
             android:exported="false"
             android:label="@string/orders" />
         <activity
-            android:name=".SplashScreenActivity"
+            android:name=".splashscreen.SplashScreenActivity"
             android:exported="false" />
         <activity
-            android:name=".RestaurantLogin"
+            android:name=".restaurant.RestaurantLogin"
             android:exported="false"
             android:label="@string/authenticate" />
         <activity
@@ -140,7 +140,7 @@
             android:exported="false"
             android:label="@string/title_activity_confirmation_order" />
         <activity
-            android:name=".MapsActivity"
+            android:name=".maps.MapsActivity"
             android:exported="false"
             android:label="@string/title_activity_maps" />
         <activity
@@ -164,19 +164,19 @@
             android:exported="false"
             android:label="@string/meniu" />
         <activity
-            android:name=".RestaurantsList"
+            android:name=".restaurant.RestaurantsList"
             android:exported="false"
             android:label="@string/restaurants_list_title" />
         <activity
             android:name=".food.FoodInfo"
             android:exported="false" />
         <activity
-            android:name=".Home"
+            android:name=".old.Home"
             android:exported="false"
             android:label="@string/title_activity_home"
             android:theme="@style/Theme.LicentaManolacheMariaCatalina.NoActionBar" />
         <activity
-            android:name=".AddCategory"
+            android:name=".old.AddCategory"
             android:exported="false" />
         <activity
             android:name=".account.ResetPassword"
@@ -187,10 +187,10 @@
             android:exported="false"
             android:label="@string/main_page" />
         <activity
-            android:name=".MainMenu"
+            android:name=".old.MainMenu"
             android:exported="false" />
         <activity
-            android:name=".AddFood"
+            android:name=".old.AddFood"
             android:exported="true" />
         <activity
             android:name=".account.SignUp"

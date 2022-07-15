@@ -10,7 +10,7 @@ public class PasswordGenerator {
     private static final int MIN_CODE = 33;
     private static final int MAX_CODE = 126;
 
-    private static String characters = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#=?/&%";
+    private static String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#=?/&%";
 
     static Random random;
     public static String process(int length) {

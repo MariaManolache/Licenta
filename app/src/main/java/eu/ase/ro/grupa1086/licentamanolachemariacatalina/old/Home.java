@@ -1,4 +1,4 @@
-package eu.ase.ro.grupa1086.licentamanolachemariacatalina;
+package eu.ase.ro.grupa1086.licentamanolachemariacatalina.old;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,12 +33,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.Account;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Category;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.databinding.ActivityHomeBinding;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.order.ShoppingCart;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.restaurant.RestaurantsList;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.MenuViewHolder;
 
 public class Home extends AppCompatActivity {

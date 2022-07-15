@@ -127,11 +127,13 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
 
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
-        userId = user.getUid();
-        orders = database.getInstance().getReference("orders").child(userId);
-        cart = database.getInstance().getReference("carts").child(userId).child("foodList");
-        ratings = database.getInstance().getReference("ratings");
-        driverOrders = database.getInstance().getReference("driverOrders");
+        if (user != null) {
+            userId = user.getUid();
+        }
+        orders = database.getReference("orders").child(userId);
+        cart = database.getReference("carts").child(userId).child("foodList");
+        ratings = database.getReference("ratings");
+        driverOrders = database.getReference("driverOrders");
 
         pbDistance = findViewById(R.id.pbDistance);
         pbPreparationTime = findViewById(R.id.pbPreparationTime);
@@ -139,7 +141,7 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
 
         cart.removeValue();
 
-        users = database.getInstance().getReference("users").child(user.getUid()).child("name");
+        users = database.getReference("users").child(user.getUid()).child("name");
 
         users.addValueEventListener(new ValueEventListener() {
             @Override
@@ -191,7 +193,9 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Order order = snapshot.getValue(Order.class);
                         pbPreparationTime.setVisibility(View.GONE);
-                        tvTime.setText(order.getPreparationTime() + " de minute");
+                        if (order != null) {
+                            tvTime.setText(order.getPreparationTime() + " de minute");
+                        }
                     }
 
                     @Override
@@ -204,7 +208,9 @@ public class ConfirmationOrder extends FragmentActivity implements OnMapReadyCal
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Address address = snapshot.getValue(Address.class);
-                        mapsAddress = address.getMapsAddress();
+                        if (address != null) {
+                            mapsAddress = address.getMapsAddress();
+                        }
                         Log.i("mapsAddress", mapsAddress);
 
                         clientAddress = getLocationFromAddress(mapsAddress);

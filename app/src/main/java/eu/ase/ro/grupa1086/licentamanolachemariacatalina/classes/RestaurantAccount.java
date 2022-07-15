@@ -1,5 +1,7 @@
 package eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -85,6 +87,7 @@ public class RestaurantAccount implements Serializable {
         this.isRestaurant = isRestaurant;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "RestaurantAccount{" +

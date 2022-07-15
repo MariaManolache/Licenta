@@ -106,22 +106,26 @@ public class FoodInfo extends FragmentActivity {
         if (user != null) {
             id = user.getUid();
         }
-        cart = database.getReference("carts").child(id).child("foodList");
+        if (id != null) {
+            cart = database.getReference("carts").child(id).child("foodList");
+        }
         users = database.getReference("users");
-        users.child(id).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                User user = snapshot.getValue(User.class);
-                if (user != null) {
-                    userName = user.getName();
+        if (id != null) {
+            users.child(id).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    User user = snapshot.getValue(User.class);
+                    if (user != null) {
+                        userName = user.getName();
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                }
+            });
+        }
 
         //View
         btnAdd = findViewById(R.id.btnPlus);
@@ -414,7 +418,9 @@ public class FoodInfo extends FragmentActivity {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                 Rating rating = dataSnapshot.getValue(Rating.class);
-                                ratingValue += rating.getRateValue();
+                                if (rating != null) {
+                                    ratingValue += rating.getRateValue();
+                                }
                                 nbOfRatings++;
                             }
 
@@ -480,7 +486,9 @@ public class FoodInfo extends FragmentActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             Rating rating = dataSnapshot.getValue(Rating.class);
-                            ratingValue += rating.getRateValue();
+                            if (rating != null) {
+                                ratingValue += rating.getRateValue();
+                            }
                             nbOfRatings++;
                         }
 
@@ -556,7 +564,9 @@ public class FoodInfo extends FragmentActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             Rating rating = dataSnapshot.getValue(Rating.class);
-                            ratingValue += rating.getRateValue();
+                            if (rating != null) {
+                                ratingValue += rating.getRateValue();
+                            }
                             nbOfRatings++;
                         }
 

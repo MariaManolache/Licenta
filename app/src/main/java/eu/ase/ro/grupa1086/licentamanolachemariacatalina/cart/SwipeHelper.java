@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Queue;
 
 public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
@@ -112,7 +113,7 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
         while(!removeQueue.isEmpty()) {
             int position = removeQueue.poll();
             if(position > -1) {
-                recyclerView.getAdapter().notifyItemChanged(position);
+                Objects.requireNonNull(recyclerView.getAdapter()).notifyItemChanged(position);
             }
         }
     }
@@ -242,8 +243,10 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
                 } else {
                     buffer = buttonBuffer.get(position);
                 }
-                translationX = dX * buffer.size() * buttonWidth / itemView.getWidth();
-                drawButton(c, itemView, buffer, position, translationX);
+                if (buffer != null) {
+                    translationX = dX * buffer.size() * buttonWidth / itemView.getWidth();
+                    drawButton(c, itemView, buffer, position, translationX);
+                }
             }
         }
         super.onChildDraw(c, recyclerView, viewHolder, translationX, dY, actionState, isCurrentlyActive);

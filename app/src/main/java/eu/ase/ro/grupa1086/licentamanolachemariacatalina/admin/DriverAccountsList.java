@@ -16,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -40,26 +39,16 @@ import java.util.List;
 import java.util.Locale;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.MainActivity;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.PersonalDriverOrders;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.DriverAccount;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Food;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Order;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.Restaurant;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.food.FoodInfo;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.order.OrderDetails;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.order.OrdersList;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.principalmenus.PrincipalMenu;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.rating.CommentsList;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.rating.Rating;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.CommentViewHolder;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.DriverOrderViewHolder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.DriverViewHolder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.OrderAdminViewHolder;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.OrderDetailsViewHolder;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.viewHolder.OrderViewHolder;
 
 public class DriverAccountsList extends AppCompatActivity {
 
@@ -259,10 +248,14 @@ public class DriverAccountsList extends AppCompatActivity {
                                                 Log.i("ceva", dataSnapshot.toString());
                                                 Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
                                                 if (restaurantName == null) {
-                                                    restaurantName = restaurant.getName();
-                                                    restaurantImage = restaurant.getImage();
+                                                    if (restaurant != null) {
+                                                        restaurantName = restaurant.getName();
+                                                        restaurantImage = restaurant.getImage();
+                                                    }
                                                 } else {
-                                                    restaurantName += ", " + restaurant.getName();
+                                                    if (restaurant != null) {
+                                                        restaurantName += ", " + restaurant.getName();
+                                                    }
                                                 }
                                             }
 
@@ -270,7 +263,9 @@ public class DriverAccountsList extends AppCompatActivity {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     User user = snapshot.getValue(User.class);
-                                                    holder.clientName.setText("#" + user.getName());
+                                                    if (user != null) {
+                                                        holder.clientName.setText("#" + user.getName());
+                                                    }
                                                 }
 
                                                 @Override
@@ -337,7 +332,7 @@ public class DriverAccountsList extends AppCompatActivity {
                                                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                                                             Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
-                                                                            if (model.getRestaurantId().equals(restaurant.getId())) {
+                                                                            if (restaurant != null && model.getRestaurantId().equals(restaurant.getId())) {
                                                                                 holder2.restaurantName.setText(restaurant.getName() + " : ");
                                                                             }
                                                                         }
@@ -595,10 +590,14 @@ public class DriverAccountsList extends AppCompatActivity {
                                                     Log.i("ceva", dataSnapshot.toString());
                                                     Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
                                                     if (restaurantName == null) {
-                                                        restaurantName = restaurant.getName();
-                                                        restaurantImage = restaurant.getImage();
+                                                        if (restaurant != null) {
+                                                            restaurantName = restaurant.getName();
+                                                            restaurantImage = restaurant.getImage();
+                                                        }
                                                     } else {
-                                                        restaurantName += ", " + restaurant.getName();
+                                                        if (restaurant != null) {
+                                                            restaurantName += ", " + restaurant.getName();
+                                                        }
                                                     }
                                                 }
 
@@ -606,7 +605,9 @@ public class DriverAccountsList extends AppCompatActivity {
                                                     @Override
                                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                         User user = snapshot.getValue(User.class);
-                                                        holder.clientName.setText("#" + user.getName());
+                                                        if (user != null) {
+                                                            holder.clientName.setText("#" + user.getName());
+                                                        }
                                                     }
 
                                                     @Override
@@ -672,7 +673,7 @@ public class DriverAccountsList extends AppCompatActivity {
                                                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                                             for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                                                                 Restaurant restaurant = dataSnapshot.getValue(Restaurant.class);
-                                                                                if (model.getRestaurantId().equals(restaurant.getId())) {
+                                                                                if (restaurant != null && model.getRestaurantId().equals(restaurant.getId())) {
                                                                                     holder2.restaurantName.setText(restaurant.getName() + " : ");
                                                                                 }
                                                                             }

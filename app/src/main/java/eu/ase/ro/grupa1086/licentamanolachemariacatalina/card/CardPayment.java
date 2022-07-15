@@ -62,7 +62,7 @@ public class CardPayment extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            Toast.makeText(CardPayment.this, "Plata a fost efectuata", Toast.LENGTH_LONG).show();
+                            Toast.makeText(CardPayment.this, "Plata a fost efectuată", Toast.LENGTH_LONG).show();
                             Intent confirmationOrder = new Intent(CardPayment.this, ConfirmationOrder.class);
                             confirmationOrder.putExtra("orderId", orderId);
                             if(origin.equals("cardPayment")) {

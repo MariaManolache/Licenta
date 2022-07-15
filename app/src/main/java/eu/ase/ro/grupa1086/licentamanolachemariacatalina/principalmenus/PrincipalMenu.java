@@ -38,7 +38,7 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
-import eu.ase.ro.grupa1086.licentamanolachemariacatalina.RestaurantsList;
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.restaurant.RestaurantsList;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.order.ShoppingCart;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.Account;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
@@ -260,7 +260,9 @@ public class PrincipalMenu extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot snapshot1 : snapshot.getChildren()) {
                     Food food = snapshot1.getValue(Food.class);
-                    imageList.put(food.getName() + "_" + food.getId() + "_" + food.getRestaurantId(), food.getImage());
+                    if (food != null) {
+                        imageList.put(food.getName() + "_" + food.getId() + "_" + food.getRestaurantId(), food.getImage());
+                    }
 
                 }
                 for(String key : imageList.keySet()) {
