@@ -275,8 +275,13 @@ public class NewRestaurantAccount extends AppCompatActivity {
                     return;
                 }
 
-                if (TextUtils.isEmpty(name)) {
+                if (TextUtils.isEmpty(phoneNumber)) {
                     etRestaurantPhoneNumber.setError("Numarul de telefon al restaurantului este necesar pentru crearea contului");
+                    return;
+                }
+
+                if (phoneNumber.length() != 12) {
+                    etRestaurantPhoneNumber.setError("Numărul de telefon al restaurantului trebuie să aibă formatul corect");
                     return;
                 }
 

@@ -83,6 +83,9 @@ public class RestaurantAccount extends AppCompatActivity {
     private DatabaseReference restaurantAccounts;
     private DatabaseReference categories;
     private DatabaseReference restaurantsByCategories;
+    private DatabaseReference driverOrdersHistory;
+    private DatabaseReference ordersHistory;
+    private DatabaseReference driverOrders;
     private FirebaseUser user;
 
     //private Spinner categorySpinner;
@@ -139,6 +142,8 @@ public class RestaurantAccount extends AppCompatActivity {
         restaurantAccounts = FirebaseDatabase.getInstance().getReference("restaurantAccounts");
         categories = FirebaseDatabase.getInstance().getReference("categories");
         restaurantsByCategories = FirebaseDatabase.getInstance().getReference("restaurantsByCategories");
+        driverOrdersHistory = FirebaseDatabase.getInstance().getReference("driverOrdersHistory");
+        ordersHistory = FirebaseDatabase.getInstance().getReference("ordersHistory");
 
         chooseCategory = findViewById(R.id.chooseCategory);
 
@@ -637,7 +642,7 @@ public class RestaurantAccount extends AppCompatActivity {
 
     private void uploadFile() {
         if (restaurantImageUri != null) {
-            StorageReference fileReference = storageReference.child(user.getUid() + "." + getFileExtension(restaurantImageUri));
+            StorageReference fileReference = storageReference.child(user.getUid()).child("images").child(restaurantImageUri + "." + getFileExtension(restaurantImageUri));
             fileReference.putFile(restaurantImageUri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -661,12 +666,30 @@ public class RestaurantAccount extends AppCompatActivity {
                             fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
-                                    restaurants.child(user.getUid()).child("image").setValue(uri.toString());
+                                    restaurants.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            restaurants.child(user.getUid()).child("image").setValue(uri.toString());
+                                            Restaurant restaurant = snapshot.getValue(Restaurant.class);
+
+                                            if (restaurant != null) {
+                                                for(int i = 0; i < restaurant.getCategories().size(); i++) {
+                                                    restaurantsByCategories.child(restaurant.getCategories().get(i)).child(user.getUid()).child("image").setValue(uri.toString());
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+
                                     orders.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                                             for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                                Log.i("verificare", dataSnapshot.toString());
+                                               // Log.i("verificare", dataSnapshot.toString());
                                                 String userId = dataSnapshot.getKey();
 
 //                                                Log.i("verificare", order.toString());
@@ -694,61 +717,165 @@ public class RestaurantAccount extends AppCompatActivity {
 //                                                });
 
 
-                                                assert userId != null;
-                                                orders.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                        for (DataSnapshot dataSnapshot2 : snapshot.getChildren()) {
-                                                            Log.i("verificare", dataSnapshot2.toString());
+                                                if (userId != null) {
+                                                    orders.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                            for (DataSnapshot dataSnapshot2 : snapshot.getChildren()) {
+                                                                //Log.i("verificare", dataSnapshot2.toString());
 
-                                                            String orderId = dataSnapshot2.getKey();
-                                                            assert orderId != null;
-                                                            orders.child(userId).child(orderId).addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                @Override
-                                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                    Order order = snapshot.getValue(Order.class);
-                                                                    //Log.i("verificare", order.toString());
-                                                                    if (order != null) {
-                                                                        for (int i = 0; i < order.getRestaurantAddress().size(); i++) {
-                                                                            if (order.getRestaurantAddress().get(i).getId().equals(user.getUid())) {
-                                                                                order.getRestaurantAddress().get(i).setImage(uri.toString());
-                                                                                orders.child(userId).child(orderId).child("restaurantAddress").setValue(order.getRestaurantAddress());
+                                                                String orderId = dataSnapshot2.getKey();
+
+                                                                if (orderId != null) {
+                                                                    orders.child(userId).child(orderId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                        @Override
+                                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                            Order order = snapshot.getValue(Order.class);
+                                                                            //Log.i("verificare", order.toString());
+                                                                            if (order != null) {
+                                                                                for (int i = 0; i < order.getRestaurantAddress().size(); i++) {
+                                                                                    if (order.getRestaurantAddress().get(i).getId().equals(user.getUid())) {
+                                                                                        order.getRestaurantAddress().get(i).setImage(uri.toString());
+                                                                                        orders.child(userId).child(orderId).child("restaurantAddress").setValue(order.getRestaurantAddress());
+                                                                                    }
+                                                                                }
+                                                                            }
+
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                        }
+                                                                    });
+                                                                }
+                                                                if (orderId != null) {
+                                                                    orders.child(userId).child(orderId).child("restaurants").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                        @Override
+                                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                            if (snapshot.exists()) {
+                                                                                Restaurant restaurant = snapshot.getValue(Restaurant.class);
+                                                                                if (restaurant != null) {
+                                                                                    restaurant.setImage(uri.toString());
+                                                                                    orders.child(userId).child(orderId).child("restaurants").child(user.getUid()).setValue(restaurant);
+                                                                                }
                                                                             }
                                                                         }
-                                                                    }
 
-                                                                }
+                                                                        @Override
+                                                                        public void onCancelled(@NonNull DatabaseError error) {
 
-                                                                @Override
-                                                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                                                }
-                                                            });
-                                                            orders.child(userId).child(orderId).child("restaurants").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                @Override
-                                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                    if (snapshot.exists()) {
-                                                                        Restaurant restaurant = snapshot.getValue(Restaurant.class);
-                                                                        if (restaurant != null) {
-                                                                            restaurant.setImage(uri.toString());
                                                                         }
-                                                                        orders.child(userId).child(orderId).child("restaurants").child(user.getUid()).setValue(restaurant);
-                                                                    }
+                                                                    });
                                                                 }
 
-                                                                @Override
-                                                                public void onCancelled(@NonNull DatabaseError error) {
+                                                                if (orderId != null) {
+                                                                    ordersHistory.child(orderId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                        @Override
+                                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                            Order order = snapshot.getValue(Order.class);
+                                                                            //Log.i("verificare", order.toString());
+                                                                            if (order != null) {
+                                                                                for (int i = 0; i < order.getRestaurantAddress().size(); i++) {
+                                                                                    if (order.getRestaurantAddress().get(i).getId().equals(user.getUid())) {
+                                                                                        order.getRestaurantAddress().get(i).setImage(uri.toString());
+                                                                                        ordersHistory.child(orderId).child("restaurantAddress").setValue(order.getRestaurantAddress());
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
 
+                                                                        @Override
+                                                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                        }
+                                                                    });
                                                                 }
-                                                            });
+                                                            }
                                                         }
-                                                    }
 
-                                                    @Override
-                                                    public void onCancelled(@NonNull DatabaseError error) {
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError error) {
 
-                                                    }
-                                                });
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+
+                                    driverOrdersHistory.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                                // Log.i("verificare", dataSnapshot.toString());
+                                                String driverId = dataSnapshot.getKey();
+
+//
+                                                if (driverId != null) {
+                                                    driverOrdersHistory.child(driverId).child("orders").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                            for (DataSnapshot dataSnapshot2 : snapshot.getChildren()) {
+                                                                //Log.i("verificare", dataSnapshot2.toString());
+
+                                                                String orderId = dataSnapshot2.getKey();
+
+                                                                if (orderId != null) {
+                                                                    driverOrdersHistory.child(driverId).child("orders").child(orderId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                        @Override
+                                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                            Order order = snapshot.getValue(Order.class);
+                                                                            //Log.i("verificare", order.toString());
+                                                                            if (order != null) {
+                                                                                for (int i = 0; i < order.getRestaurantAddress().size(); i++) {
+                                                                                    if (order.getRestaurantAddress().get(i).getId().equals(user.getUid())) {
+                                                                                        order.getRestaurantAddress().get(i).setImage(uri.toString());
+                                                                                        driverOrdersHistory.child(driverId).child("orders").child(orderId).child("restaurantAddress").setValue(order.getRestaurantAddress());
+                                                                                    }
+                                                                                }
+                                                                            }
+
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                        }
+                                                                    });
+                                                                }
+
+//                                                                orders.child(userId).child(orderId).child("restaurants").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+//                                                                    @Override
+//                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                                                        if (snapshot.exists()) {
+//                                                                            Restaurant restaurant = snapshot.getValue(Restaurant.class);
+//                                                                            if (restaurant != null) {
+//                                                                                restaurant.setImage(uri.toString());
+//                                                                                orders.child(userId).child(orderId).child("restaurants").child(user.getUid()).setValue(restaurant);
+//                                                                            }
+//                                                                        }
+//                                                                    }
+//
+//                                                                    @Override
+//                                                                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                                                                    }
+//                                                                });
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                                        }
+                                                    });
+                                                }
                                             }
                                         }
 

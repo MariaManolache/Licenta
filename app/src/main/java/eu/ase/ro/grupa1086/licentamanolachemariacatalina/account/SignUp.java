@@ -111,17 +111,22 @@ public class SignUp extends AppCompatActivity {
                 }
 
                 if(TextUtils.isEmpty(password)) {
-                    etPassword.setError("O parola este necesara pentru crearea contului");
+                    etPassword.setError("O parolă este necesară pentru crearea contului");
                     return;
                 }
 
                 if(password.length() < 4) {
-                    etPassword.setError("Parola trebuie sa aiba cel putin 4 caractere");
+                    etPassword.setError("Parola trebuie sa aibă cel puțin 4 caractere");
                     return;
                 }
 
-                if(TextUtils.isEmpty(name)) {
-                    etPhoneNumber.setError("Numarul de telefon al utilizatorului este necesar pentru crearea contului");
+                if(TextUtils.isEmpty(phoneNumber)) {
+                    etPhoneNumber.setError("Numărul de telefon al utilizatorului este necesar pentru crearea contului");
+                    return;
+                }
+
+                if (phoneNumber.length() != 12) {
+                    etPhoneNumber.setError("Numărul de telefon trebuie să aibă formatul corect");
                     return;
                 }
 
@@ -152,6 +157,7 @@ public class SignUp extends AppCompatActivity {
                                 @Override
                                 public void onVerificationFailed(@NonNull FirebaseException e) {
                                     Toast.makeText(SignUp.this, "Eroare la validarea numarului de telefon", Toast.LENGTH_LONG).show();
+                                    progressBar.setVisibility(View.GONE);
                                 }
 
                                 @Override

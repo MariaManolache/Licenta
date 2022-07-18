@@ -122,7 +122,7 @@
             android:layout_below="@+id/tvName"
             android:fontFamily="@font/alata"
             android:gravity="center"
-            android:text="Verifica-ti adresa de email cu un singur click"
+            android:text="Verifică-ti adresa de email cu un singur click"
             android:textAlignment="center"
             android:textColor="@color/violet"
             android:textSize="20sp"

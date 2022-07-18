@@ -12,6 +12,7 @@ import eu.ase.ro.grupa1086.licentamanolachemariacatalina.cart.ItemClickListener;
 
 public class DriverOrderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
+    public TextView clientNameOrder;
     public TextView restaurantsName;
     public TextView orderStatus;
     public TextView orderAddress;
@@ -35,6 +36,7 @@ public class DriverOrderViewHolder extends RecyclerView.ViewHolder implements Vi
     public DriverOrderViewHolder(@NonNull View itemView) {
         super(itemView);
 
+        clientNameOrder = itemView.findViewById(R.id.clientNameOrder);
         restaurantsName = itemView.findViewById(R.id.restaurants);
         orderStatus = itemView.findViewById(R.id.orderStatus);
         orderAddress = itemView.findViewById(R.id.orderAddress);

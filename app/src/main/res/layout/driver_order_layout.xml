@@ -41,12 +41,36 @@
                         android:layout_width="70dp"
                         android:layout_height="70dp"
                         android:layout_gravity="center_vertical|end"
-                        android:src="@drawable/ic_cart_512"></com.google.android.material.imageview.ShapeableImageView>
+                        android:src="@drawable/loading"></com.google.android.material.imageview.ShapeableImageView>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/clientNameOrder"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/alata"
+                            android:gravity="center_horizontal"
+                            android:textAlignment="center"
+                            android:textAllCaps="true"
+                            android:layout_weight="3"
+                            android:textColor="@color/violet"
+                            android:textStyle="bold"
+                            android:text="Nume client"></TextView>
+
+                            <TextView
+                                android:layout_width="40dp"
+                                android:layout_height="wrap_content"></TextView>
+
+                        </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"

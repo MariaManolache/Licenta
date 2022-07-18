@@ -58,6 +58,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
+import eu.ase.ro.grupa1086.licentamanolachemariacatalina.classes.User;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.driver.PersonalDriverOrders;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.R;
 import eu.ase.ro.grupa1086.licentamanolachemariacatalina.account.DriverAccount;
@@ -539,6 +540,21 @@ public class DriverMenu extends AppCompatActivity {
                                 }
 
                             }
+
+                            users.child(model.getUserId()).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    User user = snapshot.getValue(User.class);
+                                    if (user != null) {
+                                        holder.clientNameOrder.setText("#" + user.getName());
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
 
                             holder.restaurantsName.setText(restaurantName);
                             holder.orderStatus.setText("Status: " + String.valueOf(model.getStatus()).substring(0, 1).toUpperCase(Locale.ROOT) + String.valueOf(model.getStatus()).replace("_", " ").substring(1));

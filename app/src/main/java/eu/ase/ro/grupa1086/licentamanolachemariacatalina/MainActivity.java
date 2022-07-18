@@ -155,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
                                                     startActivity(new Intent(getApplicationContext(), DriverAccountsList.class));
                                                     overridePendingTransition(R.anim.slide_up, R.anim.slide_nothing);
                                                 }
+                                                finish();
 
                                             }
 
@@ -177,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void onPermissionDenied(PermissionDeniedResponse response) {
-                            Toast.makeText(MainActivity.this, "Trebuie acordata permisiunea pentru a putea folosi aplicatia", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "Trebuie acordată permisiunea pentru a putea folosi aplicatia", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override

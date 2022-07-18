@@ -96,8 +96,13 @@ public class NewDriverAccount extends AppCompatActivity {
                     return;
                 }
 
-                if (TextUtils.isEmpty(name)) {
-                    etDriverPhoneNumber.setError("Numarul de telefon al livratorului este necesar pentru crearea contului");
+                if (TextUtils.isEmpty(phoneNumber)) {
+                    etDriverPhoneNumber.setError("Numărul de telefon al livratorului este necesar pentru crearea contului");
+                    return;
+                }
+
+                if (phoneNumber.length() != 12) {
+                    etDriverPhoneNumber.setError("Numărul de telefon al livratorului trebuie să aibă formatul corect");
                     return;
                 }
 
